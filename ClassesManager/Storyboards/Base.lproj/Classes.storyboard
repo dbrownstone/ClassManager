@@ -13,7 +13,7 @@
         <!--Classes-->
         <scene sceneID="5ox-cw-gkX">
             <objects>
-                <tableViewController title="Classes" id="PQO-2r-u7r" customClass="ClassesTableViewController" customModule="MultiTab" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Classes" id="PQO-2r-u7r" customClass="ClassesTableViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="Qk1-ie-ccD">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -86,7 +86,7 @@
         <!--Add Classes View Controller-->
         <scene sceneID="xSj-hY-dva">
             <objects>
-                <viewController id="toG-aV-Hsw" customClass="AddClassesViewController" customModule="MultiTab" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="toG-aV-Hsw" customClass="AddClassesViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="O6k-ti-LKj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -172,7 +172,7 @@
         <!--Add A New Class-->
         <scene sceneID="jer-qm-hwd">
             <objects>
-                <tableViewController title="Add A New Class" modalPresentationStyle="currentContext" id="tK6-jJ-b19" customClass="AddNewClassViewController" customModule="MultiTab" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Add A New Class" modalPresentationStyle="currentContext" id="tK6-jJ-b19" customClass="AddNewClassViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="1" id="Mfw-UV-JYJ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="270"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -308,7 +308,7 @@
         <!--Add Member View Controller-->
         <scene sceneID="WYX-DI-56u">
             <objects>
-                <viewController id="q3t-aE-Lj1" customClass="AddMemberViewController" customModule="MultiTab" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="q3t-aE-Lj1" customClass="AddMemberViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="Nw9-ZK-ne9">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -463,12 +463,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tiq-gS-uS2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Jn9-hZ-mPc" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2636" y="691"/>
+            <point key="canvasLocation" x="2638" y="716"/>
         </scene>
         <!--List Members Table View Controller-->
         <scene sceneID="QhS-NR-Dse">
             <objects>
-                <tableViewController id="J5H-cR-9jO" customClass="ListMembersTableViewController" customModule="MultiTab" sceneMemberID="viewController">
+                <tableViewController id="J5H-cR-9jO" customClass="ListMembersTableViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="NNM-ne-qHX">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
