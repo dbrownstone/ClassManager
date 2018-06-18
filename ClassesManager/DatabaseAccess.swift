@@ -162,6 +162,12 @@ class DatabaseAccess: NSObject {
         })
     }
     
+    public func updateUserWithImageUrl( _ thisUser: User, imageURL: String) {
+        let ref = Database.database().reference(fromURL: databaseURL)
+        let userRef = ref.child(Constants.DatabaseChildKeys.Users).child(thisUser.uid!)
+        userRef.updateChildValues([Constants.UserFields.imageUrl: thisUser.profileImageUrl as Any])
+    }
+    
     public func updateClassMembersDatabase(_ thisClass: Class) {
         let ref = Database.database().reference(fromURL: databaseURL)
         let classRef = ref.child(Constants.DatabaseChildKeys.Classes).child(thisClass.uid)

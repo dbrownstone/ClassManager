@@ -46,17 +46,17 @@ class AddMemberViewController: UIViewController, UINavigationControllerDelegate,
         
         //remove teacher from list of users
         var teacherId: String!
-        for aUser in self.allUsers {
-            if aUser.name == self.thisClass.teacher {
-                teacherId = aUser.uid
-            }
-        }
         let userlist = self.allUsers
         self.allUsers = [User]()
         for aUser in userlist! {
             if aUser.uid != teacherId {
                 self.allUsers.append(aUser)
+            } else {
+                teacherId = aUser.uid
             }
+        }
+        if self.allUsers.count == 0 {
+            pickerView(self.picker, didSelectRow: 0, inComponent: 0)
         }
     }
 
@@ -117,6 +117,7 @@ class AddMemberViewController: UIViewController, UINavigationControllerDelegate,
                                                   name: .RegisterUser,
                                                   object: nil)
         dbAccess.updateClassMembersDatabase(thisClass)
+        self.performSegue(withIdentifier: Constants.Segues.ReturnToMemberList, sender: self)
     }
     
     override func didReceiveMemoryWarning() {

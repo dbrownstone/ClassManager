@@ -34,16 +34,21 @@ class ListMembersTableViewController: UITableViewController {
         dbAccess.getAllUsers()
     }
     
+    func setUsers() {
+        self.users = [User]()
+        for aUser in allRegisteredUsers {
+            if aUser.name != theClass.teacher && (theClass.members.contains(aUser.uid!)) {
+                self.users.append(aUser)
+            }
+        }
+    }
+    
     @objc func gotUsers(notification: NSNotification) {
         NotificationCenter.default.removeObserver(self,
                                                   name: .AllUsers,
                                                   object: nil)
         allRegisteredUsers = notification.userInfo!["users"] as! [User]
-        for aUser in allRegisteredUsers {
-            if aUser.name != theClass.teacher && !(theClass.members.contains(aUser.uid!)) {
-                users.append(aUser)
-            }
-        }
+        setUsers()
         self.tableView.reloadData()
     }
     
@@ -59,17 +64,10 @@ class ListMembersTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if self.users.count == 0 {
-            return 0
-        }
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.users.count == 0 {
-            return 0
-        }
-        
         return theClass.members.count + 1
     }
 
@@ -128,6 +126,9 @@ class ListMembersTableViewController: UITableViewController {
 
     public func getUserForId(_ id: String) -> User {
         var theUser: User? = nil
+        if allRegisteredUsers.count == 0 {
+            allRegisteredUsers = appDelegate.allTheUsers!
+        }
         for aUser in allRegisteredUsers {
             if aUser.uid == id {
                 theUser = aUser
@@ -154,6 +155,9 @@ class ListMembersTableViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.Segues.AddAMember {
             let controller = segue.destination as! AddMemberViewController
+            if self.users.count == 0 {
+                setUsers()
+            }
             controller.allUsers = self.users
             controller.thisClass = self.theClass
             controller.source = self

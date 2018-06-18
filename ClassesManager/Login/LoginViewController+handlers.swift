@@ -88,11 +88,11 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         for member in appDelegate.allTheUsers! {//snapshot.children {
             if member.email == self.email {
                 thisMember =  member
+                dbAccess.setOnlineState(true)
                 if (self.thisMember?.profileImageUrl?.isEmpty)! {
                     self.handleSelectProfileImageView()
                 }
                 
-                dbAccess.setOnlineState(true)
                 //               vc rf self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
                 //                break
                 //            }
@@ -113,6 +113,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     return
                 }
                 storageRef.downloadURL { url, error in
+//                    self.dismiss(animated: true, completion: nil)
                     if let error = error {
                         print("Unable to get image URL from Firebase Storage")
                         self.showAlert((error.localizedDescription), theTitle: "Error")
@@ -120,12 +121,14 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     } else {
                         self.profileImageUrl = url?.absoluteString
                         self.thisMember?.profileImageUrl = self.profileImageUrl
-                        
-                        if (self.thisMember?.isOnline)! {
+                        dbAccess.updateUserWithImageUrl(self.thisMember!, imageURL: self.profileImageUrl!)
+                        self.thisMember?.isOnline = true
+                        dbAccess.setOnlineState(true)
+
+//                        if (self.thisMember?.isOnline)! {
 //                        appDelegate.loggedInId = (self.thisMember?.uid!)!
-//                        dbAccess.setOnlineState(true)
                             self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
-                        }
+//                        }
                     }
                 }
             })
@@ -166,7 +169,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
             self.storeImageViewInDatabase()
         }
         
-        
+        dismiss(animated: true, completion: nil)
 //        self.fullNameTextField.becomeFirstResponder()
     }
     
@@ -215,6 +218,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                         break
                     }
                     self.profileImageUrl = thisMember.profileImageUrl
+                    dismiss(animated: true, completion: nil)
                     self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
                     break
                 }
@@ -262,6 +266,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                             member = thisMember
                             member?.authorized = authorized
                             member?.isOnline = online
+//                            member?.profileImageUrl = imageURL
                             appDelegate.loginName = member?.name
                             firebase.child(Constants.DatabaseChildKeys.Users)
                                 .child(fromId)

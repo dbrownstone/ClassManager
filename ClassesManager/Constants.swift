@@ -17,7 +17,7 @@
 struct Constants {
     
     struct Database {
-        static let URL = "https://multita-d90d8.firebaseio.com/"
+        static let URL = "https://classesmanager-f908d.firebaseio.com/"
     }
     
     struct Segues {
