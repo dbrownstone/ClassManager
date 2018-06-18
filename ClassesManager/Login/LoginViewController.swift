@@ -328,6 +328,10 @@ extension LoginViewController: UITextFieldDelegate {
             } else {
                 self.thisMember = response as? User
                 if (self.thisMember?.authorized)! {
+                    if !(thisMember?.profileImageUrl?.isEmpty)! {
+                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: (thisMember?.profileImageUrl!)!)
+                    }
+
 //                    NotificationCenter.default.addObserver(self, selector: #selector(self.prepareToLogThisUserIn(notification:)), name: .AUser, object: nil)
 //                    dbAccess.getAUser(emailTextField.text!)
                     passwordTextField?.becomeFirstResponder()

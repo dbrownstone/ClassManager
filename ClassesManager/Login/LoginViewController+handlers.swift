@@ -67,6 +67,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         } else {
             //display an alert telling the user to have the teacher add the user to a class first
             print("add the user to a class first")
+            self.showAlert("This user should first be added to a class!", theTitle: notification.userInfo!["error"] as! String)
         }
     }
     
