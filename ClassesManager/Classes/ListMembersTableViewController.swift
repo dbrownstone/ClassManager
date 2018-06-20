@@ -34,13 +34,14 @@ class ListMembersTableViewController: UITableViewController {
         dbAccess.getAllUsers()
     }
     
-    func setUsers() {
-        self.users = [User]()
+    func setListOfUsersNotInTheClass() {
+        var remainingUsers = self.users
         for aUser in allRegisteredUsers {
-            if aUser.name != theClass.teacher && (theClass.members.contains(aUser.uid!)) {
-                self.users.append(aUser)
+            if aUser.name != theClass.teacher && !(theClass.members.contains(aUser.uid!)) {
+                remainingUsers.append(aUser)
             }
         }
+        self.users = remainingUsers
     }
     
     @objc func gotUsers(notification: NSNotification) {
@@ -48,7 +49,7 @@ class ListMembersTableViewController: UITableViewController {
                                                   name: .AllUsers,
                                                   object: nil)
         allRegisteredUsers = notification.userInfo!["users"] as! [User]
-        setUsers()
+        setListOfUsersNotInTheClass()
         self.tableView.reloadData()
     }
     
@@ -97,6 +98,36 @@ class ListMembersTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            //remove from database users
+            var memberId = ""
+            let cell = tableView.cellForRow(at: indexPath)
+            let memberName = cell?.textLabel?.text
+            for aUser in appDelegate.allTheUsers! {
+                if aUser.name == memberName {
+                    memberId = aUser.uid!
+                    break
+                }
+            }
+            
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(self.completeMemberRemoval(notification:)),
+                                                   name: .ClassMemberRemoved,
+                                                   object: nil)
+            dbAccess.removeAMemberFromClassMembers(theClass, memberId: memberId)
+        }
+    }
+    
+    @objc func completeMemberRemoval(notification: NSNotification) {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .ClassMemberRemoved,
+                                                  object: nil)
+        theClass = notification.userInfo!["resultantClass"] as! Class
+        let indexPath = IndexPath(row: (notification.userInfo!["indexOfRemovedMember"] as! Int ) + 1, section: 0)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+    }
+
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let cell = tableView.cellForRow(at: indexPath)
 //        if cell?.selectionStyle == .none {
@@ -156,7 +187,7 @@ class ListMembersTableViewController: UITableViewController {
         if segue.identifier == Constants.Segues.AddAMember {
             let controller = segue.destination as! AddMemberViewController
             if self.users.count == 0 {
-                setUsers()
+                setListOfUsersNotInTheClass()
             }
             controller.allUsers = self.users
             controller.thisClass = self.theClass

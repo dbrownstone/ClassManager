@@ -129,4 +129,6 @@ extension Notification.Name {
         rawValue: "ChatClassSelected")
     static let UserStateChanged = Notification.Name(
         rawValue: "UserStateChanged")
+    static let ClassMemberRemoved = Notification.Name(
+        rawValue: "ClassMemberRemoved")
 }

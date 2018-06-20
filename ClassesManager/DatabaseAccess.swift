@@ -83,6 +83,23 @@ class DatabaseAccess: NSObject {
         })
     }
     
+    public func removeAMemberFromClassMembers(_ classToUpdate: Class, memberId: String) {
+        print("the class is: \(classToUpdate.name)")
+        print("the member to de deleted: \(memberId)")
+        let index = classToUpdate.members.index(of: memberId)
+        var selectedClass = classToUpdate
+        selectedClass.members.remove(at: index!)
+        let userRef = Database.database().reference().child(Constants.DatabaseChildKeys.Classes)
+        userRef.child(classToUpdate.uid).setValue([
+            "name": selectedClass.name,
+            "location": selectedClass.location,
+            "teacher": selectedClass.teacher,
+            "teacherUid": selectedClass.teacherUid,
+            "members": selectedClass.members])
+
+        NotificationCenter.default.post(name: .ClassMemberRemoved, object: nil, userInfo: ["resultantClass": selectedClass, "indexOfRemovedMember": index!])
+    }
+    
     public func getAllClasses() {
         let firebase = Database.database().reference()
         firebase.child(Constants.DatabaseChildKeys.Classes).observe(.value, with: { snapshot in

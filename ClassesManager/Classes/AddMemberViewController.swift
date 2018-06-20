@@ -44,19 +44,8 @@ class AddMemberViewController: UIViewController, UINavigationControllerDelegate,
         self.segmentedControl.setEnabled(false, forSegmentAt: 0)
         self.segmentedControl.setEnabled(false, forSegmentAt: 1)
         
-        //remove teacher from list of users
-        var teacherId: String!
-        let userlist = self.allUsers
-        self.allUsers = [User]()
-        for aUser in userlist! {
-            if aUser.uid != teacherId {
-                self.allUsers.append(aUser)
-            } else {
-                teacherId = aUser.uid
-            }
-        }
-        if self.allUsers.count == 0 {
-            pickerView(self.picker, didSelectRow: 0, inComponent: 0)
+            if self.allUsers.count == 0 {
+                pickerView(self.picker, didSelectRow: 0, inComponent: 0)
         }
     }
 
@@ -103,6 +92,7 @@ class AddMemberViewController: UIViewController, UINavigationControllerDelegate,
             }
             dbAccess.updateClassMembersDatabase(self.thisClass)
         }
+        self.performSegue(withIdentifier: Constants.Segues.ReturnToMemberList, sender: self)
     }
     
     @objc func returnToMemberList(notification: NSNotification) {
