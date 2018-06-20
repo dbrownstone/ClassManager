@@ -84,18 +84,18 @@ class DatabaseAccess: NSObject {
     }
     
     public func removeAMemberFromClassMembers(_ classToUpdate: Class, memberId: String) {
-        print("the class is: \(classToUpdate.name)")
-        print("the member to de deleted: \(memberId)")
+        print("removeAMemberFromClassMembers - class: \(classToUpdate.name)")
+        print("removeAMemberFromClassMembers - member: \(memberId)")
         let index = classToUpdate.members.index(of: memberId)
         var selectedClass = classToUpdate
         selectedClass.members.remove(at: index!)
         let userRef = Database.database().reference().child(Constants.DatabaseChildKeys.Classes)
         userRef.child(classToUpdate.uid).setValue([
-            "name": selectedClass.name,
-            "location": selectedClass.location,
-            "teacher": selectedClass.teacher,
-            "teacherUid": selectedClass.teacherUid,
-            "members": selectedClass.members])
+            Constants.ClassFields.name: selectedClass.name,
+            Constants.ClassFields.location: selectedClass.location,
+            Constants.ClassFields.teacher: selectedClass.teacher,
+            Constants.ClassFields.teacherUid: selectedClass.teacherUid,
+            Constants.ClassFields.members: selectedClass.members])
 
         NotificationCenter.default.post(name: .ClassMemberRemoved, object: nil, userInfo: ["resultantClass": selectedClass, "indexOfRemovedMember": index!])
     }
