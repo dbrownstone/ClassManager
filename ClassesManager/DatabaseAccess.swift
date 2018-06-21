@@ -100,6 +100,18 @@ class DatabaseAccess: NSObject {
         NotificationCenter.default.post(name: .ClassMemberRemoved, object: nil, userInfo: ["resultantClass": selectedClass, "indexOfRemovedMember": index!])
     }
     
+    public func deleteAClass(_ classTodelete: Class, index: Int) {
+        let classRef = Database.database().reference().child(Constants.DatabaseChildKeys.Classes)
+        classRef.child(classTodelete.uid).observe(.value, with: { snapshot in
+            if snapshot.exists() {
+                snapshot.ref.removeValue()
+                NotificationCenter.default.post(name: .ClassRemoved, object: nil, userInfo: ["resultantClass": classTodelete, "indexOfClass": index])
+            } else {
+                print("snapshot doesn't exist")
+            }
+        })
+    }
+    
     public func getAllClasses() {
         let firebase = Database.database().reference()
         firebase.child(Constants.DatabaseChildKeys.Classes).observe(.value, with: { snapshot in

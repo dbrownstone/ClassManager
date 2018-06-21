@@ -131,4 +131,6 @@ extension Notification.Name {
         rawValue: "UserStateChanged")
     static let ClassMemberRemoved = Notification.Name(
         rawValue: "ClassMemberRemoved")
+    static let ClassRemoved = Notification.Name(
+        rawValue: "ClassRemoved")
 }

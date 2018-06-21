@@ -104,6 +104,25 @@ class ClassesTableViewController: UITableViewController,
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            //remove class by teacher only
+            let selectedClass = classes[indexPath.row]
+            if selectedClass.teacherUid == appDelegate.loggedInId {
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(self.completeClassRemoval(notification:)),
+                                                       name: .ClassRemoved,
+                                                       object: nil)
+                dbAccess.deleteAClass(selectedClass, index: indexPath.row)
+            } else {
+                let alertController = UIAlertController(title: "Class not removed", message: "Class removal only by the class teacher!", preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel) { (_) in }
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true){ }
+            }
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row < classes.count {
             self.performSegue(withIdentifier: Constants.Segues.ListAllMembers, sender: classes[indexPath.row])
@@ -120,6 +139,16 @@ class ClassesTableViewController: UITableViewController,
         let textLabel2 = cell.viewWithTag(11) as! UILabel
         textLabel2.text = "Members: \(classes[row].members.count + 1)"
     }
+    
+    @objc func completeClassRemoval(notification: NSNotification) {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .ClassRemoved,
+                                                  object: nil)
+        let indexPath = IndexPath(row: notification.userInfo!["indexOfClass"] as! Int, section: 0)
+        classes.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+    }
+        
     
     // MARK: - UITabBarControllerDelegate
     
