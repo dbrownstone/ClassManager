@@ -7,7 +7,6 @@
 
 import UIKit
 import Firebase
-//import SwiftSpinner
 
 class LoginViewController: UIViewController {
     
@@ -106,7 +105,6 @@ class LoginViewController: UIViewController {
         ref = Database.database().reference().child(Constants.DatabaseChildKeys.Users)
         ref.observe(.value, with: { snapshot in
             self.observing = true
-
             
             self.email = self.emailTextField.text
             for aUser in snapshot.children {
@@ -332,10 +330,6 @@ extension LoginViewController: UITextFieldDelegate {
                     if !(thisMember?.profileImageUrl?.isEmpty)! {
                         self.profileImageView.loadImageUsingCacheWithUrlString(urlString: (thisMember?.profileImageUrl!)!)
                     }
-
-//                    NotificationCenter.default.addObserver(self, selector: #selector(self.prepareToLogThisUserIn(notification:)), name: .AUser, object: nil)
-//                    dbAccess.getAUser(emailTextField.text!)
-                    passwordTextField?.becomeFirstResponder()
                 } else {
                     self.prepareToRegister()
                 }

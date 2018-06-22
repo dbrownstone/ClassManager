@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import SwiftSpinner
 
 /**
  Handles profile image access, registering a new user and logging in an existing user
