@@ -28,8 +28,6 @@ class LoginViewController: UIViewController {
     var profileImageSelected = false
     var loginAgain = false
     
-    var spinnerView: UIView?
-    
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var returnToLoginBtn: UIButton!
@@ -48,6 +46,11 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: 45, height: 45)
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardUp), name:.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
@@ -60,7 +63,6 @@ class LoginViewController: UIViewController {
         if !(self.email?.isEmpty)! {
             self.passwordTextField.becomeFirstResponder()
             NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
-            self.spinnerView = UIViewController.displaySpinner(onView: self.view)
 
             dbAccess.getAUser(self.email!)
         } else {
@@ -82,7 +84,6 @@ class LoginViewController: UIViewController {
         self.passwordTextField.text = standardDefaults.string(forKey:  Constants.StdDefaultKeys.Sisma)
         returnToLoginBtn.isHidden = false
         returnToLoginBtn.setTitle(Constants.ButtonTitles.changePasswordTitle, for: .normal)
-        UIViewController.removeSpinner(spinner: self.spinnerView!)
     }
     
     func checkForKnownUserEmail(_ emailAddr : String) -> AnyObject {
@@ -100,8 +101,6 @@ class LoginViewController: UIViewController {
         
         var ref: DatabaseReference!
         
-        self.spinnerView = UIViewController.displaySpinner(onView: self.view)
-        
         ref = Database.database().reference().child(Constants.DatabaseChildKeys.Users)
         ref.observe(.value, with: { snapshot in
             self.observing = true
@@ -118,7 +117,6 @@ class LoginViewController: UIViewController {
                         standardDefaults.set(self.thisMember?.uid, forKey:Constants.StdDefaultKeys.CurrentLoggedInId)
                         standardDefaults.set(self.thisMember?.email, forKey:Constants.StdDefaultKeys.LoggedInEmail)
                         standardDefaults.synchronize()
-                        UIViewController.removeSpinner(spinner: self.spinnerView!)
                         appDelegate.loginName = self.thisMember?.name
                         appDelegate.thisMember = self.thisMember
                     } else {
@@ -127,7 +125,6 @@ class LoginViewController: UIViewController {
                     break
                 }
             }
-            UIViewController.removeSpinner(spinner: self.spinnerView!)
         })
     }
     
@@ -167,11 +164,9 @@ class LoginViewController: UIViewController {
     
     @IBAction func selectProfileImageView(_ sender: UITapGestureRecognizer) {
         print("single tap called")
-        self.spinnerView = UIViewController.displaySpinner(onView: self.view)
         
         self.handleSelectProfileImageView()
         self.thereIsAnImage = true
-        UIViewController.removeSpinner(spinner: self.spinnerView!)
     }
     
     @objc func keyboardUp(notification: NSNotification) {

@@ -13,6 +13,7 @@ var appDelegate:AppDelegate = (UIApplication.shared).delegate as! AppDelegate
 var standardDefaults = UserDefaults.standard
 var databaseURL = Constants.Database.URL
 var dbAccess = DatabaseAccess()
+var activityIndicator = UIActivityIndicatorView()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

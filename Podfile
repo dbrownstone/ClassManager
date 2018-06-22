@@ -8,5 +8,6 @@ pod 'Firebase/Auth'
 pod 'Firebase/Database'
 
 pod 'Alamofire'
+pod 'SwiftSpinner'
 
 end

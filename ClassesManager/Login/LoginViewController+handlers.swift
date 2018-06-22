@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import SwiftSpinner
 
 /**
  Handles profile image access, registering a new user and logging in an existing user
@@ -126,10 +127,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                         self.thisMember?.isOnline = true
                         dbAccess.setOnlineState(true)
 
-//                        if (self.thisMember?.isOnline)! {
-//                        appDelegate.loggedInId = (self.thisMember?.uid!)!
-                            self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
-//                        }
+                        self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
                     }
                 }
             })
@@ -140,12 +138,16 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
      displays the system Image Picker
      */
     @objc func handleSelectProfileImageView() {
+        SwiftSpinner.show("Connecting to image picker...")
+        SwiftSpinner.sharedInstance.backgroundColor = .clear
         print(" handleSelectProfileImageView")
         let picker = UIImagePickerController()
         
         picker.delegate = self
         picker.allowsEditing = true
-        present(picker, animated: true, completion: nil)
+        present(picker, animated: true, completion: {
+            SwiftSpinner.hide()
+        })
     }
     
     /**
@@ -171,7 +173,6 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         }
         
         dismiss(animated: true, completion: nil)
-//        self.fullNameTextField.becomeFirstResponder()
     }
     
     /**
