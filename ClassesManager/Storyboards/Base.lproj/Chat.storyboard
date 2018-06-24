@@ -13,14 +13,14 @@
         <!--Chat View Controller-->
         <scene sceneID="WOt-E9-ish">
             <objects>
-                <viewController id="Zd6-lD-rSF" customClass="ChatViewController" customModule="MultiTab" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Zd6-lD-rSF" customClass="ChatViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HZ7-MC-txd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Fts-Pa-StQ">
                                 <rect key="frame" x="0.0" y="64" width="375" height="65"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.65921151122950616" green="0.66666668653488159" blue="0.6484845298915819" alpha="0.20267016269999999" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="65" id="2eU-4h-pLs"/>
                                 </constraints>
@@ -31,7 +31,7 @@
                                     <inset key="sectionInset" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="memberImage" id="iTV-Cv-djo" customClass="MemberCollectionCell" customModule="MultiTab" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="memberImage" id="iTV-Cv-djo" customClass="MemberCollectionCell" customModule="ClassesManager" customModuleProvider="target">
                                         <rect key="frame" x="10" y="2.5" width="50" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -186,7 +186,7 @@
         <!--Select Class Alert View Controller-->
         <scene sceneID="HPV-1D-xvd">
             <objects>
-                <viewController id="KAC-A0-faC" customClass="SelectClassAlertViewController" customModule="MultiTab" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="KAC-A0-faC" customClass="SelectClassAlertViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YgC-4X-5Gl">
                         <rect key="frame" x="0.0" y="0.0" width="250" height="384"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

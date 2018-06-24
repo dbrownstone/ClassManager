@@ -94,10 +94,6 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                 if (self.thisMember?.profileImageUrl?.isEmpty)! {
                     self.handleSelectProfileImageView()
                 }
-                
-                //               vc rf self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
-                //                break
-                //            }
             }
         }
     }
@@ -115,7 +111,6 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     return
                 }
                 storageRef.downloadURL { url, error in
-//                    self.dismiss(animated: true, completion: nil)
                     if let error = error {
                         print("Unable to get image URL from Firebase Storage")
                         self.showAlert((error.localizedDescription), theTitle: "Error")
