@@ -215,6 +215,8 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                         break
                     }
                     self.profileImageUrl = thisMember.profileImageUrl
+                    thisMember.isOnline = true
+                    dbAccess.setOnlineState(true)
                     dismiss(animated: true, completion: nil)
                     self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
                     break
