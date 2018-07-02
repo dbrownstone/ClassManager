@@ -80,6 +80,7 @@ struct Constants {
         static let timeStamp = "timeStamp"
         static let isReceived = "isReceived"
         static let photoURL = "photoURL"
+        static let photoImageView = "photoImageView"
         static let imageURL = "imageURL"
     }
     

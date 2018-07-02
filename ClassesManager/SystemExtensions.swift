@@ -42,12 +42,15 @@ extension UIImageView {
      loads an image from cache if it already exists there
      - Parameter urlString: Firebase URL for this image
      */
-    func loadImageUsingCacheWithUrlString(urlString: String) {
+    func loadImageUsingCacheWithUrlString(urlString: String, memberImage: Bool = true) {
         
         self.image = nil
         // first check cache for image
         if let cachedImage = imageCache.object(forKey: urlString as AnyObject) {
             self.image = cachedImage as? UIImage
+            if  !memberImage {
+                NotificationCenter.default.post(name: .LoadImage, object: self)
+            }
             return
         }
         let url = NSURL(string:urlString)
@@ -62,6 +65,9 @@ extension UIImageView {
                 if let downloadedImage = UIImage(data: data!) {
                     imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
                     self.image = downloadedImage
+                    if  !memberImage {
+                        NotificationCenter.default.post(name: .LoadImage, object: self)
+                    }
                 } else {
                     print("downloadedImage = nil")
                 }
@@ -133,4 +139,6 @@ extension Notification.Name {
         rawValue: "ClassMemberRemoved")
     static let ClassRemoved = Notification.Name(
         rawValue: "ClassRemoved")
+    static let LoadImage = Notification.Name(
+        rawValue: "LoadImage")
 }

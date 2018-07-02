@@ -17,6 +17,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var classMembership: UICollectionView!
     
     var messages: [Message]!
+    var messageImages: [UIImageView]!
     var classes: [Class]!
     var selectedClassForChat: Class!
     var chatClassMembers: [User]!
@@ -32,6 +33,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     var bubbleHeight: CGFloat!
     var bubbleView: BubbleView!
     var messageTextLabel: UILabel!
+    var messageImageView: UIImageView!
     var messageToUid: String!
     
     @IBOutlet weak var theTableView: UITableView!
@@ -56,38 +58,24 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.title = "Chat"
         if theObjectMember != nil {
             addBackButton()
-//            self.navigationItem.rightBarButtonItem = nil
             let name = theObjectMember.name
-//            self.chatName.text = name!
             self.title = "Chat: \(name!)"
             self.messageToUid = theObjectMember.uid
-//            dbAccess.getAllMessages(theObjectMember.uid!)
             observeMessages()
         } else if selectedClassForChat != nil {
-//            self.navigationItem.rightBarButtonItem = nil
             let name = selectedClassForChat.name
-//            self.chatName.text = name
             self.title = "Chat: \(name)"
             self.loggedInUsers = [User]()
-//            NotificationCenter.default.addObserver(self,
-//                                                   selector: #selector(self.addToLoggedInList(notification:)),
-//                                                   name: .UserStateChanged,
-//                                                   object: nil
-//            )
-//            for thisMember in self.chatClassMembers {
-//                dbAccess.isUserCurrentlySignedIn(thisMember.email!)
-//            }
             for aMember in appDelegate.allTheUsers! {
                 if aMember.uid == selectedClassForChat.teacherUid {
                     self.classTeacher = aMember
                     self.chatClassMembers.append(self.classTeacher)
-//                    dbAccess.isUserCurrentlySignedIn(aMember.email!)
                     break
                 }
                 
             }
             self.messageToUid = selectedClassForChat.uid
-//            dbAccess.getAllMessages(selectedClassForChat.uid)
+            self.messages = [Message]()
             observeMessages()
         } else if !self.classSelectionCancelled {
             NotificationCenter.default.addObserver(self,
@@ -136,6 +124,15 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             classMembership.deleteItems(at: indexPaths)
             self.chatClassMembers = [User]()
+        }
+        
+        indexPaths = [IndexPath]()
+        if self.messages != nil && self.messages.count > 0 {
+            for row in (0..<self.messages.count).reversed() {
+                indexPaths.append(IndexPath(row: row, section: 0))
+                self.messages.remove(at: row)
+            }
+            self.theTableView.deleteRows(at: indexPaths, with: .none)
         }
         self.messages = [Message]()
         NotificationCenter.default.removeObserver(self, name: .UserStateChanged, object: nil)
@@ -222,6 +219,40 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
+    var isIncoming = false
+    var currentMessage: Message?
+    func prepareImageMessageBubble(_ message: Message, incoming: Bool = false) {
+        isIncoming = incoming
+        currentMessage = message
+        let imageView = UIImageView()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.prepareBubble(notification:)),
+                                               name: .LoadImage,
+                                               object: nil)
+        imageView.loadImageUsingCacheWithUrlString(urlString: message.msgImageUrl!, memberImage: false)
+    }
+    
+    @objc func prepareBubble(notification: NSNotification) {
+        let imageView = notification.object as! UIImageView
+        let constraintRect = CGSize(width: 0.66 * view.frame.width,
+                                    height: (0.66 * view.frame.width) * ((imageView.image?.size.height)!/(imageView.image?.size.width)!))
+        let startPoint = CGPoint(x: 0, y: 0)
+        let boundingBox = CGRect(origin: startPoint, size: constraintRect)
+        imageView.frame.size = CGSize(width: ceil((boundingBox.width)),
+                                      height: ceil(boundingBox.height))
+        self.bubbleView = BubbleView.init((currentMessage?.isReceived)!)
+        isIncoming = false
+        self.messageImageView = imageView
+        self.messageImageView.contentMode = .scaleAspectFit
+        if self.messageImages == nil {
+            self.messageImages = [UIImageView]()
+        }
+        self.messageImages.append(self.messageImageView)
+
+        self.continueBubblePrep(currentMessage!, values: ["URL": currentMessage?.msgImageUrl as Any,"toId": currentMessage?.toId as Any])
+
+    }
+    
     @IBAction func addAnImage(_ sender: UIButton) {
     }
 
@@ -271,52 +302,92 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
+                if message.fromId == appDelegate.loggedInId {
+                    message.isReceived = false
+                } else {
+                    message.isReceived = true
+                }
                 var toId: String?
                 if self.theObjectMember != nil {
                     toId = self.theObjectMember.uid
                 } else {
                     toId = self.selectedClassForChat.uid
                 }
-                let values = self.shouldThisMessageBeDisplayed(message, toId: toId!)
+                var values = self.shouldThisMessageBeDisplayed(message, toId: toId!)
+                values["toId"] = toId
                 if ((values["displayTheMessage"] as! Bool) == false)  {
                     return
                 }
                 let theMessage = values["theMessage"] as! Message
-                let url = values["URL"] as! String
-                self.prepareMessageBubble(message.textMessage!, incoming: message.isReceived)
-                let bubbleSize = CGSize(width: self.messageTextLabel.frame.width + 21,
-                                        height: self.messageTextLabel.frame.height + 8)
-                self.bubbleView.frame.size = bubbleSize
-                
-                let thisMessage = Message(dictionary: [
-                    "bubble": self.bubbleView,
-                    "bubbleSize": bubbleSize as AnyObject,
-                    Constants.MessageFields.fromId : theMessage.fromId! as AnyObject,
-                    Constants.MessageFields.toId : toId as AnyObject,
-                    Constants.MessageFields.textMessage: theMessage.textMessage as AnyObject,
-                    Constants.MessageFields.textLabel: self.messageTextLabel as UILabel,
-                    Constants.MessageFields.isReceived: theMessage.isReceived as AnyObject,
-                    Constants.MessageFields.imageURL: url as AnyObject,
-                    "imageWidth": 30 as AnyObject,
-                    "imageHeight": 30 as AnyObject,
-                    Constants.MessageFields.timeStamp: theMessage.timeStamp as AnyObject
-                    ])
-                if self.theObjectMember != nil {
-                    self.observeMemberMessage(thisMessage)
+                if theMessage.isImageMsg {
+                    self.prepareImageMessageBubble(message)
                 } else {
-                    self.observeGroupMessage(thisMessage)
+                    self.prepareMessageBubble(message.textMessage!, incoming: message.isReceived)
+                    self.continueBubblePrep(theMessage, values: values)
+
                 }
             }
         })
     }
     
+    func continueBubblePrep(_ message: Message, values: [String : Any]) {
+        let url = values["URL"] as! String
+        let toId = values["toId"] as! String
+        var thisMessage: Message?
+        
+        if message.isImageMsg {
+            let bubbleSize = CGSize(width: self.messageImageView.frame.width + 28,
+                                    height: self.messageImageView.frame.height + 16)
+            self.bubbleView.frame.size = bubbleSize
+            thisMessage = Message(dictionary: [
+                "bubble": self.bubbleView,
+                "bubbleSize": bubbleSize as AnyObject,
+                Constants.MessageFields.fromId : message.fromId! as AnyObject,
+                Constants.MessageFields.toId : toId as AnyObject,
+                Constants.MessageFields.photoURL: message.msgImageUrl as AnyObject,
+                Constants.MessageFields.photoImageView : self.messageImageView as AnyObject,
+                Constants.MessageFields.isReceived: message.isReceived as AnyObject,
+                Constants.MessageFields.imageURL: message.imageUrl as AnyObject,
+                "imageWidth": 30 as AnyObject,
+                "imageHeight": 30 as AnyObject,
+                Constants.MessageFields.timeStamp: message.timeStamp as AnyObject
+                ])
+        } else {
+            let bubbleSize = CGSize(width: self.messageTextLabel.frame.width + 21,
+                                    height: self.messageTextLabel.frame.height + 8)
+            self.bubbleView.frame.size = bubbleSize
+            
+            thisMessage = Message(dictionary: [
+                "bubble": self.bubbleView,
+                "bubbleSize": bubbleSize as AnyObject,
+                Constants.MessageFields.fromId : message.fromId! as AnyObject,
+                Constants.MessageFields.toId : toId as AnyObject,
+                Constants.MessageFields.textMessage: message.textMessage as AnyObject,
+                Constants.MessageFields.textLabel: self.messageTextLabel as UILabel,
+                Constants.MessageFields.isReceived: message.isReceived as AnyObject,
+                Constants.MessageFields.imageURL: url as AnyObject,
+                "imageWidth": 30 as AnyObject,
+                "imageHeight": 30 as AnyObject,
+                Constants.MessageFields.timeStamp: message.timeStamp as AnyObject
+                ])
+        }
+        if self.theObjectMember != nil {
+            self.observeMemberMessage(thisMessage!)
+        } else {
+            self.observeGroupMessage(thisMessage!)
+        }
+    }
+    
     func observeGroupMessage(_ message: Message) {
         if message.toId == self.selectedClassForChat.uid {
             message.bubble = self.bubbleView
-            self.messages.append(message)
+            if !self.messages.contains(message) {
+                self.messages.append(message)
+            }
             redisplayTableViewDataSorted()
         }
     }
+    
     func sortMessagesByDate() {
         self.messages = self.messages.sorted { ($1.timeStamp as! Double) < ($0.timeStamp as! Double) }
 
@@ -371,10 +442,17 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                    height: (thisBubble?.frame.size.height)!)
         }
         thisBubble?.frame = position!
-        thisMessage.textLabel?.center = thisBubble!.center
-        thisMessage.bubble?.backgroundColor = UIColor.clear
         cell.contentView.addSubview(thisMessage.bubble!)
-        cell.contentView.addSubview(thisMessage.textLabel!)
+
+        if thisMessage.isImageMsg {
+            thisMessage.msgImageView?.center = thisBubble!.center
+            thisMessage.bubble?.backgroundColor = UIColor.clear
+            cell.contentView.addSubview(thisMessage.msgImageView!)
+        } else {
+            thisMessage.textLabel?.center = thisBubble!.center
+            thisMessage.bubble?.backgroundColor = UIColor.clear
+            cell.contentView.addSubview(thisMessage.textLabel!)
+        }
         
         let imageView = UIImageView()
         if thisMessage.isReceived {

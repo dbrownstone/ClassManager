@@ -18,6 +18,8 @@ class Message: NSObject {
     var bubbleSize: CGSize?
     var isReceived = false
     var textLabel: UILabel?
+    var msgImageUrl: String?
+    var msgImageView: UIImageView?
     
     var imageUrl: String?
     var imageWidth: NSNumber?
@@ -25,19 +27,31 @@ class Message: NSObject {
     
     var videoUrl: String?
     
+    var isImageMsg = false
+    
     init(dictionary: [String: AnyObject], fromDatabase: Bool = false) {
         super.init()
         
         fromId = dictionary["fromId"] as? String
         toId = dictionary["toId"] as? String
-        textMessage = dictionary["text"] as? String
+        if dictionary["text"] != nil {
+            textMessage = dictionary["text"] as? String
+        } else {
+            msgImageUrl = dictionary["photoURL"] as? String
+            isImageMsg = true
+        }
+        imageUrl = dictionary["imageURL"] as? String
         timeStamp = dictionary["timeStamp"] as? NSNumber
         
         
 //        videoUrl = dictionary["videoUrl"]  as? String
 
         if !fromDatabase {
-            textLabel = dictionary["textLabel"] as? UILabel
+            if dictionary["textLabel"] != nil {
+                textLabel = dictionary["textLabel"] as? UILabel
+            } else {
+                msgImageView = dictionary["photoImageView"] as? UIImageView
+            }
             imageUrl = dictionary["imageURL"] as? String
             imageWidth = dictionary["imageWidth"] as? NSNumber
             imageHeight = dictionary["imageHeight"] as? NSNumber
