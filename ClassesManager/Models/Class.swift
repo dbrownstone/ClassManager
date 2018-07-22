@@ -16,6 +16,7 @@ struct Class {
     let teacher: String
     let teacherUid: String
     var members: [String]
+    var chatMessages: [String]
     
     init(name: String, location: String, teacher: String, teacherUid: String, thisMember: String) {
         self.uid = UUID().uuidString
@@ -24,6 +25,7 @@ struct Class {
         self.teacher = teacher
         self.teacherUid = teacherUid
         self.members = [String]()
+        self.chatMessages = [String]()
     }
     
     init(snapshot: DataSnapshot) {
@@ -34,9 +36,14 @@ struct Class {
         teacher = snapshotValue[Constants.ClassFields.teacher] as! String
         teacherUid = snapshotValue[Constants.ClassFields.teacherUid] as! String
         if snapshotValue[Constants.ClassFields.members] != nil  {
-            self.members = (snapshot.value as! [String: AnyObject])[Constants.ClassFields.members] as! [String]
+            members = (snapshot.value as! [String: AnyObject])[Constants.ClassFields.members] as! [String]
         } else {
-            self.members = [String]()
+            members = [String]()
+        }
+        if snapshotValue[Constants.ClassFields.messages] != nil  {
+            chatMessages = (snapshot.value as! [String: AnyObject])[Constants.ClassFields.messages] as! [String]
+        } else {
+            chatMessages = [String]()
         }
     }
     
@@ -46,7 +53,8 @@ struct Class {
             Constants.ClassFields.location: location,
             Constants.ClassFields.teacher: teacher,
             Constants.ClassFields.teacherUid: teacherUid,
-            Constants.ClassFields.members: members
+            Constants.ClassFields.members: members,
+            Constants.ClassFields.messages: chatMessages
         ]
     }
     
@@ -56,6 +64,11 @@ struct Class {
     
     mutating func addAMember(id:String) {
         self.members.append(id)
+    }
+    
+    
+    mutating func addAMessage(id:String) {
+        self.chatMessages.append(id)
     }
     
     mutating func indexOf(_ id: String) -> Int {

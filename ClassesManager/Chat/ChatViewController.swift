@@ -2,39 +2,57 @@
 //  ChatViewController.swift
 //  MultiTab
 //
-//  Created by David Brownstone on 01/04/2018.
+//  Created by David Brownstone on 03/07/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.
 //
 
 import UIKit
 import Firebase
 import FirebaseDatabase
+import SwiftSpinner
 
-class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BubbleTableViewCellDelegate, BubbleTableViewCellDataSource{
     
+    var selectedClass: String!
+
     @IBOutlet weak var newMessageSendButton: UIButton!
     @IBOutlet weak var camera: UIButton!
     @IBOutlet weak var classMembership: UICollectionView!
     
-    var messages: [Message]!
-    var messageImages: [UIImageView]!
+//    @IBOutlet weak var SentBubbleWidthConstraint: NSLayoutConstraint!
+//    @IBOutlet weak var SentBubbleHeightConstraint: NSLayoutConstraint!
+//    @IBOutlet weak var ReceivedBubbleWidthConstraint: NSLayoutConstraint!
+//    @IBOutlet weak var ReceivedBubbleHeightConstraint: NSLayoutConstraint!
+    
     var classes: [Class]!
-    var selectedClassForChat: Class!
+    var groupChat = true
     var chatClassMembers: [User]!
     var classTeacher: User!
-    var selectedClass: String!
     var classSelectionCancelled = false
     
+    var selectedClassForChat: Class!
+    {
+        didSet {
+            navigationItem.title = selectedClassForChat.name + " Chat"
+            
+            groupChat = true
+            
+            observeMessagesInSelectedGroup()
+        }
+    }
+    
+    var chatMessages = [Message]()
+    var selectedPickerImage: UIImage!
+    var cells = [BubbleTableViewCell]()
+    var messageImageUrlStr: String!
+    var dontShowClassAlert = false
+    
     var theObjectMember: User!
+    var messageToUid: String!
+    var keyboardSize:CGRect? = nil
     
     @IBOutlet weak var chatName: UILabel!
     @IBOutlet weak var sendingTextField: UITextField!
-    
-    var bubbleHeight: CGFloat!
-    var bubbleView: BubbleView!
-    var messageTextLabel: UILabel!
-    var messageImageView: UIImageView!
-    var messageToUid: String!
     
     @IBOutlet weak var theTableView: UITableView!
     @IBOutlet weak var navBar: UINavigationBar!
@@ -45,26 +63,59 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         defaultStyle()
-        self.messages = [Message]()
         self.theTableView.delegate = self
         self.theTableView.dataSource = self
         self.classMembership.delegate = self as? UICollectionViewDelegate
         self.classMembership.dataSource = self
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardUp), name:.UIKeyboardWillShow, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    @IBAction func cancelKeyboard(_ sender: Any) {
+        sendingTextField.resignFirstResponder()
+    }
+    
+    @objc func keyboardUp(notification: NSNotification) {
+        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+            keyboardSize = ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue)!
+            self.view.frame.origin.y = -(keyboardSize!.height)
+        }
+    }
+    
+    @objc func keyboardDown(notification: NSNotification) {
+        if ((notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue) != nil {
+            self.view.frame.origin.y = 0
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if dontShowClassAlert {
+            redisplayTableViewDataSorted()
+            dontShowClassAlert = false
+            for aClass in classes {
+                if aClass.uid == self.messageToUid {
+                    self.selectedClassForChat = aClass
+                    break
+                }
+            }    
+            return
+        }
         self.title = "Chat"
         if theObjectMember != nil {
             addBackButton()
             let name = theObjectMember.name
             self.title = "Chat: \(name!)"
             self.messageToUid = theObjectMember.uid
-            observeMessages()
+//            observeMessages()
         } else if selectedClassForChat != nil {
+            observeMessagesInSelectedGroup()
             let name = selectedClassForChat.name
+            self.messageToUid = selectedClassForChat.uid
             self.title = "Chat: \(name)"
+            groupChat = true
             self.loggedInUsers = [User]()
             for aMember in appDelegate.allTheUsers! {
                 if aMember.uid == selectedClassForChat.teacherUid {
@@ -72,23 +123,94 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.chatClassMembers.append(self.classTeacher)
                     break
                 }
-                
             }
-            self.messageToUid = selectedClassForChat.uid
-            self.messages = [Message]()
-            observeMessages()
+            
         } else if !self.classSelectionCancelled {
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(self.classesLoaded(notification:)),
                                                    name: .AllClasses,
                                                    object: nil)
             dbAccess.getAllClasses()
-
-        } else {
-            redisplayTableViewDataSorted()
         }
+        redisplayTableViewDataSorted()
+    }
+
+    var messageImagesSaved: Int?
+    var numberOfMessagesWithImage: Int?
+    func observeMessagesInSelectedGroup() {
+        self.chatMessages = [Message]()
+        self.messageImagesSaved = 0
+        numberOfMessagesWithImage = 0
+        Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary, fromDatabase: true)
+                if message.toId == self.selectedClassForChat.uid  {//&& self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
+                    if message.fromId == appDelegate.loggedInId {
+                        message.authorType = .authorTypeSelf
+                    } else {
+                        message.authorType = .authorTypeOther
+                    }
+                    for aMember in appDelegate.allTheUsers! {
+                        if aMember.uid == message.fromId {
+                            message.imageUrl = aMember.profileImageUrl
+                            break
+                        }
+                    }
+                    self.chatMessages.append(message)
+                    self.sortMessagesByDate()
+                    DispatchQueue.main.async(execute: {
+                        self.theTableView?.reloadData()
+                   })
+                }
+            }
+        })
     }
     
+    func sortMessagesByDate() {
+        self.chatMessages.sort(by: {(message1, message2) -> Bool in
+            return (message1.timeStamp?.intValue)! > (message2.timeStamp?.intValue)!
+        })
+    }
+    
+    @objc func classesLoaded(notification: NSNotification) {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .AllClasses,
+                                                  object: nil)
+        let existingClasses = (notification.userInfo!["classes"] as? [Class])!
+        // display only the classes of which this user is a member
+        classes = [Class]()
+        for aClass in existingClasses {
+            if aClass.teacher ==  appDelegate.loginName {
+                classes.append(aClass)
+                continue
+            } else {
+                if aClass.members.contains(appDelegate.loggedInId) {
+                    classes.append(aClass)
+                }
+            }
+        }
+        if classes.count > 1 {
+            self.performSegue(withIdentifier: Constants.Segues.ShowClassAlert, sender: nil)
+        } else {
+            self.selectedClassForChat = classes[0]
+            self.adjustTheTableView()
+            self.chatClassMembers = [User]()
+            for aMember in appDelegate.allTheUsers! {
+                if aMember.uid == selectedClassForChat.teacherUid {
+                    self.classTeacher = aMember
+                    self.chatClassMembers.append(self.classTeacher)
+                    break
+                } else {
+                    if self.selectedClassForChat.members.contains(aMember.uid!) {
+                        self.chatClassMembers.append(aMember)
+                    }
+                }
+            }
+
+            self.classMembership.reloadData()
+        }
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -119,22 +241,14 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.chatName.text = ""
         var indexPaths = [IndexPath]()
         if self.chatClassMembers != nil && self.chatClassMembers.count > 0 {
-            for row in 0..<self.chatClassMembers.count {
+            //class teacher is not included in classMembership
+            for row in 0..<(self.chatClassMembers.count - 1) {
                 indexPaths.append(IndexPath(row: row, section: 0))
             }
             classMembership.deleteItems(at: indexPaths)
             self.chatClassMembers = [User]()
         }
         
-        indexPaths = [IndexPath]()
-        if self.messages != nil && self.messages.count > 0 {
-            for row in (0..<self.messages.count).reversed() {
-                indexPaths.append(IndexPath(row: row, section: 0))
-                self.messages.remove(at: row)
-            }
-            self.theTableView.deleteRows(at: indexPaths, with: .none)
-        }
-        self.messages = [Message]()
         NotificationCenter.default.removeObserver(self, name: .UserStateChanged, object: nil)
         self.loggedInUsers = [User]()
     }
@@ -163,328 +277,166 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    @objc func classesLoaded(notification: NSNotification) {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .AllClasses,
-                                                  object: nil)
-        let existingClasses = (notification.userInfo!["classes"] as? [Class])!
-        // display only the classes of which this user is a member
-        classes = [Class]()
-        for aClass in existingClasses {
-            if aClass.teacher ==  appDelegate.loginName {
-                classes.append(aClass)
-                continue
-            } else {
-                if aClass.members.contains(appDelegate.loggedInId) {
-                    classes.append(aClass)
-                }
-            }
-        }
-        self.performSegue(withIdentifier: Constants.Segues.ShowClassAlert, sender: nil)
-    }
-    
     @IBAction func sendAMessage(_ sender: UIButton) {
         let timeStamp = NSDate().timeIntervalSince1970 as Double
-        dbAccess.addAndUpdateAMessage([
-            Constants.MessageFields.fromId : appDelegate.loggedInId as AnyObject,
-            Constants.MessageFields.toId: self.messageToUid as AnyObject,
-            Constants.MessageFields.textMessage: sendingTextField.text as AnyObject,
-            Constants.MessageFields.timeStamp: timeStamp
-        ])
-        sendingTextField.text = ""
-    }
-    
-    func prepareMessageBubble(_ messageText: String, incoming: Bool = false) {
-        let label =  UILabel()
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 14)
-        if incoming {
-            label.textColor = .black
+        var value = [String: Any]()
+        if self.messageImageUrlStr == nil || self.messageImageUrlStr.isEmpty {
+            value = [
+                Constants.MessageFields.fromId : appDelegate.loggedInId as AnyObject,
+                Constants.MessageFields.toId: self.messageToUid as AnyObject,
+                Constants.MessageFields.textMessage: sendingTextField.text as AnyObject,
+                Constants.MessageFields.timeStamp: timeStamp
+            ]
         } else {
-            label.textColor = .white
+            value = [
+                Constants.MessageFields.fromId : appDelegate.loggedInId as AnyObject,
+                Constants.MessageFields.toId: self.messageToUid as AnyObject,
+                Constants.MessageFields.photoURL: self.messageImageUrlStr as AnyObject,
+                Constants.MessageFields.timeStamp: timeStamp
+            ]
         }
-        label.text = messageText
-        
-        let constraintRect = CGSize(width: 0.66 * view.frame.width,
-                                    height: .greatestFiniteMagnitude)
-        let boundingBox = label.text?.boundingRect(with: constraintRect,
-                                            options: .usesLineFragmentOrigin,
-                                            attributes: [.font: label.font],
-                                            context: nil)
-        label.frame.size = CGSize(width: ceil((boundingBox?.width)!),
-                                  height: ceil((boundingBox?.height)!))
-        
-        self.bubbleView = BubbleView.init(incoming)
-        self.messageTextLabel = label
-        
-    }
-    
-    var isIncoming = false
-    var currentMessage: Message?
-    func prepareImageMessageBubble(_ message: Message, incoming: Bool = false) {
-        isIncoming = incoming
-        currentMessage = message
-        let imageView = UIImageView()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.prepareBubble(notification:)),
-                                               name: .LoadImage,
-                                               object: nil)
-        imageView.loadImageUsingCacheWithUrlString(urlString: message.msgImageUrl!, memberImage: false)
-    }
-    
-    @objc func prepareBubble(notification: NSNotification) {
-        let imageView = notification.object as! UIImageView
-        let constraintRect = CGSize(width: 0.66 * view.frame.width,
-                                    height: (0.66 * view.frame.width) * ((imageView.image?.size.height)!/(imageView.image?.size.width)!))
-        let startPoint = CGPoint(x: 0, y: 0)
-        let boundingBox = CGRect(origin: startPoint, size: constraintRect)
-        imageView.frame.size = CGSize(width: ceil((boundingBox.width)),
-                                      height: ceil(boundingBox.height))
-        self.bubbleView = BubbleView.init((currentMessage?.isReceived)!)
-        isIncoming = false
-        self.messageImageView = imageView
-        self.messageImageView.contentMode = .scaleAspectFit
-        if self.messageImages == nil {
-            self.messageImages = [UIImageView]()
-        }
-        self.messageImages.append(self.messageImageView)
-
-        self.continueBubblePrep(currentMessage!, values: ["URL": currentMessage?.msgImageUrl as Any,"toId": currentMessage?.toId as Any])
-
+        dbAccess.addAndUpdateAMessage(value)
+        sendingTextField.text = ""
+        self.messageImageUrlStr = ""
     }
     
     @IBAction func addAnImage(_ sender: UIButton) {
-    }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.sendImageMessage(notification:)),
+                                               name: .NewChatMessageImage,
+                                               object: nil)
+        SwiftSpinner.show("Connecting to image picker...")
+        SwiftSpinner.sharedInstance.backgroundColor = .clear
+        print(" handleSelectMessageImageView")
+        let picker = UIImagePickerController()
+        picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
 
-    func shouldThisMessageBeDisplayed(_ message: Message, toId: String) -> [String: Any] {
-        var url: String!
-        if message.toId == toId {
-            for member in appDelegate.allTheUsers! {
-                if member.uid == message.fromId {
-                    url = member.profileImageUrl
-                    if member.uid == appDelegate.loggedInId {
-                        message.isReceived = false
-                    } else {
-                        message.isReceived = true
-                    }
-                    if !self.messageShouldBeVisible(message.timeStamp!, chatMode: (self.selectedClassForChat != nil)) {
-                        return ["displayTheMessage": false]
-                    }
-                    return ["displayTheMessage": true, "theMessage": message, "URL": url]
-                }
-            }
-        }
-        return ["displayTheMessage": false]
-    }
-    
-    func messageShouldBeVisible(_ timeStamp:NSNumber, chatMode: Bool = true ) -> Bool {
-        var theDuration:Int;
-        let timeStampDate = Date(timeIntervalSince1970: timeStamp.doubleValue)
-        let classChat = chatMode
-        if classChat {
-            theDuration = 3//standardDefaults.integer(forKey: "Class Chat Message Period")
-        } else {
-            theDuration = 7//standardDefaults.integer(forKey: "One-on-one Chat Message Period")
-        }
-        if theDuration == -1 {
-            return true
-        }
-        let dateOfVisibility = Calendar.current.date(byAdding: .day, value: theDuration, to: timeStampDate)
-        let today = NSDate()
-        if today.compare(dateOfVisibility!) == ComparisonResult.orderedAscending {
-            //Do what you want
-            return true
-        }
-        return false;
-    }
-    
-    func observeMessages() {
-        Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message(dictionary: dictionary, fromDatabase: true)
-                if message.fromId == appDelegate.loggedInId {
-                    message.isReceived = false
-                } else {
-                    message.isReceived = true
-                }
-                var toId: String?
-                if self.theObjectMember != nil {
-                    toId = self.theObjectMember.uid
-                } else {
-                    toId = self.selectedClassForChat.uid
-                }
-                var values = self.shouldThisMessageBeDisplayed(message, toId: toId!)
-                values["toId"] = toId
-                if ((values["displayTheMessage"] as! Bool) == false)  {
-                    return
-                }
-                let theMessage = values["theMessage"] as! Message
-                if theMessage.isImageMsg {
-                    self.prepareImageMessageBubble(message)
-                } else {
-                    self.prepareMessageBubble(message.textMessage!, incoming: message.isReceived)
-                    self.continueBubblePrep(theMessage, values: values)
-
-                }
-            }
+        picker.delegate = self
+        picker.allowsEditing = true
+        self.dontShowClassAlert = true
+        present(picker, animated: true, completion: {
+            SwiftSpinner.hide()
         })
     }
     
-    func continueBubblePrep(_ message: Message, values: [String : Any]) {
-        let url = values["URL"] as! String
-        let toId = values["toId"] as! String
-        var thisMessage: Message?
+    @objc func sendImageMessage(notification: NSNotification) {
+        let userInfo = notification.userInfo
+        NotificationCenter.default.removeObserver(self, name: .NewChatMessageImage, object: nil)
+//        self.dismiss(animated: true, completion: nil)
+        self.messageImageUrlStr = userInfo!["url"] as! String
         
-        if message.isImageMsg {
-            let bubbleSize = CGSize(width: self.messageImageView.frame.width + 28,
-                                    height: self.messageImageView.frame.height + 16)
-            self.bubbleView.frame.size = bubbleSize
-            thisMessage = Message(dictionary: [
-                "bubble": self.bubbleView,
-                "bubbleSize": bubbleSize as AnyObject,
-                Constants.MessageFields.fromId : message.fromId! as AnyObject,
-                Constants.MessageFields.toId : toId as AnyObject,
-                Constants.MessageFields.photoURL: message.msgImageUrl as AnyObject,
-                Constants.MessageFields.photoImageView : self.messageImageView as AnyObject,
-                Constants.MessageFields.isReceived: message.isReceived as AnyObject,
-                Constants.MessageFields.imageURL: message.imageUrl as AnyObject,
-                "imageWidth": 30 as AnyObject,
-                "imageHeight": 30 as AnyObject,
-                Constants.MessageFields.timeStamp: message.timeStamp as AnyObject
-                ])
-        } else {
-            let bubbleSize = CGSize(width: self.messageTextLabel.frame.width + 21,
-                                    height: self.messageTextLabel.frame.height + 8)
-            self.bubbleView.frame.size = bubbleSize
-            
-            thisMessage = Message(dictionary: [
-                "bubble": self.bubbleView,
-                "bubbleSize": bubbleSize as AnyObject,
-                Constants.MessageFields.fromId : message.fromId! as AnyObject,
-                Constants.MessageFields.toId : toId as AnyObject,
-                Constants.MessageFields.textMessage: message.textMessage as AnyObject,
-                Constants.MessageFields.textLabel: self.messageTextLabel as UILabel,
-                Constants.MessageFields.isReceived: message.isReceived as AnyObject,
-                Constants.MessageFields.imageURL: url as AnyObject,
-                "imageWidth": 30 as AnyObject,
-                "imageHeight": 30 as AnyObject,
-                Constants.MessageFields.timeStamp: message.timeStamp as AnyObject
-                ])
-        }
-        if self.theObjectMember != nil {
-            self.observeMemberMessage(thisMessage!)
-        } else {
-            self.observeGroupMessage(thisMessage!)
-        }
+        self.sendAMessage(self.newMessageSendButton)
     }
     
-    func observeGroupMessage(_ message: Message) {
-        if message.toId == self.selectedClassForChat.uid {
-            message.bubble = self.bubbleView
-            if !self.messages.contains(message) {
-                self.messages.append(message)
-            }
-            redisplayTableViewDataSorted()
-        }
-    }
-    
-    func sortMessagesByDate() {
-        self.messages = self.messages.sorted { ($1.timeStamp as! Double) < ($0.timeStamp as! Double) }
-
-    }
-    
-    func observeMemberMessage(_ message: Message) {
-        if message.fromId == theObjectMember.uid ||
-            message.toId == theObjectMember.uid {
-            message.bubble = self.bubbleView
-            self.messages.append(message)
-            redisplayTableViewDataSorted()
-        }
-    }
-    
-    // MARK: UITableViewDelegate
+    // MARK: - UITableViewDelegate
     
     func numberOfSections(in tableView: UITableView) -> Int {
+        print("numberOfSections")
         return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.messages.count
+        return chatMessages.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return (self.messages[indexPath.row].bubble!).frame.size.height + CGFloat(38)
+        let message = self.chatMessages[indexPath.row]
+        var image: UIImage!
+        var max = tableView.frame.size.width * 0.55
+        if message.messageType == .imageMessageType {
+            if let URL = URL(string: message.pictureUrl!),
+                let data = try? Data(contentsOf: URL) {
+                image = UIImage(data: data)
+                if (image?.size.width)! < max {
+                    max = (image?.size.width)!
+                }
+            }
+        }
+        var size = CGSize(width: max, height: max)
+
+        if message.authorType == .authorTypeSelf {
+            if message.messageType == .textMessageType {
+                size = (message.textMessage?.boundingRect(
+                    with: CGSize(width: tableView.frame.size.width * 0.55,
+                                 height: CGFloat.greatestFiniteMagnitude),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: UIFont.systemFont(ofSize: 14.0)],
+                    context:nil).size)!
+            }
+        } else {
+            if message.messageType == .textMessageType {
+                size = (message.textMessage?.boundingRect(
+                    with: CGSize(width: tableView.frame.size.width * 0.55,
+                                 height: CGFloat.greatestFiniteMagnitude),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: UIFont.systemFont(ofSize: 14.0)],
+                    context:nil).size)!
+            }
+        }
+
+        if message.messageType == .imageMessageType {
+            let imageHeight = size.width * (image.size.height / image.size.width)
+            if message.authorType == .authorTypeOther {
+                return imageHeight + AuthorImageSize + BubbleHeightOffset
+            }
+            return imageHeight + BubbleHeightOffset
+        }
+        
+        if message.authorType == .authorTypeOther {
+            return size.height + AuthorImageSize + BubbleHeightOffset
+        }
+        return size.height + BubbleHeightOffset
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let reuseIdentifier = Constants.CellIdentifiers.ChatMessage
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        for view in cell.contentView.subviews{
-            view.removeFromSuperview()
-        }
-        configureCell(cell: cell, forRowAt: indexPath)
-        return cell
-    }
-    
-    func configureCell(cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let thisMessage = self.messages[indexPath.row]
-        let thisBubble = thisMessage.bubble
-        var position: CGRect?
-        if thisMessage.isAReceivedMsg() {
-            position = CGRect(x: 38, //cell.frame.size.width - ((thisBubble?.frame.size.width)! + 38),
-                              y: 8,
-                              width: (thisBubble?.frame.size.width)!,
-                              height: (thisBubble?.frame.size.height)!)
+        let thisMessage = chatMessages[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.BubbleCell, for: indexPath) as! BubbleTableViewCell
+        if thisMessage.messageType == .textMessageType {
+            cell.messageType = .textMessageType
+            cell.msgTextLabel?.text = thisMessage.textMessage
         } else {
-            position = CGRect(x:cell.frame.size.width - ((thisBubble?.frame.size.width)! + 8),
-                   y: 8,
-                   width: (thisBubble?.frame.size.width)!,
-                   height: (thisBubble?.frame.size.height)!)
-        }
-        thisBubble?.frame = position!
-        cell.contentView.addSubview(thisMessage.bubble!)
-
-        if thisMessage.isImageMsg {
-            thisMessage.msgImageView?.center = thisBubble!.center
-            thisMessage.bubble?.backgroundColor = UIColor.clear
-            cell.contentView.addSubview(thisMessage.msgImageView!)
-        } else {
-            thisMessage.textLabel?.center = thisBubble!.center
-            thisMessage.bubble?.backgroundColor = UIColor.clear
-            cell.contentView.addSubview(thisMessage.textLabel!)
+            cell.messageType = .imageMessageType
         }
         
-        let imageView = UIImageView()
-        if thisMessage.isReceived {
-            print("fromId: \(thisMessage.fromId ?? "") - URL: \(thisMessage.imageUrl ?? "")")
-            imageView.loadImageUsingCacheWithUrlString(urlString: thisMessage.imageUrl!)
-            imageView.frame = CGRect(x: 8, y: thisBubble!.frame.size.height, width: 30, height: 30 )
-            imageView.layer.cornerRadius = imageView.frame.height/2
-            imageView.clipsToBounds = true
-            cell.contentView.addSubview(imageView)
-        }
-        addMessageDate(cell, msg: thisMessage, bubble: thisBubble as! ChatViewController.BubbleView)
-    }
-    
-    func addMessageDate(_ cell: UITableViewCell, msg: Message, bubble: UIView) {
-        var dateLabel: UILabel!
-        if msg.isAReceivedMsg() {
-            dateLabel = UILabel(frame: CGRect(x: 38, y: bubble.frame.size.height + 8, width: bubble.frame.size.width, height: 21))
-        } else {
-            dateLabel = UILabel(frame: CGRect(x: cell.frame.size.width - (bubble.frame.size.width + 8), y: bubble.frame.size.height + 8, width: bubble.frame.size.width, height: 21))
-        }
+        cell.authorType = thisMessage.authorType!
+        cell.indexPath = indexPath
+        cell.dataSource = self
+        cell.delegate = self
         
-        dateLabel.textAlignment = .center
-        dateLabel.font = UIFont(name: "TrebuchetMS-italic", size: 12)
-        dateLabel.textColor = .lightGray
+        if thisMessage.messageType == .textMessageType {
+            cell.msgTextLabel?.font = UIFont.systemFont(ofSize: 14.0);
+        } else {
+            cell.messageImageUrl = thisMessage.pictureUrl
+        }
+        if thisMessage.authorType == .authorTypeOther {
+            cell.userImageUrl = thisMessage.imageUrl
+        }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E MMM d, HH:mm"
         dateFormatter.timeZone = NSTimeZone.local
-        let myTimeInterval = TimeInterval(truncating: msg.timeStamp!)
+        let myTimeInterval = TimeInterval(truncating: thisMessage.timeStamp!)
+        let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
+        cell.timeStamp = dateFormatter.string(from:time as Date )
+        
+        cell.prepare()
+
+        cells.append(cell)
+        
+        return cell
+    }
+    
+    func configureSentMsgCell(cell: UITableViewCell, message: Message) {
+        print("configureSentMsgCell")
+//        let bubble = cell.viewWithTag(100) as! UIImageView
+        let dateLabel = cell.viewWithTag(125) as! UILabel
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "E MMM d, HH:mm"
+        dateFormatter.timeZone = NSTimeZone.local
+        let myTimeInterval = TimeInterval(truncating: message.timeStamp!)
         let time = NSDate(timeIntervalSince1970: TimeInterval(myTimeInterval))
         dateLabel.text = dateFormatter.string(from:time as Date )
-        cell.contentView.addSubview(dateLabel)
     }
+    
     
     @objc func chatClassSelected(notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: .ChatClassSelected, object: nil)
@@ -497,7 +449,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     func adjustTheTableView(_ makeSmaller: Bool = true) { // to show the member images
         var currentHeight = self.theTableView.frame.size.height
         let currentWidth = self.theTableView.frame.size.width
-        var currentY = self.theTableView.frame.origin.y
+        var currentY = self.classMembership.frame.origin.y
         let heightSizeAdjustment = self.classMembership.frame.size.height
         if makeSmaller {
             currentY += heightSizeAdjustment
@@ -508,65 +460,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         self.theTableView.frame = CGRect(x: 0, y: currentY, width: currentWidth, height: currentHeight)
     }
-
-    class BubbleView: UIView {
-        
-        var isIncoming = false
-        
-        var incomingColor = UIColor(white: 0.9, alpha: 1)
-        var outgoingColor = UIColor(red: 74/255, green: 179/255, blue: 150/255, alpha: 1)
-        
-        required init?(coder aDecoder: NSCoder) {
-            super.init(coder: aDecoder)
-        }
-        
-        init(_ incoming: Bool) {
-            super.init(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
-            isIncoming = incoming
-        }
-        
-        override func draw(_ rect: CGRect) {
-            let width = rect.width
-            let height = rect.height
-            
-            let bezierPath = UIBezierPath()
-            
-            if isIncoming {
-                bezierPath.move(to: CGPoint(x: 22, y: height))
-                bezierPath.addLine(to: CGPoint(x: width - 17, y: height))
-                bezierPath.addCurve(to: CGPoint(x: width, y: height - 17), controlPoint1: CGPoint(x: width - 7.61, y: height), controlPoint2: CGPoint(x: width, y: height - 7.61))
-                bezierPath.addLine(to: CGPoint(x: width, y: 17))
-                bezierPath.addCurve(to: CGPoint(x: width - 17, y: 0), controlPoint1: CGPoint(x: width, y: 7.61), controlPoint2: CGPoint(x: width - 7.61, y: 0))
-                bezierPath.addLine(to: CGPoint(x: 21, y: 0))
-                bezierPath.addCurve(to: CGPoint(x: 4, y: 17), controlPoint1: CGPoint(x: 11.61, y: 0), controlPoint2: CGPoint(x: 4, y: 7.61))
-                bezierPath.addLine(to: CGPoint(x: 4, y: height - 11))
-                bezierPath.addCurve(to: CGPoint(x: 0, y: height), controlPoint1: CGPoint(x: 4, y: height - 1), controlPoint2: CGPoint(x: 0, y: height))
-                bezierPath.addLine(to: CGPoint(x: -0.05, y: height - 0.01))
-                bezierPath.addCurve(to: CGPoint(x: 11.04, y: height - 4.04), controlPoint1: CGPoint(x: 4.07, y: height + 0.43), controlPoint2: CGPoint(x: 8.16, y: height - 1.06))
-                bezierPath.addCurve(to: CGPoint(x: 22, y: height), controlPoint1: CGPoint(x: 16, y: height), controlPoint2: CGPoint(x: 19, y: height))
-                
-                incomingColor.setFill()
-                
-            } else {
-                bezierPath.move(to: CGPoint(x: width - 22, y: height))
-                bezierPath.addLine(to: CGPoint(x: 17, y: height))
-                bezierPath.addCurve(to: CGPoint(x: 0, y: height - 17), controlPoint1: CGPoint(x: 7.61, y: height), controlPoint2: CGPoint(x: 0, y: height - 7.61))
-                bezierPath.addLine(to: CGPoint(x: 0, y: 17))
-                bezierPath.addCurve(to: CGPoint(x: 17, y: 0), controlPoint1: CGPoint(x: 0, y: 7.61), controlPoint2: CGPoint(x: 7.61, y: 0))
-                bezierPath.addLine(to: CGPoint(x: width - 21, y: 0))
-                bezierPath.addCurve(to: CGPoint(x: width - 4, y: 17), controlPoint1: CGPoint(x: width - 11.61, y: 0), controlPoint2: CGPoint(x: width - 4, y: 7.61))
-                bezierPath.addLine(to: CGPoint(x: width - 4, y: height - 11))
-                bezierPath.addCurve(to: CGPoint(x: width, y: height), controlPoint1: CGPoint(x: width - 4, y: height - 1), controlPoint2: CGPoint(x: width, y: height))
-                bezierPath.addLine(to: CGPoint(x: width + 0.05, y: height - 0.01))
-                bezierPath.addCurve(to: CGPoint(x: width - 11.04, y: height - 4.04), controlPoint1: CGPoint(x: width - 4.07, y: height + 0.43), controlPoint2: CGPoint(x: width - 8.16, y: height - 1.06))
-                bezierPath.addCurve(to: CGPoint(x: width - 22, y: height), controlPoint1: CGPoint(x: width - 16, y: height), controlPoint2: CGPoint(x: width - 19, y: height))
-                
-                outgoingColor.setFill()
-            }
-            bezierPath.close()
-            bezierPath.fill()
-        }
-    }
     
     // MARK: - Navigation
     
@@ -575,7 +468,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
      */
     @IBAction func cancelBackToChatViewController(_ segue: UIStoryboardSegue) {
         self.selectedClass = ""
-        self.selectedClassForChat = nil
+//        self.selectedClassForChat = nil
         self.chatName.text = ""
         self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.navigationItem.rightBarButtonItem?.title = "Select A Class"
@@ -601,7 +494,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.Segues.ShowClassAlert {
             // clear the existing table
-            self.messages = [Message]()
             self.theTableView.reloadData()
             
             let nav = segue.destination as! UINavigationController

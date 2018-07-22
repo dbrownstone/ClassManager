@@ -48,8 +48,10 @@ extension UIImageView {
         // first check cache for image
         if let cachedImage = imageCache.object(forKey: urlString as AnyObject) {
             self.image = cachedImage as? UIImage
-            if  !memberImage {
+            if  memberImage {
                 NotificationCenter.default.post(name: .LoadImage, object: self)
+            } else {
+                NotificationCenter.default.post(name: .LoadMessageImage, object: self)
             }
             return
         }
@@ -65,8 +67,10 @@ extension UIImageView {
                 if let downloadedImage = UIImage(data: data!) {
                     imageCache.setObject(downloadedImage, forKey: urlString as AnyObject)
                     self.image = downloadedImage
-                    if  !memberImage {
-                        NotificationCenter.default.post(name: .LoadImage, object: self)
+                    if  memberImage {
+                        NotificationCenter.default.post(name: .LoadImage, object: self, userInfo: ["image": downloadedImage as Any, "URL": urlString as Any])
+                    } else {
+                        NotificationCenter.default.post(name: .LoadMessageImage, object: self, userInfo: ["image": downloadedImage as Any, "URL": urlString as Any])
                     }
                 } else {
                     print("downloadedImage = nil")
@@ -75,6 +79,29 @@ extension UIImageView {
         }).resume()
     }
 }
+
+extension UIFont {
+    var bold: UIFont {
+        return with(traits: .traitBold)
+    } // bold
+    
+    var italic: UIFont {
+        return with(traits: .traitItalic)
+    } // italic
+    
+    var boldItalic: UIFont {
+        return with(traits: [.traitBold, .traitItalic])
+    } // boldItalic
+    
+    
+    func with(traits: UIFontDescriptorSymbolicTraits) -> UIFont {
+        guard let descriptor = self.fontDescriptor.withSymbolicTraits(traits) else {
+            return self
+        } // guard
+        
+        return UIFont(descriptor: descriptor, size: 0)
+    } // with(traits:)
+} // extension
 
 extension UIViewController {
     class func displaySpinner(onView : UIView) -> UIView {
@@ -101,10 +128,7 @@ extension UIViewController {
 
 extension UIFont {
     func sizeOfString (string: String, constrainedToWidth width: Double) -> CGSize {
-        return NSString(string: string).boundingRect(with: CGSize(width: width, height: .greatestFiniteMagnitude),
-                                                     options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                     attributes: [NSAttributedStringKey.font: self],
-                                                     context: nil).size
+        return NSString(string: string).boundingRect(with: CGSize(width: width, height: .greatestFiniteMagnitude), options: NSStringDrawingOptions.usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: self], context: nil).size
     }
 }
 
@@ -141,4 +165,10 @@ extension Notification.Name {
         rawValue: "ClassRemoved")
     static let LoadImage = Notification.Name(
         rawValue: "LoadImage")
+    static let LoadMessageImage = Notification.Name(
+        rawValue: "LoadMessageImage")
+    static let NewChatMessageImage = Notification.Name(
+        rawValue: "NewChatMessageImage")
+    static let ResetTableView = Notification.Name(
+        rawValue: "ResetTableView")
 }

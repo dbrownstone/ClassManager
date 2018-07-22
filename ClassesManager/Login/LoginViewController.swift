@@ -77,7 +77,11 @@ class LoginViewController: UIViewController {
         self.thisMember = notification.userInfo?["user"] as? User
         self.emailTextField.text = self.thisMember?.email
         let profileImageUrl = self.thisMember?.profileImageUrl
-        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl!)
+        if let URL = URL(string: profileImageUrl!), let data = try? Data(contentsOf: URL) {
+            let image = UIImage(data: data)
+            self.profileImageView.image = image
+        }
+//        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl!)
         self.currentUserId = self.thisMember?.uid
         appDelegate.loggedInId = self.currentUserId!
         appDelegate.thisMember = self.thisMember
@@ -112,7 +116,7 @@ class LoginViewController: UIViewController {
                 if self.email == self.thisMember?.email {
                     if self.authorized! {
                         self.profileImageUrl = self.thisMember?.profileImageUrl
-                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: self.profileImageUrl!)
+//                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: self.profileImageUrl!)
                         self.loggingIn = true
                         standardDefaults.set(self.thisMember?.uid, forKey:Constants.StdDefaultKeys.CurrentLoggedInId)
                         standardDefaults.set(self.thisMember?.email, forKey:Constants.StdDefaultKeys.LoggedInEmail)
@@ -189,8 +193,8 @@ class LoginViewController: UIViewController {
             if (self.thisMember?.profileImageUrl?.isEmpty)! {
                 self.showAlert("Please select an image first.", theTitle: "Warning")
             } else {
-                self.profileImageView.loadImageUsingCacheWithUrlString(
-                    urlString: (self.thisMember?.profileImageUrl)!)
+//                self.profileImageView.loadImageUsingCacheWithUrlString(
+//                    urlString: (self.thisMember?.profileImageUrl)!)
             }
         } else {
             self.prepareToRegister()
@@ -322,8 +326,11 @@ extension LoginViewController: UITextFieldDelegate {
             } else {
                 self.thisMember = response as? User
                 if (self.thisMember?.authorized)! {
-                    if !(thisMember?.profileImageUrl?.isEmpty)! {
-                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: (thisMember?.profileImageUrl!)!)
+                    //                    if !(thisMember?.profileImageUrl?.isEmpty)! {
+                    if let URL = URL(string: (thisMember?.profileImageUrl)!), let data = try? Data(contentsOf: URL) {
+                        let image = UIImage(data: data)
+                        self.profileImageView.image = image
+                        //                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: (thisMember?.profileImageUrl!)!)
                     }
                 } else {
                     self.prepareToRegister()

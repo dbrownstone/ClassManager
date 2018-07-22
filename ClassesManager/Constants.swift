@@ -52,6 +52,7 @@ struct Constants {
     
     struct StorageChildKeys {
         static let ProfileImages = "profile_images"
+        static let MessageImages = "message_images"
     }
     
     struct ClassFields {
@@ -61,6 +62,7 @@ struct Constants {
         static let teacher = "teacher"
         static let teacherUid = "teacherUid"
         static let members = "members"
+        static let messages = "messages"
     }
     
     struct UserFields {
@@ -86,11 +88,14 @@ struct Constants {
     
     struct CellIdentifiers {
         static let addMessage = "addMessage"
-        static let ChatMessage = "chatMessage"
+        static let ChatMessageReceived = "chatMessageReceived"
+        static let ChatMessageSent = "chatMessageSent"
         static let Member = "member"
         static let ReturnToClasses = "returnToClasses"
         static let SelectedUser = "selectedUser"
         static let MemberImage = "memberImage"
+        static let BubbleCell = "Bubble Cell"
+        static let ResetCell = "Reset Cell"
     }
     
     struct ButtonTitles {

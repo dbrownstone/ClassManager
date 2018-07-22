@@ -25,15 +25,17 @@ class SelectClassAlertViewController: UIViewController, UIPickerViewDelegate, UI
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.pickerView.delegate = self
-        self.pickerView.dataSource = self
-        self.pickerView.selectRow(0, inComponent: 0, animated: true)
         self.selectedClassForChat = self.classes[0]
         self.selectedClass = selectedClassForChat.name
         self.chatName.text = selectedClass
         allUsers = appDelegate.allTheUsers!
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

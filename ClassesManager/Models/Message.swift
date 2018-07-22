@@ -14,31 +14,34 @@ class Message: NSObject {
     var toId:String?
     var textMessage: String?
     var timeStamp:NSNumber?
-    var bubble: UIView?
-    var bubbleSize: CGSize?
-    var isReceived = false
-    var textLabel: UILabel?
-    var msgImageUrl: String?
-    var msgImageView: UIImageView?
+    var authorType: AuthorType?
+    var messageType: MessageType?
     
     var imageUrl: String?
+    var profileImage = UIImage()
     var imageWidth: NSNumber?
     var imageHeight: NSNumber?
     
     var videoUrl: String?
-    
-    var isImageMsg = false
+    var pictureUrl: String?
+    var pictureImage = UIImage()
     
     init(dictionary: [String: AnyObject], fromDatabase: Bool = false) {
         super.init()
         
         fromId = dictionary["fromId"] as? String
+        if fromId == appDelegate.loggedInId {
+            authorType = .authorTypeSelf
+        } else {
+            authorType = .authorTypeOther
+        }
         toId = dictionary["toId"] as? String
         if dictionary["text"] != nil {
             textMessage = dictionary["text"] as? String
+            messageType = .textMessageType
         } else {
-            msgImageUrl = dictionary["photoURL"] as? String
-            isImageMsg = true
+            pictureUrl = dictionary["photoURL"] as? String
+            messageType = .imageMessageType
         }
         imageUrl = dictionary["imageURL"] as? String
         timeStamp = dictionary["timeStamp"] as? NSNumber
@@ -46,19 +49,19 @@ class Message: NSObject {
         
 //        videoUrl = dictionary["videoUrl"]  as? String
 
-        if !fromDatabase {
-            if dictionary["textLabel"] != nil {
-                textLabel = dictionary["textLabel"] as? UILabel
-            } else {
-                msgImageView = dictionary["photoImageView"] as? UIImageView
-            }
-            imageUrl = dictionary["imageURL"] as? String
-            imageWidth = dictionary["imageWidth"] as? NSNumber
-            imageHeight = dictionary["imageHeight"] as? NSNumber
-            isReceived = (dictionary["isReceived"] as? Bool)!
-            bubble = dictionary["bubble"] as? UIView
-            bubbleSize = dictionary["bubbleSize"] as? CGSize
-        }
+//        if !fromDatabase {
+//            if dictionary["textLabel"] != nil {
+//                textLabel = dictionary["textLabel"] as? UILabel
+//            } else {
+//                msgImageView = dictionary["photoImageView"] as? UIImageView
+//            }
+//            imageUrl = dictionary["imageURL"] as? String
+//            imageWidth = dictionary["imageWidth"] as? NSNumber
+//            imageHeight = dictionary["imageHeight"] as? NSNumber
+//            isReceived = (dictionary["isReceived"] as? Bool)!
+//            bubble = dictionary["bubble"] as? UIView
+//            bubbleSize = dictionary["bubbleSize"] as? CGSize
+//        }
     }
     
     init(snapshot: DataSnapshot) {
@@ -67,11 +70,12 @@ class Message: NSObject {
         toId = snapshotValue[Constants.MessageFields.toId] as? String
         textMessage = snapshotValue[Constants.MessageFields.textMessage] as? String
         timeStamp = snapshotValue[Constants.MessageFields.timeStamp] as? NSNumber
+        pictureUrl = snapshotValue[Constants.MessageFields.imageURL] as? String
     }
     
-    func isAReceivedMsg() -> Bool {
-        return isReceived
-    }
+//    func isAReceivedMsg() -> Bool {
+//        return isReceived
+//    }
     
     func toAnyObject() -> Any {
         return [
@@ -79,7 +83,7 @@ class Message: NSObject {
             Constants.MessageFields.toId: toId as Any,
             Constants.MessageFields.textMessage: textMessage as Any,
             Constants.MessageFields.timeStamp: timeStamp as Any,
-            Constants.MessageFields.imageURL: imageUrl as Any
+            Constants.MessageFields.imageURL: pictureUrl as Any
         ]
     }
 }

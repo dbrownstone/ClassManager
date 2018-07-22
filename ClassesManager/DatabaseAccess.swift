@@ -143,9 +143,9 @@ class DatabaseAccess: NSObject {
                 let message = Message(snapshot: aMsg as! DataSnapshot)
                 if message.toId == id || message.fromId == id {
                     if message.toId == id {
-                        message.isReceived = false
+                        message.authorType = .authorTypeSelf
                     } else {
-                        message.isReceived = true
+                        message.authorType = .authorTypeOther
                     }
                     messages.append(message)
                 }
@@ -201,6 +201,12 @@ class DatabaseAccess: NSObject {
         let ref = Database.database().reference(fromURL: databaseURL)
         let classRef = ref.child(Constants.DatabaseChildKeys.Classes).child(thisClass.uid)
         classRef.updateChildValues([Constants.ClassFields.members: thisClass.members])
+    }
+    
+    public func updateClassMessagesDatabase(_ thisClass: Class) {
+        let ref = Database.database().reference(fromURL: Constants.Database.URL)
+        let classRef = ref.child(Constants.DatabaseChildKeys.Classes).child(thisClass.uid)
+        classRef.updateChildValues([Constants.ClassFields.messages: thisClass.chatMessages])
     }
     
     public func addAClassToTheClassDatabase(_ thisNewClass: Class) {
