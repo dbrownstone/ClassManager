@@ -19,11 +19,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var camera: UIButton!
     @IBOutlet weak var classMembership: UICollectionView!
     
-//    @IBOutlet weak var SentBubbleWidthConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var SentBubbleHeightConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var ReceivedBubbleWidthConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var ReceivedBubbleHeightConstraint: NSLayoutConstraint!
-    
     var classes: [Class]!
     var groupChat = true
     var chatClassMembers: [User]!
@@ -193,20 +188,19 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.performSegue(withIdentifier: Constants.Segues.ShowClassAlert, sender: nil)
         } else {
             self.selectedClassForChat = classes[0]
-            self.adjustTheTableView()
+            self.selectedClass = self.selectedClassForChat.name
+//            self.adjustTheTableView()
             self.chatClassMembers = [User]()
             for aMember in appDelegate.allTheUsers! {
                 if aMember.uid == selectedClassForChat.teacherUid {
-                    self.classTeacher = aMember
-                    self.chatClassMembers.append(self.classTeacher)
-                    break
+                    self.classTeacher = aMember                    
                 } else {
                     if self.selectedClassForChat.members.contains(aMember.uid!) {
                         self.chatClassMembers.append(aMember)
                     }
                 }
             }
-
+            self.chatClassMembers.append(self.classTeacher)
             self.classMembership.reloadData()
         }
     }
@@ -218,7 +212,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         if selectedClassForChat == nil {
             makeSmaller = false
         }
-        self.adjustTheTableView(makeSmaller)
+//        self.adjustTheTableView(makeSmaller)
     }
     
     func addBackButton() {
@@ -484,7 +478,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.selectedClassForChat = controller.selectedClassForChat
         self.chatClassMembers = controller.chatClassMembers
         self.classMembership.reloadData()
-//        NotificationCenter.default.post(name: .ChatClassSelected, object: nil)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.navigationItem.rightBarButtonItem?.title = ""
         self.classSelectionCancelled = false
@@ -535,15 +528,17 @@ extension ChatViewController: UICollectionViewDataSource {
         }
         cell.name.text = theName
         
-        if (self.chatClassMembers[indexPath.row].profileImageUrl?.isEmpty)! {
-            cell.image.image = UIImage(named: "unknown_image")
-            cell.image.layer.cornerRadius = cell.image.frame.height/2
-            cell.image.clipsToBounds = true
-            return cell
+        if let URL = URL(string: self.chatClassMembers[indexPath.row].profileImageUrl!),
+            let data = try? Data(contentsOf: URL) {
+            let image = UIImage(data: data)
+            cell.imageView.image = image
+        } else {
+            cell.imageView.image = UIImage(named: "unknown_image")
         }
-        cell.image.loadImageUsingCacheWithUrlString(urlString: self.chatClassMembers[indexPath.row].profileImageUrl!)
-        cell.image.layer.cornerRadius = cell.image.frame.height/2
-        cell.image.clipsToBounds = true
+    
+        cell.imageView.layer.cornerRadius = cell.imageView.frame.height/2
+        cell.imageView.clipsToBounds = true
+        
         return cell
     }
     

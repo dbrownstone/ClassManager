@@ -10,8 +10,6 @@ import UIKit
 
 class MemberCollectionCell: UICollectionViewCell {
     
-    @IBOutlet weak var image: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var name: UILabel!
-    
-    
 }
