@@ -40,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                    name: .AllUsers,
                                                    object: nil)
             dbAccess.getAllUsers()
+            
         } else {
             internetIsAvailable = false
             print("No! internet is not available. Please Try again later.")
@@ -56,13 +57,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-//        URLCache.shared.removeAllCachedResponses()
+        URLCache.shared.removeAllCachedResponses()
         
         let appDefaults = [Constants.StdDefaultKeys.CurrentLoggedInId : "" as Any,
                            Constants.StdDefaultKeys.LoggedInEmail : "" as Any,
                            Constants.StdDefaultKeys.Sisma: "" as Any]
         standardDefaults.register(defaults: appDefaults)
         
+//        repeat {
+//            sleep(1)
+//        } while allTheUsers == nil
+//        print("all users found")
         return true
     }
     

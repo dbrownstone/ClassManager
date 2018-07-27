@@ -71,6 +71,15 @@ class BubbleTableViewCell: UITableViewCell {
     }
     
     func prepare() {
+//        let allCurrentImageViews = contentView.allSubViewsOf(type: UIImageView.self)
+        for v in contentView.subviews {
+            v.removeFromSuperview()
+        }
+//        let allCurrentLabels = contentView.allSubViewsOf(type: UILabel.self)
+//        for v in allCurrentLabels {
+//            v.removeFromSuperview()
+//        }
+        
         selectionStyle = .none
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         bubbleView = UIImageView.init(frame: CGRect.zero)
@@ -83,8 +92,8 @@ class BubbleTableViewCell: UITableViewCell {
             self.msgTextLabel?.lineBreakMode = .byWordWrapping
             self.msgTextLabel?.textColor = .black
             self.msgTextLabel?.font.withSize(14.0)
-            self.addSubview(self.msgTextLabel!)
-            self.bringSubview(toFront: self.msgTextLabel!)
+            contentView.addSubview(self.msgTextLabel!)
+            contentView.bringSubview(toFront: self.msgTextLabel!)
             self.msgTextLabel?.center = (self.bubbleView?.center)!
         } else {
             if let URL = URL(string: messageImageUrl!),
@@ -96,8 +105,8 @@ class BubbleTableViewCell: UITableViewCell {
                 self.messageImage?.frame = CGRect(x: 0, y: 5, width: max, height: max/((image?.size.width)! / (image?.size.height)!))
                 self.messageImage?.contentMode = .scaleAspectFit
                 self.messageImage?.image = image
-                self.addSubview(self.messageImage!)
-                self.bringSubview(toFront: self.messageImage!)
+                contentView.addSubview(self.messageImage!)
+                contentView.bringSubview(toFront: self.messageImage!)
                 self.messageImage?.center = (self.bubbleView?.center)!
             }
         }
@@ -133,7 +142,7 @@ class BubbleTableViewCell: UITableViewCell {
 //        let minInset: CGFloat = ((dataSource as AnyObject).minInsetForCell!(cell: self, atIndexPath: self.indexPath!))
         var size: CGSize?
         if (self.userImage != nil) {
-            self.addSubview(self.userImage!)
+            contentView.addSubview(self.userImage!)
             if self.messageType == .textMessageType {
                 size = self.msgTextLabel?.text?.boundingRect(
                     with: CGSize(width: (self.superview?.frame.size.width)! * 0.6, height: CGFloat.greatestFiniteMagnitude),
@@ -154,7 +163,6 @@ class BubbleTableViewCell: UITableViewCell {
                 size = self.messageImage?.frame.size
             }
         }
-//        var theDate = UILabel(frame: CGRect.zero)
         
         if type == .authorTypeSelf { // logged in - no sender image
             self.bubbleView?.frame = CGRect(x: self.frame.size.width - ((size?.width)! + BubbleWidthOffset), y: 8.0, width: (size?.width)! + BubbleWidthOffset, height: (size?.height)! + 25.0)
@@ -167,24 +175,25 @@ class BubbleTableViewCell: UITableViewCell {
             }
             self.bubbleView?.autoresizingMask = .flexibleLeftMargin
             self.bubbleView?.transform = .identity;
-            let dateWidth = ((self.bubbleView?.frame.size.width)! - 16.0) / 2
+            let dateWidth = (self.bubbleView?.frame.size.width)!
             let theDate = UILabel(frame: CGRect(
-                    x: self.frame.size.width - ((self.bubbleView?.frame.size.width)! + dateWidth + 8.0),
-                    y: (self.bubbleView?.frame.origin.y)! - 18.0 + (self.bubbleView?.frame.size.height)! / 2,
+                x: (self.bubbleView?.frame.origin.x)!,
+                    y: (self.bubbleView?.frame.origin.y)! + (self.bubbleView?.frame.size.height)!,
                     width: dateWidth,
-                    height: 36
+                    height: 21
                 )
             )
             theDate.font = UIFont.systemFont(ofSize: 12.0);
             theDate.font = theDate.font.italic
             theDate.text = timeStamp
             theDate.textColor = .gray
+            theDate.textAlignment = .center
             theDate.numberOfLines = 0
             theDate.lineBreakMode = .byWordWrapping
-            self.addSubview(theDate)
+            contentView.addSubview(theDate)
         } else {
-            self.bubbleView?.frame = CGRect(x: 35.0, y: 8.0, width: (size?.width)! + BubbleWidthOffset, height: (size?.height)! + 30.0)
-            self.userImage?.frame = CGRect(x: 5.0, y: (self.bubbleView?.frame.size.height)!, width: 30, height: 30)
+            self.bubbleView?.frame = CGRect(x: 35.0, y: 8.0, width: (size?.width)! + BubbleWidthOffset, height: (size?.height)! + AuthorImageSize)
+            self.userImage?.frame = CGRect(x: 5.0, y: (self.bubbleView?.frame.size.height)!, width: AuthorImageSize, height: AuthorImageSize)
             self.userImage?.layer.cornerRadius = (self.userImage?.frame.height)!/2
             self.userImage?.clipsToBounds = true
             if self.messageType == .textMessageType {
@@ -197,20 +206,20 @@ class BubbleTableViewCell: UITableViewCell {
             self.bubbleView?.autoresizingMask = .flexibleRightMargin;
             self.bubbleView?.transform = .identity
             self.bubbleView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-            let theDate = UILabel(frame: CGRect(x: (self.bubbleView?.frame.size.width)! + BubbleWidthOffset + 9.0,
-                                                y: (self.bubbleView?.frame.origin.y)! - 18.0 + (self.bubbleView?.frame.size.height)! / 2,
-                                                width: (self.bubbleView?.frame.size.width)! - 16.0,
-                                                height: 36
+            let theDate = UILabel(frame: CGRect(x: (self.bubbleView?.frame.origin.x)!,
+                                                y: (self.bubbleView?.frame.origin.y)! + (self.bubbleView?.frame.size.height)!,
+                                                width: (self.bubbleView?.frame.size.width)!,
+                                                height: 21
                 )
             )
-            
             theDate.font = UIFont.systemFont(ofSize: 12.0);
             theDate.font = theDate.font.italic
             theDate.text = timeStamp
             theDate.textColor = .gray
+            theDate.textAlignment = .center
             theDate.lineBreakMode = .byWordWrapping
             theDate.numberOfLines = 2
-            self.addSubview(theDate)
+            contentView.addSubview(theDate)
         }
     }
     

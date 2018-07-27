@@ -28,6 +28,14 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     var selectedClassForChat: Class!
     {
         didSet {
+            if selectedClassForChat == nil && !(selectedClass.isEmpty) {
+                for aClass in self.classes {
+                    if aClass.name == self.selectedClass {
+                        selectedClassForChat = aClass
+                        break
+                    }
+                }
+            }
             navigationItem.title = selectedClassForChat.name + " Chat"
             
             groupChat = true
@@ -229,22 +237,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.theObjectMember = nil
-        self.title = "Chat"
-        self.selectedClassForChat = nil
-        self.chatName.text = ""
-        var indexPaths = [IndexPath]()
-        if self.chatClassMembers != nil && self.chatClassMembers.count > 0 {
-            //class teacher is not included in classMembership
-            for row in 0..<(self.chatClassMembers.count - 1) {
-                indexPaths.append(IndexPath(row: row, section: 0))
-            }
-            classMembership.deleteItems(at: indexPaths)
-            self.chatClassMembers = [User]()
-        }
-        
         NotificationCenter.default.removeObserver(self, name: .UserStateChanged, object: nil)
-        self.loggedInUsers = [User]()
     }
     
     func defaultStyle() {
@@ -274,6 +267,9 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBAction func sendAMessage(_ sender: UIButton) {
         let timeStamp = NSDate().timeIntervalSince1970 as Double
         var value = [String: Any]()
+        if self.messageToUid == nil {
+            self.messageToUid = selectedClassForChat.uid
+        }
         if self.messageImageUrlStr == nil || self.messageImageUrlStr.isEmpty {
             value = [
                 Constants.MessageFields.fromId : appDelegate.loggedInId as AnyObject,
@@ -373,13 +369,13 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             if message.authorType == .authorTypeOther {
                 return imageHeight + AuthorImageSize + BubbleHeightOffset
             }
-            return imageHeight + BubbleHeightOffset
+            return imageHeight + BubbleHeightOffset + AuthorImageSize
         }
         
         if message.authorType == .authorTypeOther {
             return size.height + AuthorImageSize + BubbleHeightOffset
         }
-        return size.height + BubbleHeightOffset
+        return size.height + BubbleHeightOffset + AuthorImageSize
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -402,9 +398,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         } else {
             cell.messageImageUrl = thisMessage.pictureUrl
         }
+        
         if thisMessage.authorType == .authorTypeOther {
             cell.userImageUrl = thisMessage.imageUrl
         }
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E MMM d, HH:mm"
         dateFormatter.timeZone = NSTimeZone.local

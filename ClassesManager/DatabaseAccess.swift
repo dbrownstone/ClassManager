@@ -54,12 +54,15 @@ class DatabaseAccess: NSObject {
      gets all current users
      */
     public func getAllUsers() {
+        print(" getAllUsers...")
         let userRef = Database.database().reference().child(Constants.DatabaseChildKeys.Users)
         userRef.observe(.value, with: { snapshot in
+            print("observing...")
             self.allUsers = [User]()
             for aUser in snapshot.children {
                 self.allUsers.append(User(snapshot: aUser as! DataSnapshot))
             }
+            print("Observing completed")
             NotificationCenter.default.post(name: .AllUsers, object: self, userInfo: ["users": self.allUsers])
         })
     }
