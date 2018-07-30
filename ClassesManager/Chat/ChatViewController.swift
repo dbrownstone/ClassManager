@@ -321,7 +321,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - UITableViewDelegate
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("numberOfSections")
         return 1
     }
     

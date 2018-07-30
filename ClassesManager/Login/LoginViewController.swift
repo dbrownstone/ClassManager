@@ -81,7 +81,6 @@ class LoginViewController: UIViewController {
             let image = UIImage(data: data)
             self.profileImageView.image = image
         }
-//        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: profileImageUrl!)
         self.currentUserId = self.thisMember?.uid
         appDelegate.loggedInId = self.currentUserId!
         appDelegate.thisMember = self.thisMember
@@ -116,7 +115,6 @@ class LoginViewController: UIViewController {
                 if self.email == self.thisMember?.email {
                     if self.authorized! {
                         self.profileImageUrl = self.thisMember?.profileImageUrl
-//                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: self.profileImageUrl!)
                         self.loggingIn = true
                         standardDefaults.set(self.thisMember?.uid, forKey:Constants.StdDefaultKeys.CurrentLoggedInId)
                         standardDefaults.set(self.thisMember?.email, forKey:Constants.StdDefaultKeys.LoggedInEmail)
@@ -192,10 +190,7 @@ class LoginViewController: UIViewController {
         if (thisMember?.authorized)! {
             if (self.thisMember?.profileImageUrl?.isEmpty)! {
                 self.showAlert("Please select an image first.", theTitle: "Warning")
-            } else {
-//                self.profileImageView.loadImageUsingCacheWithUrlString(
-//                    urlString: (self.thisMember?.profileImageUrl)!)
-            }
+            } 
         } else {
             self.prepareToRegister()
         }

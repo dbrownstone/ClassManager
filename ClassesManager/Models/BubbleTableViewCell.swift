@@ -141,7 +141,7 @@ class BubbleTableViewCell: UITableViewCell {
         self.setImageForBubbleColor(bubbleColor!)
 //        let minInset: CGFloat = ((dataSource as AnyObject).minInsetForCell!(cell: self, atIndexPath: self.indexPath!))
         var size: CGSize?
-        if (self.userImage != nil) {
+        if (self.userImage != nil && type == .authorTypeOther) {
             contentView.addSubview(self.userImage!)
             if self.messageType == .textMessageType {
                 size = self.msgTextLabel?.text?.boundingRect(

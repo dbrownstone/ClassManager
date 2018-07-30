@@ -53,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                   name: .AllUsers,
                                                   object: nil)
         allTheUsers = notification.userInfo!["users"] as? [User]
+        print("all users found")
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
@@ -63,11 +64,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                            Constants.StdDefaultKeys.LoggedInEmail : "" as Any,
                            Constants.StdDefaultKeys.Sisma: "" as Any]
         standardDefaults.register(defaults: appDefaults)
-        
-//        repeat {
-//            sleep(1)
-//        } while allTheUsers == nil
-//        print("all users found")
         return true
     }
     
