@@ -296,6 +296,7 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
             self.profileImageView.image = UIImage(named: "unknown_image")
+            self.passwordTextField.text = ""
         }
         return true
     }
@@ -321,12 +322,11 @@ extension LoginViewController: UITextFieldDelegate {
             } else {
                 self.thisMember = response as? User
                 if (self.thisMember?.authorized)! {
-                    //                    if !(thisMember?.profileImageUrl?.isEmpty)! {
                     if let URL = URL(string: (thisMember?.profileImageUrl)!), let data = try? Data(contentsOf: URL) {
                         let image = UIImage(data: data)
                         self.profileImageView.image = image
-                        //                        self.profileImageView.loadImageUsingCacheWithUrlString(urlString: (thisMember?.profileImageUrl!)!)
                     }
+                    self.passwordTextField.becomeFirstResponder()
                 } else {
                     self.prepareToRegister()
                 }

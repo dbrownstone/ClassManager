@@ -112,7 +112,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             let name = theObjectMember.name
             self.title = "Chat: \(name!)"
             self.messageToUid = theObjectMember.uid
-//            observeMessages()
+            observeMessagesForIndividualChat()
         } else if selectedClassForChat != nil {
             observeMessagesInSelectedGroup()
             let name = selectedClassForChat.name
@@ -138,12 +138,16 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         redisplayTableViewDataSorted()
     }
 
-    var messageImagesSaved: Int?
-    var numberOfMessagesWithImage: Int?
+    func appendSortAndDispatchMessage(_ message: Message) {
+        self.chatMessages.append(message)
+        self.sortMessagesByDate()
+        DispatchQueue.main.async(execute: {
+            self.theTableView?.reloadData()
+        })
+    }
+    
     func observeMessagesInSelectedGroup() {
         self.chatMessages = [Message]()
-        self.messageImagesSaved = 0
-        numberOfMessagesWithImage = 0
         Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
@@ -159,11 +163,27 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                             break
                         }
                     }
-                    self.chatMessages.append(message)
-                    self.sortMessagesByDate()
-                    DispatchQueue.main.async(execute: {
-                        self.theTableView?.reloadData()
-                   })
+                    self.appendSortAndDispatchMessage(message)
+                }
+            }
+        })
+    }
+    
+    func observeMessagesForIndividualChat() {
+        self.chatMessages = [Message]()
+        Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary, fromDatabase: true)
+                if (message.toId == self.theObjectMember.uid && message.fromId == appDelegate.loggedInId) ||
+                    (message.toId == appDelegate.loggedInId && message.fromId == self.theObjectMember.uid) {
+                    if message.fromId == appDelegate.loggedInId {
+                        message.authorType = .authorTypeSelf
+                    } else {
+                        message.authorType = .authorTypeOther
+                        message.imageUrl = self.theObjectMember.profileImageUrl
+                        
+                    }
+                    self.appendSortAndDispatchMessage(message)
                 }
             }
         })
