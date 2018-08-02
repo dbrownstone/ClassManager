@@ -151,7 +151,7 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textField>
                                 </subviews>
-                                <color key="backgroundColor" red="0.74509803921568629" green="0.74461532963646782" blue="0.74509803921568629" alpha="0.54355736301369861" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.83539496530000001" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="2uZ-ya-LiX" firstAttribute="bottom" secondItem="aTT-zP-hPN" secondAttribute="bottomMargin" constant="3.5" id="Cvq-Iz-Nvl"/>
                                     <constraint firstAttribute="trailing" secondItem="hdU-T9-ykO" secondAttribute="trailing" constant="8" id="Ohj-IT-vsg"/>

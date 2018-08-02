@@ -472,8 +472,10 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func adjustTheTableView(_ makeSmaller: Bool = true) { // to show the member images
         let mainScreenHeight = self.view.screenHeight
-        let navBarHeight = (self.navigationController?.navigationBar.intrinsicContentSize.height)!
-            + UIApplication.shared.statusBarFrame.height
+//        let navBarHeight = (self.navigationController?.navigationBar.intrinsicContentSize.height)!
+//            + UIApplication.shared.statusBarFrame.height
+        let navBarHeight = UIApplication.shared.statusBarFrame.height +
+            self.navigationController!.navigationBar.frame.height
         let tabBarHeight = self.tabBarController?.tabBar.frame.height
         
         var currentY: CGFloat!
@@ -484,7 +486,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             currentHeight = mainScreenHeight - navBarHeight - self.classMembership.frame.size.height - self.msgBar.frame.size.height - tabBarHeight!
         } else {
             currentY = navBarHeight//self.originalTableViewOriginY
-            currentHeight = mainScreenHeight - navBarHeight - self.msgBar.frame.size.height
+            currentHeight = mainScreenHeight - navBarHeight - self.msgBar.frame.size.height - 5.0
         }
         self.theTableView.frame.origin.y = currentY
         self.theTableView.frame.size.height = currentHeight
