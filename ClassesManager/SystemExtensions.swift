@@ -36,6 +36,24 @@ extension UIView {
         getSubview(view: self)
         return all
     }
+    
+    var screenWidth: CGFloat {
+        if UIInterfaceOrientationIsPortrait(screenOrientation) {
+            return UIScreen.main.bounds.size.width
+        } else {
+            return UIScreen.main.bounds.size.height
+        }
+    }
+    var screenHeight: CGFloat {
+        if UIInterfaceOrientationIsPortrait(screenOrientation) {
+            return UIScreen.main.bounds.size.height
+        } else {
+            return UIScreen.main.bounds.size.width
+        }
+    }
+    var screenOrientation: UIInterfaceOrientation {
+        return UIApplication.shared.statusBarOrientation
+    }
 }
 
 extension UIColor {

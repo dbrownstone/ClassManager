@@ -59,6 +59,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var theTableView: UITableView!
     @IBOutlet weak var navBar: UINavigationBar!
+    @IBOutlet weak var msgBar: UIView!
+    
+    var originalTableViewHeight: CGFloat!
+    var originalTableViewWidth: CGFloat!
+    var originalTableViewOriginY: CGFloat!
     
     var fromMember: User!
     var loggedInUsers: [User]!
@@ -70,6 +75,10 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.theTableView.dataSource = self
         self.classMembership.delegate = self as? UICollectionViewDelegate
         self.classMembership.dataSource = self
+        
+        self.originalTableViewOriginY = UIApplication.shared.statusBarFrame.size.height +
+            (self.navigationController?.navigationBar.frame.height ?? 0.0)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardUp), name:.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
@@ -98,12 +107,14 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         if dontShowClassAlert {
             redisplayTableViewDataSorted()
             dontShowClassAlert = false
-            for aClass in classes {
-                if aClass.uid == self.messageToUid {
-                    self.selectedClassForChat = aClass
-                    break
+            if theObjectMember == nil {
+                for aClass in classes {
+                    if aClass.uid == self.messageToUid {
+                        self.selectedClassForChat = aClass
+                        break
+                    }
                 }
-            }    
+            }
             return
         }
         self.title = "Chat"
@@ -138,10 +149,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         redisplayTableViewDataSorted()
     }
 
-    func appendSortAndDispatchMessage(_ message: Message) {
+    func appendSortAndDispatchMessage(_ message: Message, makeSmaller: Bool) {
         self.chatMessages.append(message)
         self.sortMessagesByDate()
         DispatchQueue.main.async(execute: {
+            self.adjustTheTableView(makeSmaller)
             self.theTableView?.reloadData()
         })
     }
@@ -163,7 +175,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                             break
                         }
                     }
-                    self.appendSortAndDispatchMessage(message)
+                    self.appendSortAndDispatchMessage(message, makeSmaller: true)
                 }
             }
         })
@@ -183,7 +195,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                         message.imageUrl = self.theObjectMember.profileImageUrl
                         
                     }
-                    self.appendSortAndDispatchMessage(message)
+                    self.appendSortAndDispatchMessage(message, makeSmaller: false)
                 }
             }
         })
@@ -240,7 +252,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         if selectedClassForChat == nil {
             makeSmaller = false
         }
-//        self.adjustTheTableView(makeSmaller)
+        self.adjustTheTableView(makeSmaller)
     }
     
     func addBackButton() {
@@ -258,6 +270,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: .UserStateChanged, object: nil)
+//        self.theTableView.frame = CGRect(x: 0, y: 64.0, width: self.originalTableViewWidth!, height: self.originalTableViewHeight!)
     }
     
     func defaultStyle() {
@@ -458,18 +471,23 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func adjustTheTableView(_ makeSmaller: Bool = true) { // to show the member images
-        var currentHeight = self.theTableView.frame.size.height
-        let currentWidth = self.theTableView.frame.size.width
-        var currentY = self.classMembership.frame.origin.y
-        let heightSizeAdjustment = self.classMembership.frame.size.height
+        let mainScreenHeight = self.view.screenHeight
+        let navBarHeight = (self.navigationController?.navigationBar.intrinsicContentSize.height)!
+            + UIApplication.shared.statusBarFrame.height
+        let tabBarHeight = self.tabBarController?.tabBar.frame.height
+        
+        var currentY: CGFloat!
+        var currentHeight: CGFloat!
+        
         if makeSmaller {
-            currentY += heightSizeAdjustment
-            currentHeight -= heightSizeAdjustment
+            currentY = navBarHeight +  self.classMembership.frame.size.height//self.originalTableViewOriginY +  self.classMembership.frame.size.height
+            currentHeight = mainScreenHeight - navBarHeight - self.classMembership.frame.size.height - self.msgBar.frame.size.height - tabBarHeight!
         } else {
-            currentY -= heightSizeAdjustment
-            currentHeight += heightSizeAdjustment
+            currentY = navBarHeight//self.originalTableViewOriginY
+            currentHeight = mainScreenHeight - navBarHeight - self.msgBar.frame.size.height
         }
-        self.theTableView.frame = CGRect(x: 0, y: currentY, width: currentWidth, height: currentHeight)
+        self.theTableView.frame.origin.y = currentY
+        self.theTableView.frame.size.height = currentHeight
     }
     
     // MARK: - Navigation
