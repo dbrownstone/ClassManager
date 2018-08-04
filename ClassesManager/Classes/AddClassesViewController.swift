@@ -71,11 +71,35 @@ class AddClassesViewController: UIViewController,
         return self.existingClasses.count + 1
     }
     
-    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 50.0
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let dataView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 50))
+        let theName = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 25))
+        let theLocation = UILabel(frame: CGRect(x: 0, y: 25, width: 150, height: 20))
+        let theInstruction = UILabel(frame: CGRect(x: 0, y: 0, width: 150, height: 50))
+
+        theName.textColor = .black
+        theName.textAlignment = .center
+        theName.font  = UIFont.systemFont(ofSize: 17.0)
+        dataView.addSubview(theName)
+        theLocation.textColor = .gray
+        theLocation.textAlignment = .center
+        theLocation.font  = UIFont.italicSystemFont(ofSize: 15.0)
+        dataView.addSubview(theLocation)
         if row == self.existingClasses.count {
-            return "Create a New Class"
+            theInstruction.textColor = .black
+            theInstruction.textAlignment = .center
+            theInstruction.font  = UIFont.systemFont(ofSize: 17.0)
+            theInstruction.text = "Create a New Class"
+            dataView.addSubview(theInstruction)
+            return dataView
         }
-        return self.existingClasses[row].name
+        theName.text = self.existingClasses[row].name
+        theLocation.text = self.existingClasses[row].location
+        return dataView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {

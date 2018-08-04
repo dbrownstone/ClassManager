@@ -29,6 +29,8 @@ class SelectClassAlertViewController: UIViewController, UIPickerViewDelegate, UI
         self.selectedClass = selectedClassForChat.name
         self.chatName.text = selectedClass
         allUsers = appDelegate.allTheUsers!
+        self.pickerView.delegate = self
+        self.pickerView.dataSource = self
     }
 
     override func viewWillAppear(_ animated: Bool) {

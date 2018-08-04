@@ -138,6 +138,8 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                     break
                 }
             }
+            let changeClassBtn = UIBarButtonItem(title: Constants.ButtonTitles.changeClassTitle, style: .plain, target: self, action: #selector(changeSelectedClass(notification:)))
+            navigationItem.rightBarButtonItem = changeClassBtn
             
         } else if !self.classSelectionCancelled {
             NotificationCenter.default.addObserver(self,
@@ -149,6 +151,10 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         redisplayTableViewDataSorted()
     }
 
+    @objc func changeSelectedClass(notification: NSNotification) {
+        self.performSegue(withIdentifier: Constants.Segues.ShowClassAlert, sender: nil)
+    }
+    
     func appendSortAndDispatchMessage(_ message: Message, makeSmaller: Bool) {
         self.chatMessages.append(message)
         self.sortMessagesByDate()
@@ -160,7 +166,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func observeMessagesInSelectedGroup() {
         self.chatMessages = [Message]()
-        Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
+        Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
                 if message.toId == self.selectedClassForChat.uid  {//&& self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
@@ -183,7 +189,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func observeMessagesForIndividualChat() {
         self.chatMessages = [Message]()
-        Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
+        Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
                 if (message.toId == self.theObjectMember.uid && message.fromId == appDelegate.loggedInId) ||
@@ -264,7 +270,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     @IBAction func backAction(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "returnFromChat", sender: nil)
+        self.performSegue(withIdentifier: Constants.Segues.ReturnFromChat, sender: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -450,8 +456,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func configureSentMsgCell(cell: UITableViewCell, message: Message) {
-        print("configureSentMsgCell")
-//        let bubble = cell.viewWithTag(100) as! UIImageView
         let dateLabel = cell.viewWithTag(125) as! UILabel
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "E MMM d, HH:mm"
@@ -472,8 +476,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func adjustTheTableView(_ makeSmaller: Bool = true) { // to show the member images
         let mainScreenHeight = self.view.screenHeight
-//        let navBarHeight = (self.navigationController?.navigationBar.intrinsicContentSize.height)!
-//            + UIApplication.shared.statusBarFrame.height
         let navBarHeight = UIApplication.shared.statusBarFrame.height +
             self.navigationController!.navigationBar.frame.height
         let tabBarHeight = self.tabBarController?.tabBar.frame.height
@@ -482,11 +484,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         var currentHeight: CGFloat!
         
         if makeSmaller {
-            currentY = navBarHeight +  self.classMembership.frame.size.height//self.originalTableViewOriginY +  self.classMembership.frame.size.height
+            currentY = navBarHeight +  self.classMembership.frame.size.height
             currentHeight = mainScreenHeight - navBarHeight - self.classMembership.frame.size.height - self.msgBar.frame.size.height - tabBarHeight!
         } else {
-            currentY = navBarHeight//self.originalTableViewOriginY
-            currentHeight = mainScreenHeight - navBarHeight - self.msgBar.frame.size.height - 5.0
+            currentY = navBarHeight
+            currentHeight = mainScreenHeight - navBarHeight - self.msgBar.frame.size.height
         }
         self.theTableView.frame.origin.y = currentY
         self.theTableView.frame.size.height = currentHeight
@@ -502,7 +504,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
 //        self.selectedClassForChat = nil
         self.chatName.text = ""
         self.navigationItem.rightBarButtonItem?.isEnabled = true
-        self.navigationItem.rightBarButtonItem?.title = "Select A Class"
+        self.navigationItem.rightBarButtonItem?.title = Constants.ButtonTitles.SelectAClassTitle
         self.classSelectionCancelled = true
         self.view.setNeedsLayout()
     }

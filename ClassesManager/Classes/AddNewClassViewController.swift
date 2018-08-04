@@ -21,6 +21,7 @@ class AddNewClassViewController: UITableViewController, UIToolbarDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+                
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         nameOfTeacher.text = appDelegate.loginName
         teacherUid = appDelegate.loggedInId

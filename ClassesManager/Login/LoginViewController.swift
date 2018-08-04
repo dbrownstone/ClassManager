@@ -80,6 +80,7 @@ class LoginViewController: UIViewController {
         if let URL = URL(string: profileImageUrl!), let data = try? Data(contentsOf: URL) {
             let image = UIImage(data: data)
             self.profileImageView.image = image
+            self.profileImageView.frame.origin.y = 64.0
         }
         self.currentUserId = self.thisMember?.uid
         appDelegate.loggedInId = self.currentUserId!
@@ -208,27 +209,26 @@ class LoginViewController: UIViewController {
         self.observing = false
         self.loginBtn.setTitle(Constants.ButtonTitles.registerTitle, for: .normal)
         self.fullNameTextField.isHidden = false
-        self.fullNameTextField.text = self.thisMember?.name
+        self.fullNameTextField.text = ""//self.thisMember?.name
         self.phoneNoTextField.isHidden = false
-        self.phoneNoTextField.text = self.thisMember?.phoneNo
+        self.phoneNoTextField.text = ""//self.thisMember?.phoneNo
         if (self.fullNameTextField.text?.isEmpty)! {
             self.fullNameTextField.becomeFirstResponder()
         } else {
             self.passwordTextField.becomeFirstResponder()
         }
         
+        self.returnToLoginBtn.setTitle(Constants.ButtonTitles.returnToLoginTitle, for: .normal)
         self.returnToLoginBtn.isHidden = false
         self.loggingIn = false
+        self.profileImageView.frame.origin.y = 0
         self.profileImageView.isHidden = false
 //        self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
         
     }
     
     @IBAction func returnToLoginScreen(_ sender: UIButton) {
-        if sender.titleLabel?.text == Constants.ButtonTitles.changePasswordTitle {
-            self.changePassword()
-            return
-        }
+        self.profileImageView.frame.origin.y = 64.0
         self.loginBtn.setTitle(Constants.ButtonTitles.loginTitle, for: .normal)
         self.fullNameTextField.isHidden = true
         self.phoneNoTextField.isHidden = true
@@ -296,6 +296,7 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
             self.profileImageView.image = UIImage(named: "unknown_image")
+            self.profileImageView.frame.origin.y = 64.0
             self.passwordTextField.text = ""
         }
         return true
@@ -325,6 +326,7 @@ extension LoginViewController: UITextFieldDelegate {
                     if let URL = URL(string: (thisMember?.profileImageUrl)!), let data = try? Data(contentsOf: URL) {
                         let image = UIImage(data: data)
                         self.profileImageView.image = image
+                        self.profileImageView.frame.origin.y = 64.0
                     }
                     self.passwordTextField.becomeFirstResponder()
                 } else {

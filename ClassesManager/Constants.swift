@@ -34,6 +34,7 @@ struct Constants {
         static let GoToChat = "goToChat"
         static let ShowClassAlert = "showClassAlert"
         static let ReturnToChatView = "returnToChatView"
+        static let ReturnFromChat = "returnFromChat"
         static let CancelAlertView = "cancelAlertView"
         static let IndividualChat = "individualChat"
     }
@@ -103,5 +104,7 @@ struct Constants {
         static let registerTitle = "Register"
         static let returnToLoginTitle = "Return To Login"
         static let changePasswordTitle = "Change Password"
+        static let changeClassTitle = "Class"
+        static let SelectAClassTitle = "Select A Class"
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zdk-SN-W3E">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zdk-SN-W3E">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -270,7 +270,7 @@
                                 <rect key="frame" x="42" y="154" width="235" height="261"/>
                                 <subviews>
                                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unknown_image" translatesAutoresizingMaskIntoConstraints="NO" id="iSb-Ig-zlL">
-                                        <rect key="frame" x="67" y="0.0" width="100" height="100"/>
+                                        <rect key="frame" x="67" y="64" width="100" height="100"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="CEX-ux-PDI"/>
@@ -323,6 +323,7 @@
                                     <constraint firstItem="dSA-T7-aXp" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="AF3-xZ-n6X"/>
                                     <constraint firstItem="dSA-T7-aXp" firstAttribute="top" secondItem="gnc-ea-znp" secondAttribute="bottom" constant="8" id="B48-5x-Frg"/>
                                     <constraint firstAttribute="width" constant="235" id="BnA-6c-dbG"/>
+                                    <constraint firstItem="o1q-Ls-Q5P" firstAttribute="top" secondItem="iSb-Ig-zlL" secondAttribute="bottom" constant="-47" id="Co5-5W-EA2"/>
                                     <constraint firstItem="Xcp-SN-ZwT" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="D6k-Pa-glw"/>
                                     <constraint firstItem="Xcp-SN-ZwT" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="E5S-bP-ei6"/>
                                     <constraint firstAttribute="bottom" secondItem="dSA-T7-aXp" secondAttribute="bottom" id="Efi-kM-bhK"/>
@@ -332,12 +333,11 @@
                                     <constraint firstItem="gnc-ea-znp" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="LXs-2H-KoG"/>
                                     <constraint firstItem="dSA-T7-aXp" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="awI-BM-BuZ"/>
                                     <constraint firstAttribute="trailing" secondItem="Xcp-SN-ZwT" secondAttribute="trailing" id="bD5-VH-Dhd"/>
-                                    <constraint firstItem="iSb-Ig-zlL" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="dPS-8F-mGb"/>
                                     <constraint firstItem="gnc-ea-znp" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="deS-Z8-Vgc"/>
                                     <constraint firstItem="o1q-Ls-Q5P" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="g8D-Yb-yhM"/>
-                                    <constraint firstItem="iSb-Ig-zlL" firstAttribute="top" secondItem="4fR-4D-Drt" secondAttribute="top" id="gt4-uT-zU2"/>
                                     <constraint firstItem="dSA-T7-aXp" firstAttribute="leading" secondItem="4fR-4D-Drt" secondAttribute="leading" id="iPK-T4-RGM"/>
                                     <constraint firstAttribute="height" constant="261" id="qbX-en-sUa"/>
+                                    <constraint firstItem="gnc-ea-znp" firstAttribute="top" secondItem="iSb-Ig-zlL" secondAttribute="bottom" priority="900" constant="29" id="tER-LN-cEK"/>
                                     <constraint firstItem="iSb-Ig-zlL" firstAttribute="centerX" secondItem="4fR-4D-Drt" secondAttribute="centerX" id="tav-36-e2z"/>
                                 </constraints>
                             </view>
