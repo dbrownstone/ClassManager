@@ -141,18 +141,24 @@
                                             </connections>
                                         </barButtonItem>
                                         <view key="titleView" contentMode="scaleToFill" id="rqY-XU-q7N">
-                                            <rect key="frame" x="78" y="2" width="182" height="40"/>
+                                            <rect key="frame" x="160" y="22" width="0.0" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Select classes to add or join" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jJe-1i-24b">
-                                                    <rect key="frame" x="35" y="-1" width="112" height="42"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select one or more classes" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jJe-1i-24b">
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="jJe-1i-24b" firstAttribute="centerY" secondItem="rqY-XU-q7N" secondAttribute="centerY" id="3fb-tl-xzv"/>
+                                                <constraint firstItem="jJe-1i-24b" firstAttribute="centerX" secondItem="rqY-XU-q7N" secondAttribute="centerX" id="Md8-g0-H16"/>
+                                                <constraint firstAttribute="bottom" secondItem="jJe-1i-24b" secondAttribute="bottom" id="Xli-e6-6vv"/>
+                                                <constraint firstItem="jJe-1i-24b" firstAttribute="leading" secondItem="rqY-XU-q7N" secondAttribute="leading" id="ZAE-oI-Vku"/>
+                                                <constraint firstItem="jJe-1i-24b" firstAttribute="top" secondItem="rqY-XU-q7N" secondAttribute="top" id="dQG-x3-w3m"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jJe-1i-24b" secondAttribute="trailing" id="zQi-JH-x1Z"/>
+                                            </constraints>
                                         </view>
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="H0B-fD-w4y">
                                             <connections>

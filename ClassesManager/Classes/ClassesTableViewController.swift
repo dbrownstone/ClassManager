@@ -109,13 +109,9 @@ class ClassesTableViewController: UITableViewController,
             //remove class by teacher only
             let selectedClass = classes[indexPath.row]
             if selectedClass.teacherUid == appDelegate.loggedInId {
-                NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(self.completeClassRemoval(notification:)),
-                                                       name: .ClassRemoved,
-                                                       object: nil)
-                dbAccess.deleteAClass(selectedClass, index: indexPath.row)
+                showApprovalRequestAlert(selectedClass, indexPath: indexPath)
             } else {
-                let alertController = UIAlertController(title: "Class not removed", message: "Class removal only by the class teacher!", preferredStyle: .alert)
+                let alertController = UIAlertController(title: "Class Not Removed", message: "Class may only be removed  by the class teacher!", preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel) { (_) in }
                 alertController.addAction(cancelAction)
                 self.present(alertController, animated: true){ }
@@ -138,6 +134,22 @@ class ClassesTableViewController: UITableViewController,
         textLabel.text = classes[row].name
         let textLabel2 = cell.viewWithTag(11) as! UILabel
         textLabel2.text = "Members: \(classes[row].members.count + 1)"
+    }
+    
+    func showApprovalRequestAlert(_ selectedClass: Class, indexPath: IndexPath) {
+        let message = "Are you sure you want to delete the \(selectedClass.name) Class from the database?"
+        let alertController = UIAlertController(title: "Delete This Class", message: message, preferredStyle: .alert)
+        let approvedAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { (_) in
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(self.completeClassRemoval(notification:)),
+                                                   name: .ClassRemoved,
+                                                   object: nil)
+            dbAccess.deleteAClass(selectedClass, index: indexPath.row)
+        }
+        alertController.addAction(approvedAction)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { (_) in }
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true){ }
     }
     
     @objc func completeClassRemoval(notification: NSNotification) {

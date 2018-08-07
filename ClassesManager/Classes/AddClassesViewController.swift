@@ -27,6 +27,10 @@ class AddClassesViewController: UIViewController,
                                      action: #selector(pickerTapped))
         tap.delegate = self
         self.classPicker.addGestureRecognizer(tap)
+        var frame = self.navigationItem.titleView?.frame
+        frame?.size.width = 105.0
+        frame?.size.height = 44.0
+        self.navigationItem.titleView?.frame = frame!
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,11 +55,13 @@ class AddClassesViewController: UIViewController,
     }
     
     @IBAction func add(_ sender: Any) {
+        for aClass in existingClassesToAdd {
+            dbAccess.updateClassMembersDatabase(aClass)
+        }
         self.dismiss(animated: true, completion: nil)
     }
     
     @objc func returnBack(notification: NSNotification) {
-//        if notification.userInfo
         NotificationCenter.default.removeObserver(self,
                                                   name: .UserDBUpdated,
                                                   object: nil)
@@ -149,13 +155,6 @@ extension AddClassesViewController:UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "selectedClass", for: indexPath)
         
         cell.textLabel?.text = existingClassesToAdd[indexPath.row].name
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.returnBack(notification:)),
-                                               name: .UserDBUpdated,
-                                               object: nil)
-        
-        dbAccess.updateClassMembersDatabase(existingClassesToAdd[indexPath.row])
-        
         return cell
     }
 }
@@ -165,17 +164,8 @@ extension AddClassesViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var thisClass = existingClassesToAdd[indexPath.row]
             self.existingClassesToAdd.remove(at: indexPath.row)
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.returnBack(notification:)),
-                                                   name: .UserDBUpdated,
-                                                   object: nil)
-            let index = thisClass.indexOf(appDelegate.loggedInId)
-            thisClass.members.remove(at: index)
             tableView.deleteRows(at: [indexPath], with: .fade)
-
-            dbAccess.updateClassMembersDatabase(thisClass)
         }
     }
 }

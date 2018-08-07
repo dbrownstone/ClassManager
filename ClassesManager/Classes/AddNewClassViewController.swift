@@ -12,11 +12,11 @@ import Firebase
 class AddNewClassViewController: UITableViewController, UIToolbarDelegate {
     
     @IBOutlet weak var nameOfTeacher: UILabel!
-    var teacherUid: String!
     @IBOutlet weak var className: UITextField!
     @IBOutlet weak var classCity: UITextField!
     @IBOutlet weak var doneBtn: UIBarButtonItem!
     
+    var teacherUid: String!
     var newClasses = [Class]()
     
     override func viewDidLoad() {
@@ -44,7 +44,6 @@ class AddNewClassViewController: UITableViewController, UIToolbarDelegate {
                                                selector: #selector(self.done(notification:)),
                                                name: .ClassDBUpdated,
                                                object: nil)
-//        let dbAccess = DatabaseAccess()
         dbAccess.addAClassToTheClassDatabase(thisNewClass)
     }
     

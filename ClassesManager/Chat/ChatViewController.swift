@@ -125,7 +125,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.messageToUid = theObjectMember.uid
             observeMessagesForIndividualChat()
         } else if selectedClassForChat != nil {
-            observeMessagesInSelectedGroup()
+//            observeMessagesInSelectedGroup()
             let name = selectedClassForChat.name
             self.messageToUid = selectedClassForChat.uid
             self.title = "Chat: \(name)"
