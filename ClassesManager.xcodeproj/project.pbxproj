@@ -34,7 +34,6 @@
 		63B069A02070EF2700DC1D6F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */; };
 		63B069A22070EF4900DC1D6F /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B069A12070EF4900DC1D6F /* AboutViewController.swift */; };
 		63B069B8207130C900DC1D6F /* Classes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069B6207130C900DC1D6F /* Classes.storyboard */; };
-		63B069BE2071339E00DC1D6F /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069BC2071339E00DC1D6F /* Settings.storyboard */; };
 		63B069C1207133B400DC1D6F /* About.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069BF207133B400DC1D6F /* About.storyboard */; };
 		63B069C4207133DC00DC1D6F /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069C2207133DC00DC1D6F /* Chat.storyboard */; };
 		63B895B3207B69BC00177EDC /* AddNewClassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B895B2207B69BC00177EDC /* AddNewClassViewController.swift */; };
@@ -74,7 +73,6 @@
 		63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = ../Settings/SettingsViewController.swift; sourceTree = "<group>"; };
 		63B069A12070EF4900DC1D6F /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		63B069B7207130C900DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Classes.storyboard; sourceTree = "<group>"; };
-		63B069BD2071339E00DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		63B069C0207133B400DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/About.storyboard; sourceTree = "<group>"; };
 		63B069C3207133DC00DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Chat.storyboard; sourceTree = "<group>"; };
 		63B895B2207B69BC00177EDC /* AddNewClassViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewClassViewController.swift; sourceTree = "<group>"; };
@@ -209,7 +207,6 @@
 				63B069912070EE0E00DC1D6F /* Main.storyboard */,
 				63B069B6207130C900DC1D6F /* Classes.storyboard */,
 				63B069C2207133DC00DC1D6F /* Chat.storyboard */,
-				63B069BC2071339E00DC1D6F /* Settings.storyboard */,
 				63B069BF207133B400DC1D6F /* About.storyboard */,
 			);
 			path = Storyboards;
@@ -302,7 +299,6 @@
 				63B069C1207133B400DC1D6F /* About.storyboard in Resources */,
 				63B069932070EE0E00DC1D6F /* Main.storyboard in Resources */,
 				63B069B8207130C900DC1D6F /* Classes.storyboard in Resources */,
-				63B069BE2071339E00DC1D6F /* Settings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,14 +410,6 @@
 				63B069B7207130C900DC1D6F /* Base */,
 			);
 			name = Classes.storyboard;
-			sourceTree = "<group>";
-		};
-		63B069BC2071339E00DC1D6F /* Settings.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				63B069BD2071339E00DC1D6F /* Base */,
-			);
-			name = Settings.storyboard;
 			sourceTree = "<group>";
 		};
 		63B069BF207133B400DC1D6F /* About.storyboard */ = {
