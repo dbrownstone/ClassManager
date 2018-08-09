@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		148F843146CF3638E916E33A /* Pods_ClassesManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE044E51329519AD0BA1FCC8 /* Pods_ClassesManager.framework */; };
+		6326570C211C98E700A917D5 /* SettingsBundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326570B211C98E700A917D5 /* SettingsBundleHelper.swift */; };
+		6326570F211C9ADA00A917D5 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6326570E211C9ADA00A917D5 /* Settings.bundle */; };
 		6328DD93207BE0FC002B5B28 /* AddClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328DD92207BE0FC002B5B28 /* AddClassesViewController.swift */; };
 		6328DD97207C83A5002B5B28 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328DD96207C83A5002B5B28 /* Connectivity.swift */; };
 		6350955120B2C89D00D437B2 /* SelectClassAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */; };
@@ -29,7 +31,7 @@
 		63B069932070EE0E00DC1D6F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069912070EE0E00DC1D6F /* Main.storyboard */; };
 		63B069952070EE1000DC1D6F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B069942070EE1000DC1D6F /* Assets.xcassets */; };
 		63B069982070EE1000DC1D6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069962070EE1000DC1D6F /* LaunchScreen.storyboard */; };
-		63B069A02070EF2700DC1D6F /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B0699F2070EF2700DC1D6F /* SettingsTableViewController.swift */; };
+		63B069A02070EF2700DC1D6F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */; };
 		63B069A22070EF4900DC1D6F /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B069A12070EF4900DC1D6F /* AboutViewController.swift */; };
 		63B069B8207130C900DC1D6F /* Classes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069B6207130C900DC1D6F /* Classes.storyboard */; };
 		63B069BE2071339E00DC1D6F /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069BC2071339E00DC1D6F /* Settings.storyboard */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		39B202DA5003C211B53BBB50 /* Pods-ClassesManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClassesManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-ClassesManager/Pods-ClassesManager.release.xcconfig"; sourceTree = "<group>"; };
+		6326570B211C98E700A917D5 /* SettingsBundleHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsBundleHelper.swift; sourceTree = "<group>"; };
+		6326570E211C9ADA00A917D5 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6328DD92207BE0FC002B5B28 /* AddClassesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassesViewController.swift; sourceTree = "<group>"; };
 		6328DD96207C83A5002B5B28 /* Connectivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassAlertViewController.swift; sourceTree = "<group>"; };
@@ -67,7 +71,7 @@
 		63B069942070EE1000DC1D6F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63B069972070EE1000DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63B069992070EE1000DC1D6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63B0699F2070EF2700DC1D6F /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = ../Settings/SettingsViewController.swift; sourceTree = "<group>"; };
 		63B069A12070EF4900DC1D6F /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		63B069B7207130C900DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Classes.storyboard; sourceTree = "<group>"; };
 		63B069BD2071339E00DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
@@ -138,6 +142,16 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		634469F2211AB6C200545F34 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */,
+				6326570B211C98E700A917D5 /* SettingsBundleHelper.swift */,
+				6326570E211C9ADA00A917D5 /* Settings.bundle */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		6357C5EC2072581D0021B83C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,12 +187,13 @@
 				6328DD96207C83A5002B5B28 /* Connectivity.swift */,
 				63893282208706250009FCE8 /* DatabaseAccess.swift */,
 				6357C5F520737A760021B83C /* SystemExtensions.swift */,
+				6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */,
 				6343DB3620A5F99300D00DB2 /* Login */,
 				6343DB3720A5F9E200D00DB2 /* Models */,
 				6343DB3820A5F9FD00D00DB2 /* Classes */,
 				63E923DA20B4092100E17121 /* Chat */,
-				63B0699F2070EF2700DC1D6F /* SettingsTableViewController.swift */,
 				63B069A12070EF4900DC1D6F /* AboutViewController.swift */,
+				634469F2211AB6C200545F34 /* Settings */,
 				63B069A32070EF5600DC1D6F /* Storyboards */,
 				63B069942070EE1000DC1D6F /* Assets.xcassets */,
 				6357C5EC2072581D0021B83C /* Supporting Files */,
@@ -203,7 +218,6 @@
 		63E923DA20B4092100E17121 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */,
 				6362584A20EBA3C400116258 /* ChatViewController.swift */,
 				63F9239620FDD222002B3F49 /* ChatViewExtensions.swift */,
 			);
@@ -281,6 +295,7 @@
 			files = (
 				63B069C4207133DC00DC1D6F /* Chat.storyboard in Resources */,
 				63B069982070EE1000DC1D6F /* LaunchScreen.storyboard in Resources */,
+				6326570F211C9ADA00A917D5 /* Settings.bundle in Resources */,
 				6357C5E9207253490021B83C /* GoogleService-Info.plist in Resources */,
 				6357C5E220721F400021B83C /* Podfile in Resources */,
 				63B069952070EE1000DC1D6F /* Assets.xcassets in Resources */,
@@ -349,7 +364,7 @@
 			files = (
 				6362584B20EBA3C400116258 /* ChatViewController.swift in Sources */,
 				63B895B3207B69BC00177EDC /* AddNewClassViewController.swift in Sources */,
-				63B069A02070EF2700DC1D6F /* SettingsTableViewController.swift in Sources */,
+				63B069A02070EF2700DC1D6F /* SettingsViewController.swift in Sources */,
 				6357C5F4207375B40021B83C /* Class.swift in Sources */,
 				63EBAC242081D607001D43C2 /* AddMemberViewController.swift in Sources */,
 				6358C9F820A0548200E7B287 /* ChangePasswordViewController.swift in Sources */,
@@ -363,6 +378,7 @@
 				63753E6B20D17FEF00A6E169 /* ListMembersTableViewController.swift in Sources */,
 				6328DD97207C83A5002B5B28 /* Connectivity.swift in Sources */,
 				63B069A22070EF4900DC1D6F /* AboutViewController.swift in Sources */,
+				6326570C211C98E700A917D5 /* SettingsBundleHelper.swift in Sources */,
 				6357C5F020736AFC0021B83C /* LoginViewController+handlers.swift in Sources */,
 				6350955120B2C89D00D437B2 /* SelectClassAlertViewController.swift in Sources */,
 				6328DD93207BE0FC002B5B28 /* AddClassesViewController.swift in Sources */,

@@ -59,16 +59,14 @@ class LoginViewController: UIViewController {
         passwordTextField?.delegate = self
 
         self.email = standardDefaults.string(forKey: Constants.StdDefaultKeys.LoggedInEmail)
-
-        if !(self.email?.isEmpty)! {
-            self.passwordTextField.becomeFirstResponder()
-            NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
-
-            dbAccess.getAUser(self.email!)
-        } else {
+        if email == nil || (email?.isEmpty)! {
             appDelegate.loggedInId = ""
             self.emailTextField.becomeFirstResponder()
             self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
+        } else {
+            self.passwordTextField.becomeFirstResponder()
+            NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
+            dbAccess.getAUser(self.email!)
         }
     }
     

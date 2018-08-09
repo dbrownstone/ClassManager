@@ -577,6 +577,8 @@ extension ChatViewController: UICollectionViewDataSource {
     
         cell.imageView.layer.cornerRadius = cell.imageView.frame.height/2
         cell.imageView.clipsToBounds = true
+        cell.imageView.layer.borderWidth = 3
+        cell.imageView.layer.borderColor = UIColor.white.cgColor
         
         return cell
     }

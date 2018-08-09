@@ -20,6 +20,14 @@ struct Constants {
         static let URL = "https://classesmanager-f908d.firebaseio.com/"
     }
     
+    struct SettingsBundleKeys {
+        static let Reset = "RESET_APP_KEY"
+        static let BuildVersionKey = "build_preference"
+        static let AppVersionKey = "version_preference"
+        static let RedThemeKey = "RedThemeKey"
+        static let WhiteThemeKey = "WhiteThemeKey"
+    }
+    
     struct Segues {
         static let LoggedIn = "loggedin"
         static let ChangePassword = "changePassword"
@@ -42,7 +50,9 @@ struct Constants {
     struct StdDefaultKeys {
         static let CurrentLoggedInId = "currentLoggedInId"
         static let LoggedInEmail = "loggedInEmail"
-        static let Sisma = "azbycxd1e"
+        static let Sisma = "sisma"
+        static let CurrentVersion = "version_number"
+        static let CurrentBuild = "build_number"
     }
     
     struct DatabaseChildKeys {

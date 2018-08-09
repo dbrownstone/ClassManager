@@ -180,6 +180,15 @@ extension UIFont {
     }
 }
 
+extension Bundle {
+    var releaseVersionNumber: String? {
+        return infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+    var buildVersionNumber: String? {
+        return infoDictionary?["CFBundleVersion"] as? String
+    }
+}
+
 extension Notification.Name {
     static let Authorized = Notification.Name(rawValue: "Authorized")
     static let SignIn = Notification.Name(rawValue: "SignIn")
