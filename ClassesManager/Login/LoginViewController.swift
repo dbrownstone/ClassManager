@@ -59,6 +59,7 @@ class LoginViewController: UIViewController {
         passwordTextField?.delegate = self
 
         self.email = standardDefaults.string(forKey: Constants.StdDefaultKeys.LoggedInEmail)
+        self.password = standardDefaults.string(forKey: Constants.StdDefaultKeys.Sisma)
         if email == nil || (email?.isEmpty)! {
             appDelegate.loggedInId = ""
             self.emailTextField.becomeFirstResponder()

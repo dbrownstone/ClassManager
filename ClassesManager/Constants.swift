@@ -53,6 +53,8 @@ struct Constants {
         static let Sisma = "sisma"
         static let CurrentVersion = "version_number"
         static let CurrentBuild = "build_number"
+        static let IndividualChatVisibilityPeriod = "individualChatVisibilityPeriod"
+        static let ClassChatVisibilityPeriod = "classChatVisibilityPeriod"
     }
     
     struct DatabaseChildKeys {

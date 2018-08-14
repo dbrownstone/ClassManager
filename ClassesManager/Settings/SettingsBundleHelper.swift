@@ -26,4 +26,10 @@ class SettingsBundleHelper {
         UserDefaults.standard.set(build, forKey: Constants.StdDefaultKeys.CurrentBuild)
         UserDefaults.standard.set(version, forKey: Constants.StdDefaultKeys.CurrentVersion)
     }
+    
+    // debug only
+    class func initializeTimeSettings() {
+        standardDefaults.set(nil, forKey:Constants.StdDefaultKeys.IndividualChatVisibilityPeriod)
+        standardDefaults.set(nil, forKey:Constants.StdDefaultKeys.ClassChatVisibilityPeriod)
+    }
 }

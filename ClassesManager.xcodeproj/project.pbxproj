@@ -10,6 +10,8 @@
 		148F843146CF3638E916E33A /* Pods_ClassesManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE044E51329519AD0BA1FCC8 /* Pods_ClassesManager.framework */; };
 		6326570C211C98E700A917D5 /* SettingsBundleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6326570B211C98E700A917D5 /* SettingsBundleHelper.swift */; };
 		6326570F211C9ADA00A917D5 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6326570E211C9ADA00A917D5 /* Settings.bundle */; };
+		63265712211DA0BB00A917D5 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63265710211DA0BB00A917D5 /* Settings.storyboard */; };
+		63265714211DBCC400A917D5 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63265713211DBCC300A917D5 /* SettingsTableViewController.swift */; };
 		6328DD93207BE0FC002B5B28 /* AddClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328DD92207BE0FC002B5B28 /* AddClassesViewController.swift */; };
 		6328DD97207C83A5002B5B28 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328DD96207C83A5002B5B28 /* Connectivity.swift */; };
 		6350955120B2C89D00D437B2 /* SelectClassAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */; };
@@ -31,7 +33,6 @@
 		63B069932070EE0E00DC1D6F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069912070EE0E00DC1D6F /* Main.storyboard */; };
 		63B069952070EE1000DC1D6F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63B069942070EE1000DC1D6F /* Assets.xcassets */; };
 		63B069982070EE1000DC1D6F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069962070EE1000DC1D6F /* LaunchScreen.storyboard */; };
-		63B069A02070EF2700DC1D6F /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */; };
 		63B069A22070EF4900DC1D6F /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B069A12070EF4900DC1D6F /* AboutViewController.swift */; };
 		63B069B8207130C900DC1D6F /* Classes.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069B6207130C900DC1D6F /* Classes.storyboard */; };
 		63B069C1207133B400DC1D6F /* About.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63B069BF207133B400DC1D6F /* About.storyboard */; };
@@ -47,6 +48,8 @@
 		39B202DA5003C211B53BBB50 /* Pods-ClassesManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClassesManager.release.xcconfig"; path = "Pods/Target Support Files/Pods-ClassesManager/Pods-ClassesManager.release.xcconfig"; sourceTree = "<group>"; };
 		6326570B211C98E700A917D5 /* SettingsBundleHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsBundleHelper.swift; sourceTree = "<group>"; };
 		6326570E211C9ADA00A917D5 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		63265711211DA0BB00A917D5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
+		63265713211DBCC300A917D5 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		6328DD92207BE0FC002B5B28 /* AddClassesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassesViewController.swift; sourceTree = "<group>"; };
 		6328DD96207C83A5002B5B28 /* Connectivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
 		6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassAlertViewController.swift; sourceTree = "<group>"; };
@@ -70,7 +73,6 @@
 		63B069942070EE1000DC1D6F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63B069972070EE1000DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63B069992070EE1000DC1D6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = ../Settings/SettingsViewController.swift; sourceTree = "<group>"; };
 		63B069A12070EF4900DC1D6F /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		63B069B7207130C900DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Classes.storyboard; sourceTree = "<group>"; };
 		63B069C0207133B400DC1D6F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/About.storyboard; sourceTree = "<group>"; };
@@ -143,7 +145,7 @@
 		634469F2211AB6C200545F34 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				63B0699F2070EF2700DC1D6F /* SettingsViewController.swift */,
+				63265713211DBCC300A917D5 /* SettingsTableViewController.swift */,
 				6326570B211C98E700A917D5 /* SettingsBundleHelper.swift */,
 				6326570E211C9ADA00A917D5 /* Settings.bundle */,
 			);
@@ -208,6 +210,7 @@
 				63B069B6207130C900DC1D6F /* Classes.storyboard */,
 				63B069C2207133DC00DC1D6F /* Chat.storyboard */,
 				63B069BF207133B400DC1D6F /* About.storyboard */,
+				63265710211DA0BB00A917D5 /* Settings.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				63B069C1207133B400DC1D6F /* About.storyboard in Resources */,
 				63B069932070EE0E00DC1D6F /* Main.storyboard in Resources */,
 				63B069B8207130C900DC1D6F /* Classes.storyboard in Resources */,
+				63265712211DA0BB00A917D5 /* Settings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,7 +364,6 @@
 			files = (
 				6362584B20EBA3C400116258 /* ChatViewController.swift in Sources */,
 				63B895B3207B69BC00177EDC /* AddNewClassViewController.swift in Sources */,
-				63B069A02070EF2700DC1D6F /* SettingsViewController.swift in Sources */,
 				6357C5F4207375B40021B83C /* Class.swift in Sources */,
 				63EBAC242081D607001D43C2 /* AddMemberViewController.swift in Sources */,
 				6358C9F820A0548200E7B287 /* ChangePasswordViewController.swift in Sources */,
@@ -369,6 +372,7 @@
 				63FC8F7A20D101F200900979 /* LoginViewController.swift in Sources */,
 				63F9239720FDD223002B3F49 /* ChatViewExtensions.swift in Sources */,
 				63B0698C2070EE0E00DC1D6F /* AppDelegate.swift in Sources */,
+				63265714211DBCC400A917D5 /* SettingsTableViewController.swift in Sources */,
 				6357C5F620737A760021B83C /* SystemExtensions.swift in Sources */,
 				6357C5F220736BA00021B83C /* User.swift in Sources */,
 				63753E6B20D17FEF00A6E169 /* ListMembersTableViewController.swift in Sources */,
@@ -388,6 +392,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		63265710211DA0BB00A917D5 /* Settings.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63265711211DA0BB00A917D5 /* Base */,
+			);
+			name = Settings.storyboard;
+			sourceTree = "<group>";
+		};
 		63B069912070EE0E00DC1D6F /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
