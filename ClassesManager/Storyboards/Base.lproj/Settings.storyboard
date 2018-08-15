@@ -158,8 +158,11 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rTO-ts-0RK">
+                                        <switch opaque="NO" clearsContextBeforeDrawing="NO" tag="80" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rTO-ts-0RK">
                                             <rect key="frame" x="312" y="6" width="49" height="31"/>
+                                            <connections>
+                                                <action selector="setTheLoginMode:" destination="pAs-7C-uLe" eventType="valueChanged" id="a8E-zQ-Kja"/>
+                                            </connections>
                                         </switch>
                                     </subviews>
                                     <constraints>

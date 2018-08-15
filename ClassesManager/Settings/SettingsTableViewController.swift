@@ -19,6 +19,7 @@ enum activeTimes: String {
 class SettingsTableViewController: UITableViewController {
     
     @IBOutlet var activeTimeButtons: [UIButton]!
+    var loginMode: UISwitch!
     
     enum RowHeights: Int {
         case menu_invisible = 40
@@ -69,6 +70,10 @@ class SettingsTableViewController: UITableViewController {
         }
         selectedRow = (sender.indexPath?.row)!
         self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1)], with: .automatic)
+    }
+    
+    @IBAction func setTheLoginMode(_ sender: UISwitch) {
+        standardDefaults.set(sender.isOn, forKey: Constants.StdDefaultKeys.LoginMode)
     }
     
     @objc func displaySelectedTimePeriod(_ sender: CustomButton) {
@@ -204,6 +209,14 @@ class SettingsTableViewController: UITableViewController {
                 titleLbl.text = "Individual"
             } else {
                 titleLbl.text = "Class"
+            }
+        } else {
+            self.loginMode = cell.viewWithTag(80) as! UISwitch
+            
+            if standardDefaults.object(forKey: Constants.StdDefaultKeys.LoginMode) != nil {
+                loginMode.setOn(standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode), animated: true)
+            } else {
+                loginMode.setOn(false, animated: true)
             }
         }
         return cell

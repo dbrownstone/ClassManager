@@ -14,6 +14,7 @@ class SettingsBundleHelper {
             let appDomain: String? = Bundle.main.bundleIdentifier
             UserDefaults.standard.removePersistentDomain(forName: appDomain!)
             // reset userDefaults..
+            initializeSettings()
             // CoreDataDataModel().deleteAllData()
             // delete all other user data here..
         }
@@ -28,7 +29,7 @@ class SettingsBundleHelper {
     }
     
     class func initializeSettings() {
-        let appDefaults = [Constants.StdDefaultKeys.IndividualChatVisibilityPeriod: activeTimes.noLimit.rawValue, Constants.StdDefaultKeys.ClassChatVisibilityPeriod: activeTimes.noLimit.rawValue]
+        let appDefaults = [Constants.StdDefaultKeys.IndividualChatVisibilityPeriod: activeTimes.noLimit.rawValue, Constants.StdDefaultKeys.ClassChatVisibilityPeriod: activeTimes.noLimit.rawValue, Constants.StdDefaultKeys.LoginMode: false] as [String : Any]
         standardDefaults.register(defaults: appDefaults)
     }
     

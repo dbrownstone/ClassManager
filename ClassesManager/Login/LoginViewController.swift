@@ -57,24 +57,27 @@ class LoginViewController: UIViewController {
         emailTextField?.becomeFirstResponder()
         emailTextField?.delegate = self
         passwordTextField?.delegate = self
-
+        
         self.email = standardDefaults.string(forKey: Constants.StdDefaultKeys.LoggedInEmail)
         self.password = standardDefaults.string(forKey: Constants.StdDefaultKeys.Sisma)
-        if email == nil || (email?.isEmpty)! {
-            appDelegate.loggedInId = ""
-            self.emailTextField.becomeFirstResponder()
-            self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
-        } else {
-            self.passwordTextField.becomeFirstResponder()
-            NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
-            dbAccess.getAUser(self.email!)
+        if standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode) == false {
+            if email == nil || (email?.isEmpty)! {
+                appDelegate.loggedInId = ""
+                self.emailTextField.becomeFirstResponder()
+                self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
+            } else {
+                self.passwordTextField.becomeFirstResponder()
+                NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
+                dbAccess.getAUser(self.email!)
+                return
+            }
         }
+        self.handleLogin()
     }
     
     @objc func getCurrentUser(notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: .AUser, object: nil)
         self.thisMember = notification.userInfo?["user"] as? User
-        self.emailTextField.text = self.thisMember?.email
         let profileImageUrl = self.thisMember?.profileImageUrl
         if let URL = URL(string: profileImageUrl!), let data = try? Data(contentsOf: URL) {
             let image = UIImage(data: data)
@@ -82,9 +85,12 @@ class LoginViewController: UIViewController {
             self.profileImageView.frame.origin.y = 64.0
         }
         self.currentUserId = self.thisMember?.uid
+        
+        self.emailTextField.text = self.thisMember?.email
+        self.passwordTextField.text = standardDefaults.string(forKey:  Constants.StdDefaultKeys.Sisma)
+        
         appDelegate.loggedInId = self.currentUserId!
         appDelegate.thisMember = self.thisMember
-        self.passwordTextField.text = standardDefaults.string(forKey:  Constants.StdDefaultKeys.Sisma)
         returnToLoginBtn.isHidden = false
         returnToLoginBtn.setTitle(Constants.ButtonTitles.changePasswordTitle, for: .normal)
     }
@@ -196,12 +202,12 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @IBAction func login(_ sender: UIButton) {
-        if sender.titleLabel?.text == Constants.ButtonTitles.registerTitle {
+    @IBAction func login(_ sender: Any) {
+        let button = sender as! UIButton
+        if button.titleLabel?.text == Constants.ButtonTitles.registerTitle {
             self.handleRegister()
-        } else {
-            self.handleLogin()
         }
+        self.handleLogin()
     }
     
     func prepareToRegister() {

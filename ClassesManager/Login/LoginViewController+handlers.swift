@@ -185,16 +185,18 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
      */
     @objc func handleLogin() {
         print("  handleLogin")
-        self.classesTVController?.navigationItem.titleView = nil
-        
-        guard let email = emailTextField.text, let password = passwordTextField.text else {
-            print("Invalid login parameters!")
-            self.showAlert("Incomplete text fields!", theTitle: "Error")
-            return
-        }
-        
         NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
-        dbAccess.signIn(email, password: password)
+        self.classesTVController?.navigationItem.titleView = nil
+        if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode)) {
+            dbAccess.signIn(self.email!, password: self.password!)
+        } else {
+            guard let emailText = emailTextField.text, let passwordText = passwordTextField.text else {
+                print("Invalid login parameters!")
+                self.showAlert("Incomplete text fields!", theTitle: "Error")
+                return
+            }
+            dbAccess.signIn(emailText, password: passwordText)
+        }
     }
     
     @objc func signInResult(notification: NSNotification) {
@@ -202,13 +204,13 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         NotificationCenter.default.removeObserver(self, name: .SignIn, object: nil)
         if ((notification.userInfo!["error"] as? String)?.isEmpty)! {
             for thisMember in appDelegate.allTheUsers! {
-                if thisMember.email == emailTextField.text {
+                if thisMember.email == self.email {
                     appDelegate.thisMember = thisMember
                     appDelegate.loginName = thisMember.name
                     appDelegate.loggedInId = (thisMember.uid)!
                     standardDefaults.set(thisMember.uid, forKey: Constants.StdDefaultKeys.CurrentLoggedInId)
                     standardDefaults.set(thisMember.email, forKey: Constants.StdDefaultKeys.LoggedInEmail)
-                    standardDefaults.set(self.passwordTextField.text, forKey: Constants.StdDefaultKeys.Sisma)
+                    standardDefaults.set(self.password, forKey: Constants.StdDefaultKeys.Sisma)
                     standardDefaults.synchronize()
                     if (thisMember.profileImageUrl?.isEmpty)! {
                         self.handleSelectProfileImageView()

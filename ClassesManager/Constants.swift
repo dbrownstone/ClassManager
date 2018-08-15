@@ -53,6 +53,7 @@ struct Constants {
         static let CurrentBuild = "build_number"
         static let IndividualChatVisibilityPeriod = "individualChatVisibilityPeriod"
         static let ClassChatVisibilityPeriod = "classChatVisibilityPeriod"
+        static let LoginMode = "loginMode"
     }
     
     struct DatabaseChildKeys {
