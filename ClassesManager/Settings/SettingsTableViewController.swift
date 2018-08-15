@@ -37,7 +37,7 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         //Remove this line - for debug only
-        SettingsBundleHelper.initializeTimeSettings()
+//        SettingsBundleHelper.initializeTimeSettings()
         if standardDefaults.object(forKey: Constants.StdDefaultKeys.IndividualChatVisibilityPeriod) != nil  {
             individualChatTimePeriod = standardDefaults.string(forKey:  Constants.StdDefaultKeys.IndividualChatVisibilityPeriod)!
         }
@@ -73,25 +73,25 @@ class SettingsTableViewController: UITableViewController {
     @objc func displaySelectedTimePeriod(_ sender: CustomButton) {
         let whichButton = sender.name
         let cell = self.tableView.cellForRow(at: sender.indexPath!)
-        let theView = cell?.viewWithTag(11)
+        let theView = cell?.viewWithTag(11) // contains all the menu in a stack view
         let cancelBtn = cell?.viewWithTag(51) as! CustomButton
-//        let stackView = cell?.viewWithTag(100) as! UIStackView
         cancelBtn.indexPath = sender.indexPath
-        theView?.isHidden = false
-//        stackView.isHidden = true
+        theView?.isHidden = true
         let labelResult = cell?.viewWithTag(50) as! UILabel
         labelResult.text = whichButton
         if sender.indexPath?.row == 0 {
             standardDefaults.set(whichButton, forKey:Constants.StdDefaultKeys.IndividualChatVisibilityPeriod)
+            individualChatTimePeriod = whichButton
         } else {
             standardDefaults.set(whichButton, forKey:Constants.StdDefaultKeys.ClassChatVisibilityPeriod)
+            classChatTimePeriod = whichButton
         }
         cancelBtn.isHidden = false
         cancelBtn.addTarget(self, action: #selector(self.cancelButtonPick(_:)), for: UIControlEvents.touchUpInside)
         menuOpened = !menuOpened
         heightForSelectedRow = RowHeights.menu_invisible.rawValue
         selectedRow = (sender.indexPath?.row)!
-        self.tableView.reloadRows(at: [sender.indexPath!], with: .automatic)
+        self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1)], with: .automatic)
     }
     
     @objc func cancelButtonPick(_ sender: CustomButton) {
@@ -106,9 +106,14 @@ class SettingsTableViewController: UITableViewController {
         sender.isHidden = true
         heightForSelectedRow = RowHeights.menu_visible.rawValue
         selectedRow = (sender.indexPath?.row)!
-        self.tableView.reloadRows(at: [sender.indexPath!], with: .none)
-        self.selectedRow = -1
+        if selectedRow == 0 {
+            individualChatTimePeriod = ""
+        } else {
+            classChatTimePeriod = ""
+        }
         labelResult.text = ""
+        self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1)], with: .none)
+        self.selectedRow = -1
     }
     // MARK: - Table view data source
     
@@ -162,43 +167,37 @@ class SettingsTableViewController: UITableViewController {
             reuseIdentifier = "ActiveTimeMenu"
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        
+        var theView = cell.viewWithTag(11)
+
         if indexPath.section == 1 {
-            if heightForSelectedRow == RowHeights.menu_visible.rawValue {
-                prepareThePullDownMenu(cell,indexPath: indexPath)
-            } else {
-                let theStackView = cell.viewWithTag(100) as! UIStackView
-                theStackView.isHidden = true
-            }
             if (indexPath.row == 0 && !(individualChatTimePeriod).isEmpty) || (indexPath.row == 1 && !(classChatTimePeriod.isEmpty)) {
-                let theView = cell.viewWithTag(11)
+                theView = cell.viewWithTag(11)
                 theView?.isHidden = true
                 let cancelBtn = cell.viewWithTag(51) as! CustomButton
                 cancelBtn.indexPath = indexPath
                 cancelBtn.isHidden = false
                 cancelBtn.addTarget(self, action: #selector(self.cancelButtonPick(_:)), for: UIControlEvents.touchUpInside)
                 let labelResult = cell.viewWithTag(50) as! UILabel
-                labelResult.text = individualChatTimePeriod
+                if indexPath.row == 0 {
+                    labelResult.text = individualChatTimePeriod
+                } else {
+                    labelResult.text = classChatTimePeriod
+                }
                 self.selectedActiveTimeRow = indexPath.row
             } else {
                 let mainBtn = cell.viewWithTag(99) as! CustomButton
-                mainBtn.name = "main"
                 mainBtn.indexPath = indexPath
                 mainBtn.addTarget(self, action: #selector(self.showHideTimesMenu(_:)), for: UIControlEvents.touchUpInside)
                 setBorder(mainBtn)
-//
-//                if selectedRow != indexPath.row {
-//                    let theStackView = cell.viewWithTag(100) as! UIStackView
-//                    theStackView.isHidden = true
-//                }
+                if heightForSelectedRow == RowHeights.menu_visible.rawValue {
+                    theView?.isHidden = false
+                    prepareThePullDownMenu(cell,indexPath: indexPath)
+                } else {
+                    let theStackView = cell.viewWithTag(100) as! UIStackView
+                    theStackView.isHidden = true
+                }
                 
-//                let buttonView = cell.viewWithTag(100) as! UIStackView
-//                setBorder(buttonView)
             }
-            
-            
-            // Configure the cell...
-            
             let titleLbl = cell.viewWithTag(10) as! UILabel
             if indexPath.row == 0 {
                 titleLbl.text = "Individual"
