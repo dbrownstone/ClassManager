@@ -27,8 +27,13 @@ class SettingsBundleHelper {
         UserDefaults.standard.set(version, forKey: Constants.StdDefaultKeys.CurrentVersion)
     }
     
+    class func initializeSettings() {
+        let appDefaults = [Constants.StdDefaultKeys.IndividualChatVisibilityPeriod: activeTimes.noLimit.rawValue, Constants.StdDefaultKeys.ClassChatVisibilityPeriod: activeTimes.noLimit.rawValue]
+        standardDefaults.register(defaults: appDefaults)
+    }
+    
     // debug only
-    class func initializeTimeSettings() {
+    class func clearTimeSettings() {
         standardDefaults.set(nil, forKey:Constants.StdDefaultKeys.IndividualChatVisibilityPeriod)
         standardDefaults.set(nil, forKey:Constants.StdDefaultKeys.ClassChatVisibilityPeriod)
     }

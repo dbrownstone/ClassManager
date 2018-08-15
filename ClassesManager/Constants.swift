@@ -24,8 +24,6 @@ struct Constants {
         static let Reset = "RESET_APP_KEY"
         static let BuildVersionKey = "build_preference"
         static let AppVersionKey = "version_preference"
-        static let RedThemeKey = "RedThemeKey"
-        static let WhiteThemeKey = "WhiteThemeKey"
     }
     
     struct Segues {

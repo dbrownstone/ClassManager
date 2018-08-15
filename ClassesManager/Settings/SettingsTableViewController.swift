@@ -8,16 +8,17 @@
 
 import UIKit
 
+enum activeTimes: String {
+    case oneDay = "1 Day"
+    case oneWeek = "1 Week"
+    case twoWeeks = "2 Weeks"
+    case fourWeeks = "1 Month"
+    case noLimit = "No Limit"
+}
+
 class SettingsTableViewController: UITableViewController {
     
     @IBOutlet var activeTimeButtons: [UIButton]!
-    enum activeTimes: String {
-        case oneDay = "1 Day"
-        case oneWeek = "1 Week"
-        case twoWeeks = "2 Weeks"
-        case fourWeeks = "1 Month"
-        case noLimit = "No Limit"
-    }
     
     enum RowHeights: Int {
         case menu_invisible = 40
