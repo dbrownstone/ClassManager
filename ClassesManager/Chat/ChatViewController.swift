@@ -164,12 +164,52 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         })
     }
     
+    func messageShouldBeVisible(timeStamp:NSNumber) -> Bool {
+        var visibilityPeriod: String!
+        var theDuration:Int;
+        let timeStampDate = Date(timeIntervalSince1970: timeStamp.doubleValue)
+        if groupChat {
+            visibilityPeriod = standardDefaults.string(forKey: Constants.StdDefaultKeys.ClassChatVisibilityPeriod)
+        } else {
+            visibilityPeriod = standardDefaults.string(forKey: Constants.StdDefaultKeys.IndividualChatVisibilityPeriod)
+        }
+        if visibilityPeriod == activeTimes.noLimit.rawValue {
+            return true
+        }
+        
+        switch visibilityPeriod {
+        case activeTimes.oneDay.rawValue:
+            theDuration = 1
+            break
+        case activeTimes.oneWeek.rawValue:
+            theDuration = 7
+            break
+        case activeTimes.twoWeeks.rawValue:
+            theDuration = 14
+            break
+        case activeTimes.fourWeeks.rawValue:
+            theDuration = 28
+            break
+        default:
+            theDuration = -1
+            break
+        }
+        
+        let dateOfVisibility = Calendar.current.date(byAdding: .day, value: theDuration, to: timeStampDate)
+        let today = NSDate()
+        if today.compare(dateOfVisibility!) == ComparisonResult.orderedAscending {
+            //Do what you want
+            return true
+        }
+        return false;
+    }
+    
     func observeMessagesInSelectedGroup() {
         self.chatMessages = [Message]()
         Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
-                if message.toId == self.selectedClassForChat.uid  {//&& self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
+                if message.toId == self.selectedClassForChat.uid && self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
                     if message.fromId == appDelegate.loggedInId {
                         message.authorType = .authorTypeSelf
                     } else {
@@ -191,17 +231,19 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.chatMessages = [Message]()
         Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message(dictionary: dictionary, fromDatabase: true)
-                if (message.toId == self.theObjectMember.uid && message.fromId == appDelegate.loggedInId) ||
-                    (message.toId == appDelegate.loggedInId && message.fromId == self.theObjectMember.uid) {
-                    if message.fromId == appDelegate.loggedInId {
-                        message.authorType = .authorTypeSelf
-                    } else {
-                        message.authorType = .authorTypeOther
-                        message.imageUrl = self.theObjectMember.profileImageUrl
-                        
+                let message = Message(dictionary: dictionary, fromDatabase: true)                
+                if self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
+                    if (message.toId == self.theObjectMember.uid && message.fromId == appDelegate.loggedInId) ||
+                        (message.toId == appDelegate.loggedInId && message.fromId == self.theObjectMember.uid) {
+                        if message.fromId == appDelegate.loggedInId {
+                            message.authorType = .authorTypeSelf
+                        } else {
+                            message.authorType = .authorTypeOther
+                            message.imageUrl = self.theObjectMember.profileImageUrl
+                            
+                        }
+                        self.appendSortAndDispatchMessage(message, makeSmaller: false)
                     }
-                    self.appendSortAndDispatchMessage(message, makeSmaller: false)
                 }
             }
         })
@@ -276,7 +318,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: .UserStateChanged, object: nil)
-//        self.theTableView.frame = CGRect(x: 0, y: 64.0, width: self.originalTableViewWidth!, height: self.originalTableViewHeight!)
     }
     
     func defaultStyle() {
@@ -561,7 +602,6 @@ extension ChatViewController: UICollectionViewDataSource {
         if indexPath.row == self.chatClassMembers.count - 1 {
             theName += "-T"
         }
-//        if dbAccess.isUserCurrentlySignedIn(thisMember.email!) {
         if thisMember.isOnline! {
             theName += "*"
         }
