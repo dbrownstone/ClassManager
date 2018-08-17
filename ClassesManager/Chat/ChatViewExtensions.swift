@@ -8,7 +8,8 @@
 
 import UIKit
 import Firebase
-import SwiftSpinner
+//import SwiftSpinner
+//import SwiftLoader
 
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     /**

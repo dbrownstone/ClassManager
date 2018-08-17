@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import SwiftSpinner
 
 /**
  Handles profile image access, registering a new user and logging in an existing user
@@ -133,15 +132,19 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
      displays the system Image Picker
      */
     @objc func handleSelectProfileImageView() {
-        SwiftSpinner.show("Connecting to image picker...")
-        SwiftSpinner.sharedInstance.backgroundColor = .clear
+        var config : SwiftLoader.Config = SwiftLoader.Config()
+        config.size = 150
+        config.spinnerColor = .red
+        config.foregroundColor = .clear
+        SwiftLoader.setConfig(config: config)
+        SwiftLoader.show(title: "Connecting to image picker...", animated: true)
         print(" handleSelectProfileImageView")
         let picker = UIImagePickerController()
         
         picker.delegate = self
         picker.allowsEditing = true
         present(picker, animated: true, completion: {
-            SwiftSpinner.hide()
+            SwiftLoader.hide()
         })
     }
     

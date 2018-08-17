@@ -9,7 +9,6 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
-import SwiftSpinner
 
 class ChatViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, BubbleTableViewCellDelegate, BubbleTableViewCellDataSource{
     
@@ -82,6 +81,12 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardUp), name:.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
+        
+        var config : SwiftLoader.Config = SwiftLoader.Config()
+        config.size = 150
+        config.spinnerColor = .red
+        config.foregroundColor = .clear
+        SwiftLoader.setConfig(config: config)
     }
     
     @IBAction func cancelKeyboard(_ sender: Any) {
@@ -206,6 +211,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func observeMessagesInSelectedGroup() {
         self.chatMessages = [Message]()
+        SwiftLoader.show(title: "Loading Class Messages...", animated: true)
         Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
@@ -229,9 +235,10 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func observeMessagesForIndividualChat() {
         self.chatMessages = [Message]()
+        SwiftLoader.show(title: "Loading Messages...", animated: true)
         Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message(dictionary: dictionary, fromDatabase: true)                
+                let message = Message(dictionary: dictionary, fromDatabase: true)
                 if self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
                     if (message.toId == self.theObjectMember.uid && message.fromId == appDelegate.loggedInId) ||
                         (message.toId == appDelegate.loggedInId && message.fromId == self.theObjectMember.uid) {
@@ -375,8 +382,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                selector: #selector(self.sendImageMessage(notification:)),
                                                name: .NewChatMessageImage,
                                                object: nil)
-        SwiftSpinner.show("Connecting to image picker...")
-        SwiftSpinner.sharedInstance.backgroundColor = .clear
+        SwiftLoader.show(title: "Connecting to image picker...", animated: true)
         print(" handleSelectMessageImageView")
         let picker = UIImagePickerController()
         picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
@@ -385,7 +391,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         picker.allowsEditing = true
         self.dontShowClassAlert = true
         present(picker, animated: true, completion: {
-            SwiftSpinner.hide()
+            SwiftLoader.hide()
         })
     }
     
@@ -409,6 +415,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        SwiftLoader.hide()
         let message = self.chatMessages[indexPath.row]
         var image: UIImage!
         var max = tableView.frame.size.width * 0.55

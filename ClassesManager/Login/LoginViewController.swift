@@ -60,7 +60,7 @@ class LoginViewController: UIViewController {
         
         self.email = standardDefaults.string(forKey: Constants.StdDefaultKeys.LoggedInEmail)
         self.password = standardDefaults.string(forKey: Constants.StdDefaultKeys.Sisma)
-        if standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode) == false {
+        if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode) == false || self.email == nil || self.password == nil) {
             if email == nil || (email?.isEmpty)! {
                 appDelegate.loggedInId = ""
                 self.emailTextField.becomeFirstResponder()
@@ -326,6 +326,7 @@ extension LoginViewController: UITextFieldDelegate {
             if response is String  { // i.e. ""
                 self.prepareToRegister()
             } else {
+                self.email = textField.text
                 self.thisMember = response as? User
                 if (self.thisMember?.authorized)! {
                     if let URL = URL(string: (thisMember?.profileImageUrl)!), let data = try? Data(contentsOf: URL) {
@@ -344,6 +345,7 @@ extension LoginViewController: UITextFieldDelegate {
             if fullNameTextField.isHidden == false {
                 self.handleRegister()
             } else {
+                self.password = textField.text
                 self.handleLogin()
             }
             break;

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -135,6 +136,7 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="eTA-Dr-V8X" firstAttribute="top" secondItem="4yI-fP-Dg4" secondAttribute="top" constant="11" id="8P8-cI-kWD"/>
+                                        <constraint firstItem="vEP-DW-sgL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eTA-Dr-V8X" secondAttribute="trailing" constant="8" id="9Hd-l9-RSh"/>
                                         <constraint firstAttribute="trailing" secondItem="VPN-ao-bjE" secondAttribute="trailing" constant="7" id="Cp4-Gs-WND"/>
                                         <constraint firstItem="noX-0K-xuC" firstAttribute="top" secondItem="4yI-fP-Dg4" secondAttribute="top" constant="11" id="FGU-Ge-End"/>
                                         <constraint firstItem="VPN-ao-bjE" firstAttribute="top" secondItem="4yI-fP-Dg4" secondAttribute="top" constant="4.5" id="KLU-GZ-37r"/>
@@ -158,18 +160,20 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <switch opaque="NO" clearsContextBeforeDrawing="NO" tag="80" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rTO-ts-0RK">
-                                            <rect key="frame" x="312" y="6" width="49" height="31"/>
+                                        <switch opaque="NO" clearsContextBeforeDrawing="NO" tag="80" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rTO-ts-0RK">
+                                            <rect key="frame" x="310" y="6" width="51" height="31"/>
                                             <connections>
                                                 <action selector="setTheLoginMode:" destination="pAs-7C-uLe" eventType="valueChanged" id="a8E-zQ-Kja"/>
                                             </connections>
                                         </switch>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="rTO-ts-0RK" firstAttribute="centerY" secondItem="6Cw-c0-DSm" secondAttribute="centerY" id="4jI-6n-VqY"/>
-                                        <constraint firstItem="0w2-Yd-sNJ" firstAttribute="leading" secondItem="6Cw-c0-DSm" secondAttribute="leading" constant="16" id="KTv-xk-1iS"/>
-                                        <constraint firstItem="0w2-Yd-sNJ" firstAttribute="centerY" secondItem="6Cw-c0-DSm" secondAttribute="centerY" id="Mmh-BZ-afK"/>
-                                        <constraint firstAttribute="trailing" secondItem="rTO-ts-0RK" secondAttribute="trailing" constant="16" id="Vzf-pn-XLe"/>
+                                        <constraint firstItem="0w2-Yd-sNJ" firstAttribute="top" secondItem="6Cw-c0-DSm" secondAttribute="topMargin" id="3Xa-dr-fAT"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="0w2-Yd-sNJ" secondAttribute="bottom" constant="1" id="AOY-W2-Gwd"/>
+                                        <constraint firstItem="rTO-ts-0RK" firstAttribute="trailing" secondItem="6Cw-c0-DSm" secondAttribute="trailingMargin" id="EhI-F4-yU6"/>
+                                        <constraint firstItem="0w2-Yd-sNJ" firstAttribute="centerY" secondItem="rTO-ts-0RK" secondAttribute="centerY" id="J0H-Tb-E6G"/>
+                                        <constraint firstItem="0w2-Yd-sNJ" firstAttribute="leading" secondItem="6Cw-c0-DSm" secondAttribute="leadingMargin" id="nMg-wI-AJf"/>
+                                        <constraint firstItem="rTO-ts-0RK" firstAttribute="top" secondItem="6Cw-c0-DSm" secondAttribute="topMargin" constant="-5" id="vqk-N6-D52"/>
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
