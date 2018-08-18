@@ -66,6 +66,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var fromMember: User!
     var loggedInUsers: [User]!
+    var msgCount = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,9 +85,20 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         var config : SwiftLoader.Config = SwiftLoader.Config()
         config.size = 150
-        config.spinnerColor = .red
+        config.spinnerColor = .black
         config.foregroundColor = .clear
         SwiftLoader.setConfig(config: config)
+//        SwiftLoader.show(title: "Loading Class Messages...", animated: true)
+        determineTheMessageCount()
+    }
+    
+    func determineTheMessageCount() {
+        let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
+        
+        ref.observe(.value, with: { (snapshot: DataSnapshot!) in
+            self.msgCount = Int(snapshot.childrenCount)
+            print(self.msgCount)
+        })
     }
     
     @IBAction func cancelKeyboard(_ sender: Any) {
@@ -230,13 +242,20 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.appendSortAndDispatchMessage(message, makeSmaller: true)
                 }
             }
+            self.msgCount = self.msgCount - 1
+            if self.msgCount == 0 {
+                SwiftLoader.hide()
+                self.determineTheMessageCount()
+            }
         })
     }
     
     func observeMessagesForIndividualChat() {
         self.chatMessages = [Message]()
+        let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
+        
         SwiftLoader.show(title: "Loading Messages...", animated: true)
-        Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
+        ref.observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
                 if self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
@@ -249,9 +268,15 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                             message.imageUrl = self.theObjectMember.profileImageUrl
                             
                         }
+                        self.msgCount += 1
                         self.appendSortAndDispatchMessage(message, makeSmaller: false)
                     }
                 }
+            }
+            self.msgCount = self.msgCount - 1
+            if self.msgCount == 0 {
+                SwiftLoader.hide()
+                self.determineTheMessageCount()
             }
         })
     }
@@ -415,7 +440,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        SwiftLoader.hide()
         let message = self.chatMessages[indexPath.row]
         var image: UIImage!
         var max = tableView.frame.size.width * 0.55
@@ -462,6 +486,12 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             return size.height + AuthorImageSize + BubbleHeightOffset
         }
         return size.height + BubbleHeightOffset + AuthorImageSize
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == chatMessages.count - 1 {
+            SwiftLoader.hide()
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

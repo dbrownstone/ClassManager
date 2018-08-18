@@ -16,6 +16,11 @@ class ClassesTableViewController: UITableViewController,
     var existingClasses = [Class]()
     var classes = [Class]()
     var chatSubject: User!
+    var heightForSelectedRow = 60
+    var selectedRow = -1
+    var rowHeights = [Int]()
+    
+    @IBOutlet weak var showHideBtn: CustomButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +70,9 @@ class ClassesTableViewController: UITableViewController,
         if self.classes.count == 0  {
             self.performSegue(withIdentifier: Constants.Segues.AddAClass, sender: self)
         } else {
+            for _ in classes {
+                rowHeights.append(60)
+            }
             self.tableView.reloadData()
         }
     }
@@ -72,6 +80,18 @@ class ClassesTableViewController: UITableViewController,
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    @IBAction func showAllOrPart(_ sender: CustomButton) {
+        if rowHeights[(sender.indexPath?.row)!] == 60 {
+           sender.name = "All"
+            rowHeights[(sender.indexPath?.row)!] = 120
+        } else {
+            sender.name = "Limited"
+            rowHeights[(sender.indexPath?.row)!] = 60
+        }
+        self.tableView.reloadRows(at: [sender.indexPath!], with: .none)
     }
     
     // MARK: - Table view data source
@@ -89,16 +109,20 @@ class ClassesTableViewController: UITableViewController,
         if indexPath.row == classes.count {
             return 44
         }
-        return 88
+        
+        return CGFloat(rowHeights[indexPath.row])
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.addMessage, for: indexPath)
+        var cell: UITableViewCell!
+        
         if indexPath.row == classes.count {
+            cell = tableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.addMessage, for: indexPath)
             return cell
         }
-
+        
         // Configure the cell...
+        cell = tableView.dequeueReusableCell(withIdentifier: Constants.CellIdentifiers.addClass, for: indexPath)
         configureThisCell(cell, row: indexPath.row)
         
         return cell
@@ -128,12 +152,28 @@ class ClassesTableViewController: UITableViewController,
     }
     
     func configureThisCell(_ cell: UITableViewCell, row: NSInteger) {
-        let theImageView = cell.viewWithTag(50) as! UIImageView
-        theImageView.image = UIImage(named: "DanceClasses")
+        let theBtn = cell.viewWithTag(15) as! CustomButton
+        if theBtn.name.count == 0 {
+            theBtn.name = "Limited"
+        }
+        theBtn.indexPath = IndexPath(row: row, section: 0)
         let textLabel = cell.viewWithTag(10) as! UILabel
         textLabel.text = classes[row].name
         let textLabel2 = cell.viewWithTag(11) as! UILabel
-        textLabel2.text = "Members: \(classes[row].members.count + 1)"
+        textLabel2.text = classes[row].location
+        let textLabel3 = cell.viewWithTag(12) as! UILabel
+        textLabel3.text = ""
+        let textLabel4 = cell.viewWithTag(13) as! UILabel
+        textLabel4.text = ""
+        let textLabel5 = cell.viewWithTag(14) as! UILabel
+        textLabel5.text = ""
+        if rowHeights[row] == 120 {
+            textLabel4.text = "Members: \(classes[row].members.count + 1)"
+            textLabel3.text = classes[row].dayAndTime
+            if classes[row].teacherUid != appDelegate.loggedInId {
+                textLabel5.text = classes[row].teacher
+            }
+        }
     }
     
     func showApprovalRequestAlert(_ selectedClass: Class, indexPath: IndexPath) {

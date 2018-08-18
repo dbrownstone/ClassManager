@@ -307,7 +307,6 @@ class CustomButton : UIButton {
     
     var name : String = ""
     var indexPath : IndexPath? = nil
-    
     //        convenience init(name: String, indexPath: IndexPath) {
     //            self.init()
     //            self.name = name

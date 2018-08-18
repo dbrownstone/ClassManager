@@ -13,15 +13,17 @@ struct Class {
     let uid: String
     let location: String
     let name: String
+    let dayAndTime: String
     let teacher: String
     let teacherUid: String
     var members: [String]
     var chatMessages: [String]
     
-    init(name: String, location: String, teacher: String, teacherUid: String, thisMember: String) {
+    init(name: String, location: String, day_time: String, teacher: String, teacherUid: String, thisMember: String) {
         self.uid = UUID().uuidString
         self.name = name
         self.location = location
+        self.dayAndTime = day_time
         self.teacher = teacher
         self.teacherUid = teacherUid
         self.members = [String]()
@@ -33,6 +35,7 @@ struct Class {
         let snapshotValue = snapshot.value as! [String: AnyObject]
         name = snapshotValue[Constants.ClassFields.name] as! String
         location = snapshotValue[Constants.ClassFields.location] as! String
+        dayAndTime = snapshotValue[Constants.ClassFields.day_time] as! String
         teacher = snapshotValue[Constants.ClassFields.teacher] as! String
         teacherUid = snapshotValue[Constants.ClassFields.teacherUid] as! String
         if snapshotValue[Constants.ClassFields.members] != nil  {
@@ -51,6 +54,7 @@ struct Class {
         return [
             Constants.ClassFields.name: name,
             Constants.ClassFields.location: location,
+            Constants.ClassFields.day_time: dayAndTime,
             Constants.ClassFields.teacher: teacher,
             Constants.ClassFields.teacherUid: teacherUid,
             Constants.ClassFields.members: members,

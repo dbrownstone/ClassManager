@@ -63,8 +63,9 @@ class LoginViewController: UIViewController {
         if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode) == false || self.email == nil || self.password == nil) {
             if email == nil || (email?.isEmpty)! {
                 appDelegate.loggedInId = ""
-                self.emailTextField.becomeFirstResponder()
+//                self.emailTextField.becomeFirstResponder()
                 self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
+                return
             } else {
                 self.passwordTextField.becomeFirstResponder()
                 NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
@@ -72,7 +73,7 @@ class LoginViewController: UIViewController {
                 return
             }
         }
-        self.handleLogin()
+//        self.handleLogin()
     }
     
     @objc func getCurrentUser(notification: NSNotification) {

@@ -199,6 +199,8 @@ class ListMembersTableViewController: UITableViewController {
             let navController = segue.destination as! UINavigationController
             let controller = navController.topViewController as! ChatViewController
             controller.theObjectMember = self.selectedMember
+//            SwiftLoader.show(title: "Loading Class Messages...", animated: true)
+
         }
     }
 

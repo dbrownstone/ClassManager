@@ -14,6 +14,7 @@ class AddNewClassViewController: UITableViewController, UIToolbarDelegate {
     @IBOutlet weak var nameOfTeacher: UILabel!
     @IBOutlet weak var className: UITextField!
     @IBOutlet weak var classCity: UITextField!
+    @IBOutlet weak var weekday_time: UITextField!
     @IBOutlet weak var doneBtn: UIBarButtonItem!
     
     var teacherUid: String!
@@ -38,7 +39,7 @@ class AddNewClassViewController: UITableViewController, UIToolbarDelegate {
     }
     
     @IBAction func add(_ sender: Any) {
-        let thisNewClass = Class(name: className.text!, location: classCity.text!, teacher: nameOfTeacher.text!, teacherUid: self.teacherUid, thisMember: "")
+        let thisNewClass = Class(name: className.text!, location: classCity.text!, day_time: weekday_time.text!, teacher: nameOfTeacher.text!, teacherUid: self.teacherUid, thisMember: "")
         newClasses.append(thisNewClass)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.done(notification:)),

@@ -71,6 +71,7 @@ struct Constants {
         static let uid = "uid"
         static let name = "name"
         static let location = "location"
+        static let day_time = "day_time"
         static let teacher = "teacher"
         static let teacherUid = "teacherUid"
         static let members = "members"
@@ -100,6 +101,7 @@ struct Constants {
     
     struct CellIdentifiers {
         static let addMessage = "addMessage"
+        static let addClass = "addClass"
         static let ChatMessageReceived = "chatMessageReceived"
         static let ChatMessageSent = "chatMessageSent"
         static let Member = "member"
