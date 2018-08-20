@@ -262,7 +262,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="done" id="Iwt-uC-vxH">
                             <connections>
-                                <action selector="done:" destination="KAC-A0-faC" id="gXR-3o-OEQ"/>
+                                <action selector="done:" destination="KAC-A0-faC" id="hq3-2W-OgT"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -271,14 +271,13 @@
                     <connections>
                         <outlet property="chatName" destination="5nG-FL-yZj" id="gle-Wx-PqI"/>
                         <outlet property="pickerView" destination="hZQ-fJ-Esa" id="QWO-wZ-QGc"/>
-                        <segue destination="ZEU-LR-8Rz" kind="unwind" identifier="returnToChatView" unwindAction="returnToChatViewController:" id="kY5-pY-jpp"/>
                         <segue destination="ZEU-LR-8Rz" kind="unwind" identifier="cancelAlertView" unwindAction="cancelBackToChatViewController:" id="1pc-lz-K8v"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Gt-Su-4og" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ZEU-LR-8Rz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3189" y="-22"/>
+            <point key="canvasLocation" x="2895" y="-22"/>
         </scene>
         <!--Chat-->
         <scene sceneID="n4k-Tq-up4">
@@ -316,7 +315,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fxw-1C-e8m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2541.5999999999999" y="-21.139430284857571"/>
+            <point key="canvasLocation" x="2226" y="-22"/>
         </scene>
     </scenes>
     <resources>

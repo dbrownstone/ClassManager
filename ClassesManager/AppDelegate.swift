@@ -60,6 +60,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         URLCache.shared.removeAllCachedResponses()
         SettingsBundleHelper.initializeSettings()
+        
+        var config : SwiftActivity.Config = SwiftActivity.Config()
+        config.size = 150
+        config.spinnerColor = .magenta
+        config.spinnerLineWidth = 3
+        SwiftActivity.setConfig(config: config)
+
         return true
     }
     

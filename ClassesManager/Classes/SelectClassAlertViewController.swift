@@ -10,12 +10,14 @@ import UIKit
 
 class SelectClassAlertViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
+    var sourceController: ChatViewController!
     var dbAccess = DatabaseAccess()
 
     var classes: [Class]!
     var selectedClassForChat: Class!
     var selectedClass: String!
     var allUsers: [User]!
+    var messageCountHold: Int!
     
     var chatClassMembers: [User]!
     
@@ -48,19 +50,21 @@ class SelectClassAlertViewController: UIViewController, UIPickerViewDelegate, UI
     }
     
     @IBAction func done(_ sender: Any) {
-        self.chatName.text = self.selectedClass! + " Class"
-        self.chatClassMembers = [User]()
+        SwiftActivity.show(title: "Loading \(self.selectedClass!) Members...", animated: true)
         
-        for id in self.selectedClassForChat.members {
-            for user in self.allUsers {
-                if user.uid == id {
-                    self.chatClassMembers.append(user)
-                    break
+        self.dismiss(animated: true, completion: {
+            self.chatClassMembers = [User]()
+            
+            for id in self.selectedClassForChat.members {
+                for user in self.allUsers {
+                    if user.uid == id {
+                        self.chatClassMembers.append(user)
+                        break
+                    }
                 }
             }
-        }
-        self.performSegue(withIdentifier: Constants.Segues.ReturnToChatView, sender: self)
-        
+            self.sourceController.selectedData(["title": self.selectedClass! + " Class", "selectedClass": self.selectedClassForChat, "Class Members": self.chatClassMembers])
+        })
     }
 
     // MARK: - Navigation

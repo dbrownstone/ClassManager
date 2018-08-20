@@ -39,7 +39,8 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             
             groupChat = true
             
-            observeMessagesInSelectedGroup()
+//           observeMessagesInSelectedGroup()
+            getMessagesForSelectedClassForChat()
         }
     }
     
@@ -66,6 +67,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var fromMember: User!
     var loggedInUsers: [User]!
+    var allAvailableMessages = [Message]()
     var msgCount = 0
     
     override func viewDidLoad() {
@@ -82,22 +84,21 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardUp), name:.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
-        
-        var config : SwiftLoader.Config = SwiftLoader.Config()
-        config.size = 150
-        config.spinnerColor = .black
-        config.foregroundColor = .clear
-        SwiftLoader.setConfig(config: config)
-//        SwiftLoader.show(title: "Loading Class Messages...", animated: true)
-        determineTheMessageCount()
+        getTheMessages()
     }
     
-    func determineTheMessageCount() {
+    func getTheMessages() {
+//        SwiftActivity.show(title: "Loading Messages for the \(self.selectedClass) Class...", animated: true)
         let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
         
         ref.observe(.value, with: { (snapshot: DataSnapshot!) in
             self.msgCount = Int(snapshot.childrenCount)
-            print(self.msgCount)
+            let enumerator = snapshot.children
+            while let rest = enumerator.nextObject() as? DataSnapshot {
+                let dictionary = rest.value as? [String: AnyObject]
+                self.allAvailableMessages.append(Message(dictionary: dictionary!, fromDatabase: true))
+            }
+//            SwiftActivity.hide()
         })
     }
     
@@ -122,9 +123,9 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         
         if dontShowClassAlert {
-            redisplayTableViewDataSorted()
-            dontShowClassAlert = false
-            if theObjectMember == nil {
+            if theObjectMember == nil && self.selectedClassForChat == nil {
+                redisplayTableViewDataSorted()
+                dontShowClassAlert = false
                 for aClass in classes {
                     if aClass.uid == self.messageToUid {
                         self.selectedClassForChat = aClass
@@ -132,6 +133,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
             }
+            
             return
         }
         self.title = "Chat"
@@ -148,13 +150,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.title = "Chat: \(name)"
             groupChat = true
             self.loggedInUsers = [User]()
-            for aMember in appDelegate.allTheUsers! {
-                if aMember.uid == selectedClassForChat.teacherUid {
-                    self.classTeacher = aMember
-                    self.chatClassMembers.append(self.classTeacher)
-                    break
-                }
-            }
+            addTheTeacherToTheListOfMembers()
             let changeClassBtn = UIBarButtonItem(title: Constants.ButtonTitles.changeClassTitle, style: .plain, target: self, action: #selector(changeSelectedClass(notification:)))
             navigationItem.rightBarButtonItem = changeClassBtn
             
@@ -168,6 +164,31 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         redisplayTableViewDataSorted()
     }
 
+    // adds the teacher to the selected class member list
+    func addTheTeacherToTheListOfMembers() {
+        for aMember in appDelegate.allTheUsers! {
+            if aMember.uid == selectedClassForChat.teacherUid {
+                self.classTeacher = aMember
+                self.chatClassMembers.append(self.classTeacher)
+                break
+            }
+        }
+    }
+    
+    func selectedData(_ theData: [String: Any]) {
+        self.chatName.text = "\(theData["title"]!) Class"
+        self.selectedClassForChat = theData["selectedClass"] as! Class
+        self.selectedClass = self.selectedClassForChat.name
+        SwiftActivity.show(title: "Loading \(self.selectedClass!) Messages...", animated: true)
+        self.chatClassMembers = theData["Class Members"] as! [User]
+
+        addTheTeacherToTheListOfMembers()
+        self.classMembership.reloadData()
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.navigationItem.rightBarButtonItem?.title = ""
+        self.classSelectionCancelled = false
+    }
+    
     @objc func changeSelectedClass(notification: NSNotification) {
         self.performSegue(withIdentifier: Constants.Segues.ShowClassAlert, sender: nil)
     }
@@ -221,10 +242,35 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         return false;
     }
     
+    func getMessagesForSelectedClassForChat() {
+        for message in self.allAvailableMessages {
+            if message.toId == self.selectedClassForChat.uid && self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
+                if message.fromId == appDelegate.loggedInId {
+                    message.authorType = .authorTypeSelf
+                } else {
+                    message.authorType = .authorTypeOther
+                }
+                for aMember in appDelegate.allTheUsers! {
+                    if aMember.uid == message.fromId {
+                        message.imageUrl = aMember.profileImageUrl
+                        break
+                    }
+                }
+                self.chatMessages.append(message)
+            }
+        }
+        self.sortMessagesByDate()
+        DispatchQueue.main.async(execute: {
+            self.adjustTheTableView(true)
+            self.theTableView?.reloadData()
+        })
+    }
+    
     func observeMessagesInSelectedGroup() {
         self.chatMessages = [Message]()
-        SwiftLoader.show(title: "Loading Class Messages...", animated: true)
-        Database.database().reference().child(Constants.DatabaseChildKeys.Messages).observe(.childAdded, with: { (snapshot) in
+        SwiftActivity.show(title: "Loading Class Messages...", animated: true)
+        let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
+        ref.observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
                 if message.toId == self.selectedClassForChat.uid && self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
@@ -244,17 +290,16 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             self.msgCount = self.msgCount - 1
             if self.msgCount == 0 {
-                SwiftLoader.hide()
-                self.determineTheMessageCount()
+                SwiftActivity.hide()
+                self.getTheMessages()
             }
         })
     }
     
     func observeMessagesForIndividualChat() {
-        self.chatMessages = [Message]()
+//        self.chatMessages = [Message]()
         let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
         
-        SwiftLoader.show(title: "Loading Messages...", animated: true)
         ref.observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
@@ -273,11 +318,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
             }
-            self.msgCount = self.msgCount - 1
-            if self.msgCount == 0 {
-                SwiftLoader.hide()
-                self.determineTheMessageCount()
-            }
+//            self.msgCount = self.msgCount - 1
+//            if self.msgCount == 0 {
+//                SwiftActivity.hide()
+//                self.getTheMessages()
+//            }
         })
     }
     
@@ -332,6 +377,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         if selectedClassForChat == nil {
             makeSmaller = false
         }
+        
         self.adjustTheTableView(makeSmaller)
     }
     
@@ -407,7 +453,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                selector: #selector(self.sendImageMessage(notification:)),
                                                name: .NewChatMessageImage,
                                                object: nil)
-        SwiftLoader.show(title: "Connecting to image picker...", animated: true)
+        SwiftActivity.show(title: "Connecting to image picker...", animated: true)
         print(" handleSelectMessageImageView")
         let picker = UIImagePickerController()
         picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
@@ -416,7 +462,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         picker.allowsEditing = true
         self.dontShowClassAlert = true
         present(picker, animated: true, completion: {
-            SwiftLoader.hide()
+            SwiftActivity.hide()
         })
     }
     
@@ -490,7 +536,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == chatMessages.count - 1 {
-            SwiftLoader.hide()
+            SwiftActivity.hide()
         }
     }
     
@@ -530,6 +576,9 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         cells.append(cell)
         
+        if indexPath.row == chatMessages.count - 1 {
+            SwiftActivity.hide()
+        }
         return cell
     }
     
@@ -590,6 +639,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBAction func returnToChatViewController(_ segue: UIStoryboardSegue)
     {
         let controller = segue.source as! SelectClassAlertViewController
+        self.msgCount = controller.messageCountHold
         self.chatName.text = controller.selectedClass! + " Class"
         self.chatClassMembers = [User]()
         self.selectedClassForChat = controller.selectedClassForChat
@@ -598,17 +648,19 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.navigationItem.rightBarButtonItem?.title = ""
         self.classSelectionCancelled = false
-        self.view.setNeedsLayout()
+//        self.view.setNeedsLayout()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Constants.Segues.ShowClassAlert {
             // clear the existing table
-            self.theTableView.reloadData()
-            
+//            self.theTableView.reloadData()
+            self.dontShowClassAlert = true
             let nav = segue.destination as! UINavigationController
             let controller = nav.topViewController as! SelectClassAlertViewController
             controller.classes = self.classes
+            controller.messageCountHold = self.msgCount
+            controller.sourceController = self
         }
     }
 }

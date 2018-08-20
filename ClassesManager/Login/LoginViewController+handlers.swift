@@ -132,19 +132,19 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
      displays the system Image Picker
      */
     @objc func handleSelectProfileImageView() {
-        var config : SwiftLoader.Config = SwiftLoader.Config()
+        var config : SwiftActivity.Config = SwiftActivity.Config()
         config.size = 150
         config.spinnerColor = .red
         config.foregroundColor = .clear
-        SwiftLoader.setConfig(config: config)
-        SwiftLoader.show(title: "Connecting to image picker...", animated: true)
+        SwiftActivity.setConfig(config: config)
+        SwiftActivity.show(title: "Connecting to image picker...", animated: true)
         print(" handleSelectProfileImageView")
         let picker = UIImagePickerController()
         
         picker.delegate = self
         picker.allowsEditing = true
         present(picker, animated: true, completion: {
-            SwiftLoader.hide()
+            SwiftActivity.hide()
         })
     }
     

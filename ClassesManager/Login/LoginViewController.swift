@@ -73,7 +73,9 @@ class LoginViewController: UIViewController {
                 return
             }
         }
-//        self.handleLogin()
+        if (self.email?.count)! > 0 && (self.password?.count)! > 0 {
+            self.handleLogin()
+        }
     }
     
     @objc func getCurrentUser(notification: NSNotification) {

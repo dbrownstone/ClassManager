@@ -1,5 +1,5 @@
 //
-//  ClassesManager
+//  SwiftActivity
 //
 //  Created by David Brownstone on 17/09/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.
@@ -13,7 +13,7 @@ let loaderSpinnerMarginSide : CGFloat = 35.0
 let loaderSpinnerMarginTop : CGFloat = 20.0
 let loaderTitleMargin : CGFloat = 5.0
 
-public class SwiftLoader: UIView {
+public class SwiftActivity: UIView {
     
     private var coverView : UIView?
     private var titleLabel : UILabel?
@@ -34,9 +34,9 @@ public class SwiftLoader: UIView {
         }
     }
     
-    class var sharedInstance: SwiftLoader {
+    class var sharedInstance: SwiftActivity {
         struct Singleton {
-            static let instance = SwiftLoader(frame: CGRect(x: 0,y: 0,width: Config().size,height: Config().size))
+            static let instance = SwiftActivity(frame: CGRect(x: 0,y: 0,width: Config().size,height: Config().size))
         }
         return Singleton.instance
     }
@@ -49,7 +49,7 @@ public class SwiftLoader: UIView {
         
         let currentWindow : UIWindow = UIApplication.shared.keyWindow!
         
-        let loader = SwiftLoader.sharedInstance
+        let loader = SwiftActivity.sharedInstance
         loader.canUpdated = true
         loader.animated = animated
         loader.title = title
@@ -72,12 +72,12 @@ public class SwiftLoader: UIView {
     }
     
     public class func hide() {
-        let loader = SwiftLoader.sharedInstance
+        let loader = SwiftActivity.sharedInstance
         loader.stop()
     }
     
     public class func setConfig(config : Config) {
-        let loader = SwiftLoader.sharedInstance
+        let loader = SwiftActivity.sharedInstance
         loader.config = config
         loader.frame = CGRect(x: 0,y: 0,width: loader.config.size,height: loader.config.size)
     }
@@ -138,9 +138,9 @@ public class SwiftLoader: UIView {
         if (self.titleLabel == nil) {
             self.titleLabel = UILabel(frame: CGRect(x: loaderTitleMargin, y: loaderSpinnerMarginTop + loadingViewSize, width: self.frame.width - loaderTitleMargin*2, height: 42.0))
             self.addSubview(self.titleLabel!)
-            self.titleLabel?.numberOfLines = 1
+            self.titleLabel?.numberOfLines = 2
             self.titleLabel?.textAlignment = NSTextAlignment.center
-            self.titleLabel?.adjustsFontSizeToFitWidth = true
+            self.titleLabel?.adjustsFontSizeToFitWidth = false
         } else {
             self.titleLabel?.frame = CGRect(x: loaderTitleMargin, y: loaderSpinnerMarginTop + loadingViewSize, width: self.frame.width - loaderTitleMargin*2, height: 42.0)
         }

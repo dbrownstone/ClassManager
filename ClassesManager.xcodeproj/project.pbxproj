@@ -24,7 +24,7 @@
 		6357C5F620737A760021B83C /* SystemExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357C5F520737A760021B83C /* SystemExtensions.swift */; };
 		6358C9F820A0548200E7B287 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6358C9F720A0548200E7B287 /* ChangePasswordViewController.swift */; };
 		6362584B20EBA3C400116258 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6362584A20EBA3C400116258 /* ChatViewController.swift */; };
-		636B16682126C9B700B61251 /* SwiftLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636B16672126C9B700B61251 /* SwiftLoader.swift */; };
+		636B16682126C9B700B61251 /* SwiftActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636B16672126C9B700B61251 /* SwiftActivity.swift */; };
 		6371458D208AE4640088F0B8 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6371458C208AE4640088F0B8 /* Message.swift */; };
 		63753E6B20D17FEF00A6E169 /* ListMembersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63753E6A20D17FEF00A6E169 /* ListMembersTableViewController.swift */; };
 		63893283208706250009FCE8 /* DatabaseAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63893282208706250009FCE8 /* DatabaseAccess.swift */; };
@@ -63,7 +63,7 @@
 		6357C5F520737A760021B83C /* SystemExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SystemExtensions.swift; sourceTree = "<group>"; };
 		6358C9F720A0548200E7B287 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		6362584A20EBA3C400116258 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		636B16672126C9B700B61251 /* SwiftLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftLoader.swift; sourceTree = "<group>"; };
+		636B16672126C9B700B61251 /* SwiftActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftActivity.swift; sourceTree = "<group>"; };
 		6371458C208AE4640088F0B8 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		63753E6A20D17FEF00A6E169 /* ListMembersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListMembersTableViewController.swift; sourceTree = "<group>"; };
 		63893282208706250009FCE8 /* DatabaseAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseAccess.swift; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 				6328DD96207C83A5002B5B28 /* Connectivity.swift */,
 				63893282208706250009FCE8 /* DatabaseAccess.swift */,
 				6357C5F520737A760021B83C /* SystemExtensions.swift */,
-				636B16672126C9B700B61251 /* SwiftLoader.swift */,
+				636B16672126C9B700B61251 /* SwiftActivity.swift */,
 				6343DB3620A5F99300D00DB2 /* Login */,
 				6343DB3720A5F9E200D00DB2 /* Models */,
 				6343DB3820A5F9FD00D00DB2 /* Classes */,
@@ -371,7 +371,7 @@
 				6371458D208AE4640088F0B8 /* Message.swift in Sources */,
 				63893283208706250009FCE8 /* DatabaseAccess.swift in Sources */,
 				63FC8F7A20D101F200900979 /* LoginViewController.swift in Sources */,
-				636B16682126C9B700B61251 /* SwiftLoader.swift in Sources */,
+				636B16682126C9B700B61251 /* SwiftActivity.swift in Sources */,
 				63F9239720FDD223002B3F49 /* ChatViewExtensions.swift in Sources */,
 				63B0698C2070EE0E00DC1D6F /* AppDelegate.swift in Sources */,
 				63265714211DBCC400A917D5 /* SettingsTableViewController.swift in Sources */,
@@ -568,7 +568,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K2U9D4SGK5;
 				INFOPLIST_FILE = "$(SRCROOT)/ClassesManager/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.brownstone.ClassesManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -585,7 +588,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K2U9D4SGK5;
 				INFOPLIST_FILE = "$(SRCROOT)/ClassesManager/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.brownstone.ClassesManager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
