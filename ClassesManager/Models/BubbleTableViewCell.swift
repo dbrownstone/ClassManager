@@ -58,7 +58,8 @@ class BubbleTableViewCell: UITableViewCell {
     var authorType: AuthorType?
     var messageType: MessageType?
     var messageImageUrl: String?
-    var messageImage: UIImageView?
+    var messageImage: UIImage?
+    var messageImageView: UIImageView?
     var userImageUrl: String?
     var userImage: UIImageView?
     var msgTextLabel: UILabel?
@@ -96,19 +97,18 @@ class BubbleTableViewCell: UITableViewCell {
             contentView.bringSubview(toFront: self.msgTextLabel!)
             self.msgTextLabel?.center = (self.bubbleView?.center)!
         } else {
-            if let URL = URL(string: messageImageUrl!),
-                let data = try? Data(contentsOf: URL) {
-                let image = UIImage(data: data)
-                
-                self.messageImage = UIImageView()
+//            if let URL = URL(string: messageImageUrl!),
+//                let data = try? Data(contentsOf: URL) {
+            
+                self.messageImageView = UIImageView()
                 let max = (contentView.frame.size.width) * 0.55
-                self.messageImage?.frame = CGRect(x: 0, y: 5, width: max, height: max/((image?.size.width)! / (image?.size.height)!))
-                self.messageImage?.contentMode = .scaleAspectFit
-                self.messageImage?.image = image
-                contentView.addSubview(self.messageImage!)
-                contentView.bringSubview(toFront: self.messageImage!)
-                self.messageImage?.center = (self.bubbleView?.center)!
-            }
+            self.messageImageView?.image = self.messageImage
+            self.messageImageView?.frame = CGRect(x: 0, y: 5, width: max, height: max/((messageImage?.size.width)! / (messageImage?.size.height)!))
+                self.messageImageView?.contentMode = .scaleAspectFit
+                contentView.addSubview(self.messageImageView!)
+                contentView.bringSubview(toFront: self.messageImageView!)
+                self.messageImageView?.center = (self.bubbleView?.center)!
+//            }
         }
         
         if authorType == .authorTypeOther {
@@ -150,7 +150,7 @@ class BubbleTableViewCell: UITableViewCell {
                     attributes: [.font: self.msgTextLabel?.font as Any],
                     context: nil).size
             } else {
-                size = self.messageImage?.frame.size
+                size = self.messageImageView?.frame.size
             }
         } else {
             if self.messageType == .textMessageType {
@@ -160,7 +160,7 @@ class BubbleTableViewCell: UITableViewCell {
                 attributes: [.font: self.msgTextLabel?.font as Any],
                 context: nil).size
             } else {
-                size = self.messageImage?.frame.size
+                size = self.messageImageView?.frame.size
             }
         }
         
@@ -171,7 +171,7 @@ class BubbleTableViewCell: UITableViewCell {
                 self.msgTextLabel?.frame = CGRect(x: self.frame.size.width - ((size?.width)! + BubbleWidthOffset - 10.0), y: 14.0, width: (size?.width)! + BubbleWidthOffset - 23.0, height: (size?.height)!)
                 self.msgTextLabel?.autoresizingMask = .flexibleLeftMargin
             } else {
-                self.messageImage?.center = (self.bubbleView?.center)!
+                self.messageImageView?.center = (self.bubbleView?.center)!
             }
             self.bubbleView?.autoresizingMask = .flexibleLeftMargin
             self.bubbleView?.transform = .identity;
@@ -201,7 +201,7 @@ class BubbleTableViewCell: UITableViewCell {
                 
                 self.msgTextLabel?.autoresizingMask = .flexibleRightMargin;
             } else {
-                self.messageImage?.center = (self.bubbleView?.center)!
+                self.messageImageView?.center = (self.bubbleView?.center)!
             }
             self.bubbleView?.autoresizingMask = .flexibleRightMargin;
             self.bubbleView?.transform = .identity

@@ -18,7 +18,7 @@ class Message: NSObject {
     var messageType: MessageType?
     
     var imageUrl: String?
-    var profileImage = UIImage()
+    var profileImage: UIImage?
     var imageWidth: NSNumber?
     var imageHeight: NSNumber?
     
@@ -42,8 +42,18 @@ class Message: NSObject {
         } else {
             pictureUrl = dictionary["photoURL"] as? String
             messageType = .imageMessageType
+            if let URL = URL(string: pictureUrl!),
+                let data = try? Data(contentsOf: URL) {
+                pictureImage = UIImage(data: data)!
+            }
         }
-        imageUrl = dictionary["imageURL"] as? String
+        if !fromDatabase {
+            imageUrl = dictionary["imageURL"] as? String
+            if let URL = URL(string: imageUrl!),
+                let data = try? Data(contentsOf: URL) {
+                profileImage = UIImage(data: data)!
+            }
+        }
         timeStamp = dictionary["timeStamp"] as? NSNumber
         
         
@@ -68,14 +78,25 @@ class Message: NSObject {
         let snapshotValue = snapshot.value as! [String: AnyObject]
         fromId = snapshotValue[Constants.MessageFields.fromId] as? String
         toId = snapshotValue[Constants.MessageFields.toId] as? String
+        if fromId == appDelegate.loggedInId {
+            authorType = .authorTypeSelf
+        } else {
+            authorType = .authorTypeOther
+        }
         textMessage = snapshotValue[Constants.MessageFields.textMessage] as? String
+        if textMessage == nil {
+            messageType = .imageMessageType
+            pictureUrl = snapshotValue[Constants.MessageFields.photoURL] as? String
+            if let URL = URL(string: pictureUrl!),
+                let data = try? Data(contentsOf: URL) {
+                pictureImage = UIImage(data: data)!
+            }
+        } else {
+            messageType = .textMessageType
+        }
         timeStamp = snapshotValue[Constants.MessageFields.timeStamp] as? NSNumber
-        pictureUrl = snapshotValue[Constants.MessageFields.imageURL] as? String
+        
     }
-    
-//    func isAReceivedMsg() -> Bool {
-//        return isReceived
-//    }
     
     func toAnyObject() -> Any {
         return [

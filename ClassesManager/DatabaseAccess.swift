@@ -127,7 +127,7 @@ class DatabaseAccess: NSObject {
     }
     
     public func addAndUpdateAMessage(_ values: [String: Any]) {        
-        let ref = Database.database().reference().child("messages")
+        let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
         let childRef = ref.childByAutoId()
         
         childRef.updateChildValues(values, withCompletionBlock: { (error, ref) in
@@ -138,22 +138,16 @@ class DatabaseAccess: NSObject {
         })
     }
     
-    public func getAllMessages(_ id: String) {
+    public func getAllMessages() {
         let firebase = Database.database().reference()
-        firebase.child(Constants.DatabaseChildKeys.Messages).observe(.value, with: { snapshot in
-            var messages = [Message]()
+        firebase.child(Constants.DatabaseChildKeys.Messages).observe(.value, with: { (snapshot: DataSnapshot!) in
+            var allAvailableMessages = [Message]()
             for aMsg in snapshot.children {
-                let message = Message(snapshot: aMsg as! DataSnapshot)
-                if message.toId == id || message.fromId == id {
-                    if message.toId == id {
-                        message.authorType = .authorTypeSelf
-                    } else {
-                        message.authorType = .authorTypeOther
-                    }
-                    messages.append(message)
-                }
+                allAvailableMessages.append(Message(snapshot: aMsg as! DataSnapshot))
             }
-            NotificationCenter.default.post(name: .AllMessages, object: self, userInfo: ["messages": messages])
+            
+            NotificationCenter.default.post(name: .AllMessages, object: self,
+                                            userInfo: ["messages": allAvailableMessages])
         })
     }
     

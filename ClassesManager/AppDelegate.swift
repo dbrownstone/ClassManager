@@ -25,7 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var loginName: String?
     var thisMember: User?
     var allTheUsers: [User]?
-
+    var allAvailableMessages = [Message]()
+    var msgCount = 0
+    
 //    var tbControl: UITabBarController!
 
     override init() {
@@ -40,7 +42,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                    name: .AllUsers,
                                                    object: nil)
             dbAccess.getAllUsers()
-            
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(self.messagesLoaded(notification:)),
+                                                   name: .AllMessages,
+                                                   object: nil)
+            dbAccess.getAllMessages()
         } else {
             internetIsAvailable = false
             print("No! internet is not available. Please Try again later.")
@@ -55,6 +61,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         allTheUsers = notification.userInfo!["users"] as? [User]
         print("all users found")
     }
+    
+    @objc func messagesLoaded(notification: NSNotification) {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .AllMessages,
+                                                  object: nil)
+        allAvailableMessages = (notification.userInfo!["messages"] as? [Message])!
+        print("Message Count: \(self.allAvailableMessages.count)")
+    }
+    
+    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
