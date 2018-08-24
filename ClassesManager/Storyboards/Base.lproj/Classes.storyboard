@@ -111,13 +111,11 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cdO-V8-iHN" customClass="CustomButton" customModule="ClassesManager" customModuleProvider="target">
-                                            <rect key="frame" x="248" y="9" width="30" height="30"/>
+                                            <rect key="frame" x="240" y="9" width="30" height="30"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="30" id="HvV-rY-gdg"/>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="R4L-cg-Ah6"/>
-                                                <constraint firstAttribute="width" constant="30" id="c7G-Eh-gKW"/>
+                                                <constraint firstAttribute="width" constant="30" id="vUh-q3-3Tp"/>
                                             </constraints>
-                                            <state key="normal" title="Button" image="extend"/>
+                                            <state key="normal" image="extend"/>
                                             <connections>
                                                 <action selector="showAllOrPart:" destination="PQO-2r-u7r" eventType="touchUpInside" id="KXb-qL-Gdn"/>
                                             </connections>
@@ -143,7 +141,7 @@
                                         <constraint firstItem="1V2-B4-N6s" firstAttribute="leading" secondItem="FkU-ot-IsO" secondAttribute="leading" constant="8" id="cyL-uv-paB"/>
                                         <constraint firstItem="dwH-do-EkK" firstAttribute="bottom" secondItem="FkU-ot-IsO" secondAttribute="bottomMargin" id="cyg-Kg-IRf"/>
                                         <constraint firstItem="HSw-Lg-chr" firstAttribute="width" secondItem="98F-Pp-Nro" secondAttribute="width" id="dKh-v8-n6x"/>
-                                        <constraint firstAttribute="trailing" secondItem="cdO-V8-iHN" secondAttribute="trailing" constant="8" id="dTR-YU-QHg"/>
+                                        <constraint firstAttribute="trailing" secondItem="cdO-V8-iHN" secondAttribute="trailing" constant="16" id="dTR-YU-QHg"/>
                                         <constraint firstItem="SRt-Cs-EX6" firstAttribute="width" secondItem="HSw-Lg-chr" secondAttribute="width" id="eGr-w4-Uml"/>
                                         <constraint firstItem="Bne-O3-UUd" firstAttribute="leading" secondItem="SRt-Cs-EX6" secondAttribute="leading" id="eRH-yZ-4CL"/>
                                         <constraint firstItem="SRt-Cs-EX6" firstAttribute="leading" secondItem="HSw-Lg-chr" secondAttribute="leading" id="ekk-Il-6Rw"/>
@@ -156,9 +154,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <gestureRecognizers/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="cdO-V8-iHN" secondAttribute="trailing" constant="42" id="DDh-iw-RFa"/>
-                                </constraints>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -182,7 +177,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xat-Db-BfH" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="LMM-DJ-03W" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="191.25" y="-113.02816901408451"/>
+            <point key="canvasLocation" x="191" y="-114"/>
         </scene>
         <!--Add Classes View Controller-->
         <scene sceneID="xSj-hY-dva">
@@ -400,6 +395,7 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="1ur-I9-mTQ" firstAttribute="centerY" secondItem="4gY-3K-AdA" secondAttribute="centerY" id="Ujs-Yx-eYo"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1ur-I9-mTQ" secondAttribute="trailingMargin" id="YRD-hS-leF"/>
                                                 <constraint firstItem="1ur-I9-mTQ" firstAttribute="centerY" secondItem="4gY-3K-AdA" secondAttribute="centerY" id="ilN-Ak-N3c"/>
                                                 <constraint firstItem="1ur-I9-mTQ" firstAttribute="leading" secondItem="4gY-3K-AdA" secondAttribute="leadingMargin" id="w4o-TV-d4X"/>
                                             </constraints>

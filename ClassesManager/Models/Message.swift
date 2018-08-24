@@ -10,8 +10,9 @@ import UIKit
 import Firebase
 
 class Message: NSObject {
-    var fromId:String?
-    var toId:String?
+    var uid: String?
+    var fromId: String?
+    var toId: String?
     var textMessage: String?
     var timeStamp:NSNumber?
     var authorType: AuthorType?
@@ -28,7 +29,6 @@ class Message: NSObject {
     
     init(dictionary: [String: AnyObject], fromDatabase: Bool = false) {
         super.init()
-        
         fromId = dictionary["fromId"] as? String
         if fromId == appDelegate.loggedInId {
             authorType = .authorTypeSelf
@@ -75,6 +75,7 @@ class Message: NSObject {
     }
     
     init(snapshot: DataSnapshot) {
+        uid = snapshot.key
         let snapshotValue = snapshot.value as! [String: AnyObject]
         fromId = snapshotValue[Constants.MessageFields.fromId] as? String
         toId = snapshotValue[Constants.MessageFields.toId] as? String

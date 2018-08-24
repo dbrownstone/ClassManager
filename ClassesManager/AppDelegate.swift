@@ -7,7 +7,9 @@
 //
 
 import UIKit
-import Firebase
+import Firebase                                                                                                    
+import FirebaseDatabase
+
 
 var appDelegate:AppDelegate = (UIApplication.shared).delegate as! AppDelegate
 var standardDefaults = UserDefaults.standard
@@ -67,7 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                   name: .AllMessages,
                                                   object: nil)
         allAvailableMessages = (notification.userInfo!["messages"] as? [Message])!
-        print("Message Count: \(self.allAvailableMessages.count)")
+        msgCount = self.allAvailableMessages.count
+        print("Message Count: \(self.msgCount)")
     }
     
     
@@ -81,6 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.size = 150
         config.spinnerColor = .magenta
         config.spinnerLineWidth = 3
+//        config.backgroundColor = .clear
         SwiftActivity.setConfig(config: config)
 
         return true

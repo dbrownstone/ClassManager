@@ -85,6 +85,7 @@ struct Constants {
         static let phoneNo = "phoneNo"
         static let imageUrl = "profileImageUrl"
         static let online = "online"
+        static let messages = "messages"
     }
     
     struct MessageFields {

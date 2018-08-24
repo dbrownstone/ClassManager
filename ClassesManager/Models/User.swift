@@ -18,7 +18,8 @@ class User: NSObject {
     var email:String?
     var authorized = false
     var profileImageUrl:String?
-    var isOnline: Bool?
+    var isOnline: Bool?    
+    var chatMessages = [String]()
     
     override init() {
         super.init()
@@ -30,7 +31,6 @@ class User: NSObject {
         self.email = email
         self.profileImageUrl = profileImageUrl
         self.isOnline = false
-        
     }
     
     init(snapshot: DataSnapshot) {
@@ -41,6 +41,11 @@ class User: NSObject {
         self.email = snapshotValue[Constants.UserFields.email] as? String
         if snapshotValue[Constants.UserFields.authorized] != nil {
             self.authorized = snapshotValue[Constants.UserFields.authorized] as! Bool
+        }
+        if snapshotValue[Constants.UserFields.messages] != nil && (snapshotValue[Constants.UserFields.messages]?.count)! > 0 {
+            chatMessages = ((snapshot.value as! [String: AnyObject])[Constants.UserFields.messages] as? [String])!
+        } else {
+            chatMessages = [String]()
         }
         self.profileImageUrl = snapshotValue[Constants.UserFields.imageUrl] as? String
         self.isOnline = snapshotValue[Constants.UserFields.online] as? Bool
@@ -53,7 +58,8 @@ class User: NSObject {
             Constants.UserFields.email: email as Any,
             Constants.UserFields.authorized:authorized as Any,
             Constants.UserFields.online: isOnline as Any,
-            Constants.UserFields.imageUrl: profileImageUrl as Any
+            Constants.UserFields.imageUrl: profileImageUrl as Any,
+            Constants.UserFields.messages: chatMessages as Any
         ]
     }
     

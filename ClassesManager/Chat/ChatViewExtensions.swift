@@ -1,6 +1,6 @@
 //
 //  ChatViewExtensions.swift
-//  ClassesManager
+//  ChatViewExtensions
 //
 //  Created by David Brownstone on 26/06/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.
@@ -8,8 +8,6 @@
 
 import UIKit
 import Firebase
-//import SwiftSpinner
-//import SwiftActivity
 
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     /**

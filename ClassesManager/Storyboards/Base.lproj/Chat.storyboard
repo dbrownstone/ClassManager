@@ -58,7 +58,6 @@
                                         </view>
                                         <constraints>
                                             <constraint firstItem="sV4-Pj-URo" firstAttribute="top" secondItem="iTV-Cv-djo" secondAttribute="top" constant="5" id="5ZR-PY-0Lm"/>
-                                            <constraint firstItem="poh-Hx-JQk" firstAttribute="leading" secondItem="iTV-Cv-djo" secondAttribute="leading" id="GP3-mh-Sxm"/>
                                             <constraint firstItem="sV4-Pj-URo" firstAttribute="centerX" secondItem="iTV-Cv-djo" secondAttribute="centerX" id="ROM-EI-wma"/>
                                             <constraint firstItem="poh-Hx-JQk" firstAttribute="top" secondItem="sV4-Pj-URo" secondAttribute="bottom" id="g9w-Wd-JZq"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="poh-Hx-JQk" secondAttribute="bottom" constant="-2" id="qjg-xN-1hX"/>
@@ -159,14 +158,15 @@
                         <viewLayoutGuide key="safeArea" id="OuG-Jm-miy"/>
                     </view>
                     <navigationItem key="navigationItem" id="muQ-5e-PUi">
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Class" id="DfE-vc-Uqu">
+                        <barButtonItem key="rightBarButtonItem" image="change" id="DfE-vc-Uqu">
                             <connections>
-                                <action selector="selectTheClassForTheChat" destination="Zd6-lD-rSF" id="YoO-vb-vJf"/>
+                                <action selector="selectClassForTheChat:" destination="Zd6-lD-rSF" id="2mP-1w-Yhv"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="camera" destination="d7m-CS-44t" id="lRY-kR-btv"/>
+                        <outlet property="changeClassButton" destination="DfE-vc-Uqu" id="gm8-Se-llJ"/>
                         <outlet property="chatName" destination="doP-Rn-yOu" id="I4I-B7-aWy"/>
                         <outlet property="classMembership" destination="Fts-Pa-StQ" id="3gV-KP-uTQ"/>
                         <outlet property="msgBar" destination="aTT-zP-hPN" id="SOf-pL-vko"/>
@@ -320,6 +320,7 @@
     </scenes>
     <resources>
         <image name="camera" width="25" height="25"/>
+        <image name="change" width="30" height="29"/>
         <image name="chat" width="25" height="25"/>
         <image name="unknown_image" width="45" height="45"/>
     </resources>

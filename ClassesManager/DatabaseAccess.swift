@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import FirebaseAuth
 
 class DatabaseAccess: NSObject {
     
@@ -129,13 +130,21 @@ class DatabaseAccess: NSObject {
     public func addAndUpdateAMessage(_ values: [String: Any]) {        
         let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
         let childRef = ref.childByAutoId()
-        
+//        let key = childRef.childByAutoId().key
         childRef.updateChildValues(values, withCompletionBlock: { (error, ref) in
             if error != nil {
                 print(error ?? "Send error")
                 return
             }
+            NotificationCenter.default.post(name: .MsgDBUpdated, object: childRef.key, userInfo: values)
         })
+        
+    }
+    
+    public func updateUserWithMessage(_ user: User, messageId: String) {
+        let ref = Database.database().reference(fromURL: databaseURL)
+        let userRef = ref.child(Constants.DatabaseChildKeys.Users).child(user.uid!)
+        userRef.updateChildValues([Constants.UserFields.messages: user.chatMessages as Any])
     }
     
     public func getAllMessages() {
@@ -143,7 +152,8 @@ class DatabaseAccess: NSObject {
         firebase.child(Constants.DatabaseChildKeys.Messages).observe(.value, with: { (snapshot: DataSnapshot!) in
             var allAvailableMessages = [Message]()
             for aMsg in snapshot.children {
-                allAvailableMessages.append(Message(snapshot: aMsg as! DataSnapshot))
+                let thisMsg: Message = Message(snapshot: aMsg as! DataSnapshot)
+                allAvailableMessages.append(thisMsg)
             }
             
             NotificationCenter.default.post(name: .AllMessages, object: self,

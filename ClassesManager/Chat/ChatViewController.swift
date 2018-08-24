@@ -59,6 +59,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var theTableView: UITableView!
     @IBOutlet weak var navBar: UINavigationBar!
     @IBOutlet weak var msgBar: UIView!
+    @IBOutlet weak var changeClassButton: UIBarButtonItem!
+    
+    var mainScreenHeight: CGFloat!
+    var navBarHeight: CGFloat!
+    var tabBarHeight: CGFloat!
     
     var originalTableViewHeight: CGFloat!
     var originalTableViewWidth: CGFloat!
@@ -68,6 +73,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     var loggedInUsers: [User]!
     var allAvailableMessages = [Message]()
     var msgCount = 0
+    var mostRecentMsgTimeStamp: NSNumber?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +83,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.classMembership.delegate = self as? UICollectionViewDelegate
         self.classMembership.dataSource = self
         
+        mainScreenHeight = self.view.screenHeight
+        navBarHeight = UIApplication.shared.statusBarFrame.height +
+            self.navigationController!.navigationBar.frame.height
+        tabBarHeight = self.tabBarController?.tabBar.frame.height
+        
         self.originalTableViewOriginY = UIApplication.shared.statusBarFrame.size.height +
             (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
@@ -85,6 +96,14 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
         self.msgCount = appDelegate.msgCount
         self.allAvailableMessages = appDelegate.allAvailableMessages
+        if self.allAvailableMessages.count > 0 {
+            self.allAvailableMessages.sort(by: {(message1, message2) -> Bool in
+                return (message1.timeStamp?.intValue)! > (message2.timeStamp?.intValue)!
+            })
+            self.mostRecentMsgTimeStamp = (self.allAvailableMessages[0]).timeStamp
+        } else {
+            self.mostRecentMsgTimeStamp = 0
+        }
     }
     
     @IBAction func cancelKeyboard(_ sender: Any) {
@@ -111,28 +130,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             if theObjectMember == nil && self.selectedClassForChat == nil {
                 redisplayTableViewDataSorted()
                 dontShowClassAlert = false
-                /*
-                SwiftActivity.show(title: "Loading Classes...", animated: true)
-                for aClass in classes {
-                    if aClass.uid == self.messageToUid {
-                        self.selectedClassForChat = aClass
-                        self.selectedClass = aClass.name
-                        break
-                    }
-                }
-                SwiftActivity.show(title: "Loading \(self.selectedClass!) Members...", animated: true)
-                for id in self.selectedClassForChat.members {
-                    for user in appDelegate.allTheUsers! {
-                        if user.uid == id {
-                            self.chatClassMembers.append(user)
-                            break
-                        }
-                    }
-                }
-                selectedData(["title": self.selectedClass! + " Class", "selectedClass": self.selectedClassForChat, "Class Members": self.chatClassMembers])
- */
             }
-            
             return
         }
         self.title = "Chat"
@@ -140,10 +138,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             addBackButton()
             let name = theObjectMember.name
             self.title = "Chat: \(name!)"
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
             self.messageToUid = theObjectMember.uid
-//            SwiftActivity.show(title: "Loading Messages...", animated: true)
+            self.groupChat = false
             getChatMessagesFor(theObjectMember.uid!)
-            observeNewMessagesForSelectedGroupOrIndividual(theObjectMember.uid!)
+            observeNewMessagesFor(theObjectMember.uid!)
         } else if selectedClassForChat != nil {
             let name = selectedClassForChat.name
             self.messageToUid = selectedClassForChat.uid
@@ -151,9 +150,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             groupChat = true
             self.loggedInUsers = [User]()
             addTheTeacherToTheListOfMembers()
-            let changeClassBtn = UIBarButtonItem(title: Constants.ButtonTitles.changeClassTitle, style: .plain, target: self, action: #selector(changeSelectedClass(notification:)))
-            navigationItem.rightBarButtonItem = changeClassBtn
-            
+            navigationItem.rightBarButtonItem?.isEnabled = true
         } else if !self.classSelectionCancelled {
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(self.classesLoaded(notification:)),
@@ -175,7 +172,28 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    func clearAllTheViews() {
+        var indexPathArray = [IndexPath]()
+        for index in 0..<self.chatMessages.count {
+            let indexPath = IndexPath(item: index, section: 0)
+            indexPathArray.append(indexPath)
+        }
+        self.chatMessages = [Message]()
+        theTableView.deleteRows(at: indexPathArray, with: .fade)
+
+        indexPathArray = [IndexPath]()
+        for i in 0..<self.chatClassMembers.count {
+            let indexPath = IndexPath(item: i, section: 0)
+            indexPathArray.append(indexPath)
+        }
+        self.chatClassMembers = [User]()
+        self.classMembership.deleteItems(at: indexPathArray)
+    }
+    
     func selectedData(_ theData: [String: Any]) {
+        if self.chatClassMembers != nil && self.chatClassMembers.count > 0 {
+            self.clearAllTheViews()
+        }
         self.chatName.text = "\(theData["title"]!) Class"
         self.selectedClassForChat = theData["selectedClass"] as! Class
         self.selectedClass = self.selectedClassForChat.name
@@ -184,12 +202,11 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.chatClassMembers = theData["Class Members"] as! [User]
 
         addTheTeacherToTheListOfMembers()
-        
-        observeNewMessagesForSelectedGroupOrIndividual(self.selectedClassForChat.uid)
+
+        observeNewMessagesFor(self.selectedClassForChat.uid)
         
         self.classMembership.reloadData()
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-        self.navigationItem.rightBarButtonItem?.title = ""
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.classSelectionCancelled = false
     }
     
@@ -208,8 +225,8 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func messageShouldBeVisible(timeStamp:NSNumber) -> Bool {
         var visibilityPeriod: String!
-        var theDuration:Int;
-        let timeStampDate = Date(timeIntervalSince1970: timeStamp.doubleValue)
+        var theDuration:Int
+        
         if groupChat {
             visibilityPeriod = standardDefaults.string(forKey: Constants.StdDefaultKeys.ClassChatVisibilityPeriod)
         } else {
@@ -218,6 +235,8 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         if visibilityPeriod == activeTimes.noLimit.rawValue {
             return true
         }
+        
+        let timeStampDate = Date(timeIntervalSince1970: timeStamp.doubleValue)
         
         switch visibilityPeriod {
         case activeTimes.oneDay.rawValue:
@@ -248,21 +267,31 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func getChatMessagesFor(_ uid: String) {
         SwiftActivity.show(title: "Loading chat messages", animated: true)
-        for message in self.allAvailableMessages {
-            if (message.toId == uid || message.fromId == uid) &&
-                self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
-                if message.fromId == appDelegate.loggedInId {
-                    message.authorType = .authorTypeSelf
-                } else {
-                    message.authorType = .authorTypeOther
-                }
-                for aMember in appDelegate.allTheUsers! {
-                    if aMember.uid == message.fromId {
-                        message.imageUrl = aMember.profileImageUrl
+        if groupChat {
+            let selectedClassMessageIds = self.selectedClassForChat.chatMessages
+            for msgId in selectedClassMessageIds {
+                for message in self.allAvailableMessages {
+                    if message.uid == msgId {
+                        self.getAndAppendTheMessages(message)
                         break
                     }
                 }
-                self.chatMessages.append(message)
+            }
+        } else {
+            var selectedUserMessageIds = self.theObjectMember.chatMessages
+            selectedUserMessageIds += appDelegate.thisMember!.chatMessages
+            for msgId in selectedUserMessageIds {
+                for message in self.allAvailableMessages {
+                    if message.uid == msgId {
+                        if (message.toId == self.theObjectMember.uid ||
+                            message.fromId == self.theObjectMember.uid) &&
+                            (message.toId == appDelegate.loggedInId ||
+                                message.fromId == appDelegate.loggedInId) {
+                            self.getAndAppendTheMessages(message)
+                            break
+                        }
+                    }
+                }
             }
         }
         if chatMessages.count == 0 {
@@ -277,51 +306,59 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func observeNewMessagesForSelectedGroupOrIndividual(_ uid: String) {
+    func getAndAppendTheMessages(_ message: Message) {
+        if self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
+            if message.fromId == appDelegate.loggedInId {
+                message.authorType = .authorTypeSelf
+            } else {
+                message.authorType = .authorTypeOther
+            }
+            for aMember in appDelegate.allTheUsers! {
+                if aMember.uid == message.fromId {
+                    message.imageUrl = aMember.profileImageUrl
+                    break
+                }
+            }
+            if self.chatMessages.contains(message) {
+                print("message with id \(String(describing: message.uid)) is duplicated in self.chatMessages")
+                return
+            }
+            
+            self.chatMessages.append(message)
+        }
+    }
+    
+    func observeNewMessagesFor(_ id: String) {
+        //from either theObjectMember or selectedClassForChat
         let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
         
         ref.queryLimited(toLast: 1).observe(.childAdded, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary, fromDatabase: true)
-                if message.toId == uid && self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
+                if message.timeStamp!.doubleValue <= self.mostRecentMsgTimeStamp!.doubleValue {
+                    return
+                }
+                message.uid = snapshot.key
+                if message.toId == id && self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
                     if message.fromId == appDelegate.loggedInId {
                         message.authorType = .authorTypeSelf
                     } else {
                         message.authorType = .authorTypeOther
-                    }
-                    for aMember in appDelegate.allTheUsers! {
-                        if aMember.uid == message.fromId {
-                            message.imageUrl = aMember.profileImageUrl
-                            break
+                        for aMember in appDelegate.allTheUsers! {
+                            if aMember.uid == message.fromId {
+                                message.imageUrl = aMember.profileImageUrl
+                                break
+                            }
                         }
                     }
-                    self.appendSortAndDispatchMessage(message)
                 }
-            }
-        })
-    }
-    
-    func observeNewMessagesForIndividualChat() {
-//        self.chatMessages = [Message]()
-        let ref = Database.database().reference().child(Constants.DatabaseChildKeys.Messages)
-        
-        ref.observe(.childAdded, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message(dictionary: dictionary, fromDatabase: true)
-                if self.messageShouldBeVisible(timeStamp:message.timeStamp!) {
-                    if (message.toId == self.theObjectMember.uid && message.fromId == appDelegate.loggedInId) ||
-                        (message.toId == appDelegate.loggedInId && message.fromId == self.theObjectMember.uid) {
-                        if message.fromId == appDelegate.loggedInId {
-                            message.authorType = .authorTypeSelf
-                        } else {
-                            message.authorType = .authorTypeOther
-                            message.imageUrl = self.theObjectMember.profileImageUrl
-                            
-                        }
-                        self.msgCount += 1
-                        self.appendSortAndDispatchMessage(message)
-                    }
-                }
+                self.appendSortAndDispatchMessage(message)
+                appDelegate.allAvailableMessages.append(message)
+                self.allAvailableMessages = appDelegate.allAvailableMessages
+                self.allAvailableMessages.sort(by: {(message1, message2) -> Bool in
+                    return (message1.timeStamp?.intValue)! > (message2.timeStamp?.intValue)!
+                })
+                self.mostRecentMsgTimeStamp = (self.allAvailableMessages[0]).timeStamp
             }
         })
     }
@@ -416,12 +453,17 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
         }
     }
-    
+
     @IBAction func sendAMessage(_ sender: UIButton) {
+        self.cancelKeyboard(sender)
         let timeStamp = NSDate().timeIntervalSince1970 as Double
         var value = [String: Any]()
-        if self.messageToUid == nil {
-            self.messageToUid = selectedClassForChat.uid
+        if self.messageToUid == nil  {
+            if groupChat {
+                self.messageToUid = selectedClassForChat.uid
+            } else {
+                self.messageToUid = self.theObjectMember.uid
+            }
         }
         if self.messageImageUrlStr == nil || self.messageImageUrlStr.isEmpty {
             value = [
@@ -438,11 +480,34 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
                 Constants.MessageFields.timeStamp: timeStamp
             ]
         }
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.messageHasBeenAdded(notification:)),
+                                               name: .MsgDBUpdated,
+                                               object: nil)
         dbAccess.addAndUpdateAMessage(value)
+        
         sendingTextField.text = ""
         self.messageImageUrlStr = ""
     }
     
+    @objc func messageHasBeenAdded(notification: NSNotification) {
+        let messageUid = notification.object as! String
+        if groupChat {
+            self.selectedClassForChat?.chatMessages.append(messageUid)
+            dbAccess.updateClassMessagesDatabase(self.selectedClassForChat!)
+        } else {
+            let fromUid = notification.userInfo![Constants.MessageFields.fromId] as! String
+            if fromUid == appDelegate.thisMember?.uid {
+                appDelegate.thisMember?.chatMessages.append(messageUid)
+                dbAccess.updateUserWithMessage(appDelegate.thisMember!, messageId: messageUid)
+            } else if fromUid == self.theObjectMember?.uid  {
+                self.theObjectMember?.chatMessages.append(messageUid)
+                dbAccess.updateUserWithMessage(theObjectMember!, messageId: messageUid)
+            }
+        }
+    }
+
     @IBAction func addAnImage(_ sender: UIButton) {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.sendImageMessage(notification:)),
@@ -589,22 +654,18 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         NotificationCenter.default.removeObserver(self, name: .ChatClassSelected, object: nil)
     }
 
-    @IBAction func selectTheClassForTheChat() {
+    @IBAction func selectClassForTheChat(_ sender: Any) {
         self.performSegue(withIdentifier: Constants.Segues.ShowClassAlert, sender: nil)
     }
     
     func adjustTheTableView() { // to show the member images
-        let mainScreenHeight = self.view.screenHeight
-        let navBarHeight = UIApplication.shared.statusBarFrame.height +
-            self.navigationController!.navigationBar.frame.height
-        let tabBarHeight = self.tabBarController?.tabBar.frame.height
         
         var currentY: CGFloat!
         var currentHeight: CGFloat!
         
         if self.selectedClassForChat != nil {
-            currentY = navBarHeight +  self.classMembership.frame.size.height
-            currentHeight = mainScreenHeight - navBarHeight - self.classMembership.frame.size.height - self.msgBar.frame.size.height - tabBarHeight!
+            currentY = self.navBarHeight +  self.classMembership.frame.size.height
+            currentHeight = self.mainScreenHeight - self.navBarHeight - self.classMembership.frame.size.height - self.msgBar.frame.size.height - tabBarHeight!
         } else {
             currentY = navBarHeight
             currentHeight = mainScreenHeight - navBarHeight - self.msgBar.frame.size.height
@@ -623,7 +684,6 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
 //        self.selectedClassForChat = nil
         self.chatName.text = ""
         self.navigationItem.rightBarButtonItem?.isEnabled = true
-        self.navigationItem.rightBarButtonItem?.title = Constants.ButtonTitles.SelectAClassTitle
         self.classSelectionCancelled = true
         self.view.setNeedsLayout()
     }
@@ -637,8 +697,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.selectedClassForChat = controller.selectedClassForChat
         self.chatClassMembers = controller.chatClassMembers
         self.classMembership.reloadData()
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-        self.navigationItem.rightBarButtonItem?.title = ""
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
         self.classSelectionCancelled = false
 //        self.view.setNeedsLayout()
     }

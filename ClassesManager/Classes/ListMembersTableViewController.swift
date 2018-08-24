@@ -135,6 +135,9 @@ class ListMembersTableViewController: UITableViewController {
             // add a message here to suggest selecting somebody else
             return nil
         }
+        
+        SwiftActivity.show(title: "Getting Chat Messages...", animated: true)
+        
         return indexPath
     }
     
