@@ -1,4 +1,4 @@
-//
+////
 //  ChatViewController.swift
 //  MultiTab
 //
@@ -263,11 +263,8 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let dateOfVisibility = Calendar.current.date(byAdding: .day, value: theDuration, to: timeStampDate)
         let today = NSDate()
-        if today.compare(dateOfVisibility!) == ComparisonResult.orderedAscending {
-            //Do what you want
-            return true
-        }
-        return false;
+        print("Today: \(today) visibilityDate: \(dateOfVisibility!)")
+        return today.earlierDate(dateOfVisibility!) == today as Date
     }
     
     func getChatMessagesFor(_ uid: String) {
@@ -622,7 +619,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         if thisMessage.authorType == .authorTypeOther {
-            cell.userImageUrl = thisMessage.imageUrl
+            cell.userImageUrl = theObjectMember.profileImageUrl
         } else {
             cell.userImageUrl = ""
         }
