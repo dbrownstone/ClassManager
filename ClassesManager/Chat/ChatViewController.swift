@@ -172,7 +172,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func clearAllTheViews() {
+    public func clearTableView() {
         var indexPathArray = [IndexPath]()
         for index in 0..<self.chatMessages.count {
             let indexPath = IndexPath(item: index, section: 0)
@@ -180,8 +180,13 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         self.chatMessages = [Message]()
         theTableView.deleteRows(at: indexPathArray, with: .fade)
+    }
+    
+    func clearAllTheViews() {
+        clearTableView()
 
-        indexPathArray = [IndexPath]()
+        // clear membershipView
+        var indexPathArray = [IndexPath]()
         for i in 0..<self.chatClassMembers.count {
             let indexPath = IndexPath(item: i, section: 0)
             indexPathArray.append(indexPath)
@@ -191,7 +196,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func selectedData(_ theData: [String: Any]) {
-        if self.chatClassMembers != nil && self.chatClassMembers.count > 0 {
+        if self.chatMessages.count > 0 {
             self.clearAllTheViews()
         }
         self.chatName.text = "\(theData["title"]!) Class"
@@ -223,7 +228,7 @@ class ChatViewController: UIViewController, UITableViewDelegate, UITableViewData
         })
     }
     
-    func messageShouldBeVisible(timeStamp:NSNumber) -> Bool {
+    public func messageShouldBeVisible(timeStamp:NSNumber) -> Bool {
         var visibilityPeriod: String!
         var theDuration:Int
         

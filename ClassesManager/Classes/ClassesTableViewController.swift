@@ -29,6 +29,20 @@ class ClassesTableViewController: UITableViewController,
         self.tabBarController?.delegate = self
     }
     
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        let tabBarIndex = tabBarController.selectedIndex
+        if tabBarIndex == 1 {
+            let chatViewController = (viewController as! UINavigationController).topViewController as! ChatViewController
+            let visibleMessages = chatViewController.chatMessages
+            if visibleMessages.count > 0 {
+                let msgToBeChecked = visibleMessages[visibleMessages.count - 1]
+                if !chatViewController.messageShouldBeVisible(timeStamp: msgToBeChecked.timeStamp!) {
+                    chatViewController.clearTableView()
+                }
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self,
