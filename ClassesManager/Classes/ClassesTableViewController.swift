@@ -45,10 +45,11 @@ class ClassesTableViewController: UITableViewController,
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(self.classesLoaded(notification:)),
-                                               name: .AllClasses,
-                                               object: nil)
+                                                   selector: #selector(self.classesLoaded(notification:)),
+                                                   name: .AllClasses,
+                                                   object: nil)
         dbAccess.getAllClasses()
     }
     

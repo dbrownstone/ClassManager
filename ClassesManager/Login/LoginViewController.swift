@@ -46,6 +46,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if !appDelegate.internetIsAvailable {
+            return
+        }
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
         activityIndicator.frame = CGRect(x: 0, y: 0, width: 45, height: 45)
         activityIndicator.hidesWhenStopped = true
@@ -144,7 +147,7 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: View Lifecycle
+    // MARK: - View Lifecycle
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -162,10 +165,21 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if self.loginAgain {
-            self.loginAgain = false
-            self.showAlert("Please enter your new password and login again.", theTitle: "Password Changed")
+        if appDelegate.internetIsAvailable {
+            if self.loginAgain {
+                self.loginAgain = false
+                self.showAlert("Please enter your new password and login again.", theTitle: "Password Changed")
+            }
+            return
         }
+        let alertController = UIAlertController(
+            title: "No Internet",
+            message: "Internet is not currently available.\nPlease try again later.", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel) { (_) in
+            exit(0)            
+        }
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true){ }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -297,6 +311,8 @@ class LoginViewController: UIViewController {
     }
     
 }
+
+// MARK: - TestField delegates
 
 extension LoginViewController: UITextFieldDelegate {
     // UITextFieldDelegate

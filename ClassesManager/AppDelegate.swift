@@ -52,7 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             internetIsAvailable = false
             print("No! internet is not available. Please Try again later.")
-            exit(0)
         }
     }
     
