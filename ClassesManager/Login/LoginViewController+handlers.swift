@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import FirebaseDatabase
 
 /**
  Handles profile image access, registering a new user and logging in an existing user
@@ -195,9 +196,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
             self.showAlert("Incomplete text fields!", theTitle: "Error")
             return
         }
-        if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode)) {
-            dbAccess.signIn(self.email!, password: self.password!)
-        }
+        dbAccess.signIn(self.email!, password: self.password!)
     }
     
     @objc func signInResult(notification: NSNotification) {
@@ -228,7 +227,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     }
                     thisMember.isOnline = true
                     dbAccess.setOnlineState(true)
-                    dismiss(animated: true, completion: nil)
+//                    dismiss(animated: true, completion: nil)
                     self.performSegue(withIdentifier: Constants.Segues.SignedIn, sender: self)
                     break
                 }

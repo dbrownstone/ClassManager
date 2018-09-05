@@ -198,8 +198,7 @@ extension Bundle {
 extension Notification.Name {
     static let Authorized = Notification.Name(rawValue: "Authorized")
     static let SignIn = Notification.Name(rawValue: "SignIn")
-    static let ClassDBUpdated = Notification.Name(
-        rawValue: "ClassDBUpdated")
+    static let ClassDBUpdated = Notification.Name(rawValue: "ClassDBUpdated")
     static let UserDBUpdated = Notification.Name(
         rawValue: "UserDBUpdated")
     static let RegisterUser = Notification.Name(
@@ -232,6 +231,5 @@ extension Notification.Name {
         rawValue: "LoadMessageImage")
     static let NewChatMessageImage = Notification.Name(
         rawValue: "NewChatMessageImage")
-    static let ResetTableView = Notification.Name(
-        rawValue: "ResetTableView")
+    static let ResetTableView = Notification.Name(rawValue: "ResetTableView")
 }
