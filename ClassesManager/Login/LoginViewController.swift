@@ -63,7 +63,7 @@ class LoginViewController: UIViewController {
         
         self.email = standardDefaults.string(forKey: Constants.StdDefaultKeys.LoggedInEmail)
         self.password = standardDefaults.string(forKey: Constants.StdDefaultKeys.Sisma)
-        if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode) == false || self.email == nil || self.password == nil) {
+        if (self.email == nil || self.password == nil) {
             if email == nil || (email?.isEmpty)! {
                 appDelegate.loggedInId = ""
 //                self.emailTextField.becomeFirstResponder()
@@ -77,6 +77,8 @@ class LoginViewController: UIViewController {
             }
         }
         if (self.email?.count)! > 0 && (self.password?.count)! > 0 {
+            self.emailTextField.text = self.email
+            self.passwordTextField.text = self.password
             self.handleLogin()
         }
     }
@@ -266,28 +268,6 @@ class LoginViewController: UIViewController {
     
     // MARK: - Navigation
     
-    @IBAction func logout(_ segue: UIStoryboardSegue) {
-        do {
-            try Auth.auth().signOut()
-            self.fullNameTextField?.text = ""
-            self.phoneNoTextField?.text = ""
-            self.email = ""
-            self.password = ""
-            self.emailTextField?.text = ""
-            self.emailTextField?.becomeFirstResponder()
-            self.passwordTextField?.text = ""
-            thereIsAnImage = false
-            self.profileImageView.image = UIImage(named:"unknown_image")
-            standardDefaults.set("", forKey: Constants.StdDefaultKeys.CurrentLoggedInId)
-            standardDefaults.set("", forKey: Constants.StdDefaultKeys.LoggedInEmail)
-            standardDefaults.synchronize()
-            dbAccess.setOnlineState(false)
-            dismiss(animated: true, completion: nil)
-        } catch {
-            print("Unable to logout")
-        }
-    }
-    
     @IBAction func cancelChangedPassword(_ segue: UIStoryboardSegue) {
     }
     
@@ -305,8 +285,11 @@ class LoginViewController: UIViewController {
             controller.source = self
             controller.thisMember =  self.thisMember
             controller.password = self.passwordTextField?.text
-        } else {
-//            appDelegate.tbControl = segue.destination as! UITabBarController
+        } else if segue.identifier == Constants.Segues.SignedIn {
+////            appDelegate.tbControl = segue.destination as! UITabBarController
+            let controller =  segue.destination as! InitialViewController
+            controller.alreadyLoggedIn = true
+            print("Show classes")
         }
     }
     

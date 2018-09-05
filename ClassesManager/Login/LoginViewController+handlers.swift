@@ -121,7 +121,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                         self.thisMember?.isOnline = true
                         dbAccess.setOnlineState(true)
 
-                        self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
+                        self.performSegue(withIdentifier: Constants.Segues.DoneLoggingIn, sender: self)
                     }
                 }
             })
@@ -187,23 +187,21 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
      logs in an already existing user and displays the matching  profile image
      */
     @objc func handleLogin() {
-        print("  handleLogin")
+        print("handleLogin")
         NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
         self.classesTVController?.navigationItem.titleView = nil
+        guard let emailText = emailTextField.text, let passwordText = passwordTextField.text else {
+            print("Invalid login parameters!")
+            self.showAlert("Incomplete text fields!", theTitle: "Error")
+            return
+        }
         if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode)) {
             dbAccess.signIn(self.email!, password: self.password!)
-        } else {
-            guard let emailText = emailTextField.text, let passwordText = passwordTextField.text else {
-                print("Invalid login parameters!")
-                self.showAlert("Incomplete text fields!", theTitle: "Error")
-                return
-            }
-            dbAccess.signIn(emailText, password: passwordText)
         }
     }
     
     @objc func signInResult(notification: NSNotification) {
-        print("  signInResult")
+        print("signInResult")
         NotificationCenter.default.removeObserver(self, name: .SignIn, object: nil)
         if ((notification.userInfo!["error"] as? String)?.isEmpty)! {
             for thisMember in appDelegate.allTheUsers! {
@@ -211,6 +209,8 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     appDelegate.thisMember = thisMember
                     appDelegate.loginName = thisMember.name
                     appDelegate.loggedInId = (thisMember.uid)!
+                    self.emailTextField.text = self.email
+                    self.passwordTextField.text = self.password
                     standardDefaults.set(thisMember.uid, forKey: Constants.StdDefaultKeys.CurrentLoggedInId)
                     standardDefaults.set(thisMember.email, forKey: Constants.StdDefaultKeys.LoggedInEmail)
                     standardDefaults.set(self.password, forKey: Constants.StdDefaultKeys.Sisma)
@@ -218,12 +218,18 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     if (thisMember.profileImageUrl?.isEmpty)! {
                         self.handleSelectProfileImageView()
                         break
+                    } else {
+                        self.profileImageUrl = thisMember.profileImageUrl
+                        if let URL = URL(string: profileImageUrl!), let data = try? Data(contentsOf: URL) {
+                            let image = UIImage(data: data)
+                            self.profileImageView.image = image
+                            self.profileImageView.frame.origin.y = 64.0
+                        }
                     }
-                    self.profileImageUrl = thisMember.profileImageUrl
                     thisMember.isOnline = true
                     dbAccess.setOnlineState(true)
                     dismiss(animated: true, completion: nil)
-                    self.performSegue(withIdentifier: Constants.Segues.LoggedIn, sender: self)
+                    self.performSegue(withIdentifier: Constants.Segues.SignedIn, sender: self)
                     break
                 }
             }            

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zdk-SN-W3E">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dSC-gr-Vi8">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -29,7 +29,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="63" y="0.0"/>
+            <point key="canvasLocation" x="-692" y="-7"/>
         </scene>
         <!--Classes-->
         <scene sceneID="ZQr-qh-XQX">
@@ -39,7 +39,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N9j-pQ-z0J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="846" y="-278"/>
+            <point key="canvasLocation" x="280" y="-292"/>
         </scene>
         <!--Chat-->
         <scene sceneID="M9H-2d-LNu">
@@ -49,7 +49,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3yc-L1-ZQ3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="831" y="-142"/>
+            <point key="canvasLocation" x="265" y="-155"/>
         </scene>
         <!--Settings-->
         <scene sceneID="6vb-b4-PZt">
@@ -59,7 +59,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xaO-5c-HJt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="850" y="81"/>
+            <point key="canvasLocation" x="284" y="68"/>
         </scene>
         <!--About-->
         <scene sceneID="KUe-68-A8v">
@@ -69,7 +69,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uad-kw-Mlv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="839" y="246"/>
+            <point key="canvasLocation" x="273" y="232"/>
         </scene>
         <!--Change Password View Controller-->
         <scene sceneID="vQa-n5-Jdw">
@@ -363,11 +363,12 @@
                         <outlet property="profileImageView" destination="iSb-Ig-zlL" id="Wcb-6G-lMf"/>
                         <outlet property="returnToLoginBtn" destination="tdR-0x-H4O" id="CXm-Bf-qqP"/>
                         <outlet property="tapGestureRecognizer" destination="24M-hH-iM8" id="DLG-IZ-8Ns"/>
-                        <segue destination="49e-Tb-3d3" kind="show" identifier="loggedin" id="z21-Z4-kGI"/>
                         <segue destination="lm0-0c-HVa" kind="show" identifier="changePassword" id="XdT-zo-jSe"/>
+                        <segue destination="iDa-Yi-D61" kind="unwind" identifier="signedIn" unwindAction="doneLoggingIn:" id="Ita-ay-HYo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EXB-vC-sCe" sceneMemberID="firstResponder"/>
+                <exit id="iDa-Yi-D61" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer id="24M-hH-iM8">
                     <connections>
                         <action selector="selectProfileImageView:" destination="zdk-SN-W3E" id="FJh-ev-VVA"/>
@@ -375,11 +376,52 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-758" y="320"/>
+            <point key="canvasLocation" x="-694" y="699"/>
+        </scene>
+        <!--Initial View Controller-->
+        <scene sceneID="4jz-fg-ncs">
+            <objects>
+                <viewController id="dSC-gr-Vi8" customClass="InitialViewController" customModule="ClassesManager" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5W3-Zi-3dF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Nia" translatesAutoresizingMaskIntoConstraints="NO" id="hcR-vz-rTt">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-xS-Qc8">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.95294117649999999" green="0.96862745100000003" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="mI8-xS-Qc8" firstAttribute="trailing" secondItem="ZMP-Bv-Rcn" secondAttribute="trailing" id="Jzs-Av-aok"/>
+                            <constraint firstItem="hcR-vz-rTt" firstAttribute="top" secondItem="5W3-Zi-3dF" secondAttribute="top" id="Kqw-nx-5LJ"/>
+                            <constraint firstItem="mI8-xS-Qc8" firstAttribute="leading" secondItem="ZMP-Bv-Rcn" secondAttribute="leading" id="KrA-Ti-1bN"/>
+                            <constraint firstItem="mI8-xS-Qc8" firstAttribute="top" secondItem="5W3-Zi-3dF" secondAttribute="top" id="UTR-sC-U7a"/>
+                            <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="trailing" secondItem="hcR-vz-rTt" secondAttribute="trailing" id="W2N-Bq-jd3"/>
+                            <constraint firstItem="hcR-vz-rTt" firstAttribute="leading" secondItem="5W3-Zi-3dF" secondAttribute="leading" id="X1u-8c-Be6"/>
+                            <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="bottom" secondItem="hcR-vz-rTt" secondAttribute="bottom" id="jxV-zG-Pet"/>
+                            <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="bottom" secondItem="mI8-xS-Qc8" secondAttribute="bottom" id="wBJ-99-Sbd"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZMP-Bv-Rcn"/>
+                    </view>
+                    <connections>
+                        <outlet property="cover" destination="mI8-xS-Qc8" id="EPY-jz-7fa"/>
+                        <outlet property="splashScreen" destination="hcR-vz-rTt" id="kC2-IF-YhS"/>
+                        <segue destination="49e-Tb-3d3" kind="show" identifier="loggedin" id="ikV-bV-VLI"/>
+                        <segue destination="zdk-SN-W3E" kind="custom" identifier="login" customClass="ScaleSegue" customModule="ClassesManager" customModuleProvider="target" id="Uuj-Nc-VeI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pol-XP-Fgb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1565.625" y="317.95774647887322"/>
         </scene>
     </scenes>
     <resources>
         <image name="DanceClasses" width="10" height="25"/>
+        <image name="Nia" width="320" height="480"/>
         <image name="chat" width="25" height="25"/>
         <image name="info" width="15" height="25"/>
         <image name="settings" width="30" height="30"/>

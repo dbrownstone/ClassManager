@@ -7,9 +7,6 @@
 //
 
 import UIKit
-import Firebase                                                                                                    
-import FirebaseDatabase
-
 
 var appDelegate:AppDelegate = (UIApplication.shared).delegate as! AppDelegate
 var standardDefaults = UserDefaults.standard
@@ -28,52 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var thisMember: User?
     var allTheUsers: [User]?
     var allAvailableMessages = [Message]()
+    var allClasses = [Class]()
     var msgCount = 0
+    var splashScreen: UIImageView?
     
 //    var tbControl: UITabBarController!
 
-    override init() {
-        super.init()
-        if Connectivity.isConnectedToInternet() {
-            print("Yes! internet is available.")
-            internetIsAvailable = true
-            FirebaseApp.configure()
-            Database.database().isPersistenceEnabled = true
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.usersLoaded(notification:)),
-                                                   name: .AllUsers,
-                                                   object: nil)
-            dbAccess.getAllUsers()
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.messagesLoaded(notification:)),
-                                                   name: .AllMessages,
-                                                   object: nil)
-            dbAccess.getAllMessages()
-        } else {
-            internetIsAvailable = false
-            print("No! internet is not available. Please Try again later.")
-        }
-    }
-    
-    @objc func usersLoaded(notification: NSNotification) {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .AllUsers,
-                                                  object: nil)
-        allTheUsers = notification.userInfo!["users"] as? [User]
-        print("all users found")
-    }
-    
-    @objc func messagesLoaded(notification: NSNotification) {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .AllMessages,
-                                                  object: nil)
-        allAvailableMessages = (notification.userInfo!["messages"] as? [Message])!
-        msgCount = self.allAvailableMessages.count
-        print("Message Count: \(self.msgCount)")
-    }
-    
-    
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         URLCache.shared.removeAllCachedResponses()
@@ -83,7 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.size = 150
         config.spinnerColor = .magenta
         config.spinnerLineWidth = 3
-//        config.backgroundColor = .clear
         SwiftActivity.setConfig(config: config)
 
         return true
@@ -100,18 +56,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        self.showSplash()
+    }
+    
+    func showSplash() {
+        self.splashScreen = UIImageView(image: UIImage(named: "Nia"))
+        self.window?.addSubview(splashScreen!)
+        self.window?.bringSubview(toFront: splashScreen!)
+        self.window?.makeKeyAndVisible()
+    }
+    
+    func hideSplash() {
+        UIView.animate(withDuration: 4.2, delay: 0.5, options: .curveEaseOut, animations: {
+            self.splashScreen?.alpha = 0.0
+        }, completion: { finished in
+            self.splashScreen?.removeFromSuperview()
+            print("end splash");
+        })
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 //        SettingsBundleHelper.checkAndExecuteSettings()
         SettingsBundleHelper.setVersionAndBuildNumber()
+        self.hideSplash()
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
         dbAccess.setOnlineState(false)
     }
-    
-    
 }
 

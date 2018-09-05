@@ -27,7 +27,10 @@ struct Constants {
     }
     
     struct Segues {
+        static let GoToLoginScreen = "login"
         static let LoggedIn = "loggedin"
+        static let DoneLoggingIn = "doneLoggingIn"
+        static let SignedIn = "signedIn"
         static let ChangePassword = "changePassword"
         static let AddAClass = "addAClass"
         static let AddANewClass = "addANewClass"

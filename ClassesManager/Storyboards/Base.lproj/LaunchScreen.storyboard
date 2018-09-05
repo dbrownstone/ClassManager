@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina3_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -18,17 +18,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="launch" translatesAutoresizingMaskIntoConstraints="NO" id="aoz-cl-Zkl">
-                                <rect key="frame" x="0.0" y="159" width="320" height="162"/>
-                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lBM-ow-TYH">
+                                <rect key="frame" x="53" y="166" width="214" height="148"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="groups" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOX-6h-rTv">
+                                        <rect key="frame" x="26" y="45.5" width="162" height="56.5"/>
+                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="51"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="manager" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xj8-QL-mVa">
+                                        <rect key="frame" x="61" y="87" width="68" height="19"/>
+                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="17"/>
+                                        <color key="textColor" white="0.7990722656" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="yOX-6h-rTv" firstAttribute="centerY" secondItem="lBM-ow-TYH" secondAttribute="centerY" id="9uG-C9-y4K"/>
+                                    <constraint firstItem="yOX-6h-rTv" firstAttribute="centerX" secondItem="lBM-ow-TYH" secondAttribute="centerX" id="I2Z-Jn-yOP"/>
+                                    <constraint firstItem="yOX-6h-rTv" firstAttribute="leading" secondItem="Xj8-QL-mVa" secondAttribute="trailing" constant="-103" id="Y0H-py-H3m"/>
+                                    <constraint firstItem="Xj8-QL-mVa" firstAttribute="top" secondItem="yOX-6h-rTv" secondAttribute="bottom" constant="-15" id="m5V-M5-nM2"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.30259644985198975" green="0.72296446561813354" blue="0.92720788717269897" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.49803921568627452" blue="0.44313725490196076" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="aoz-cl-Zkl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="156" id="4lw-A7-vd2"/>
-                            <constraint firstItem="aoz-cl-Zkl" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7IQ-8Q-KBj"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="aoz-cl-Zkl" secondAttribute="bottom" constant="176" id="OxX-Rs-F4s"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="aoz-cl-Zkl" secondAttribute="trailing" id="Ufl-nk-07X"/>
-                            <constraint firstItem="aoz-cl-Zkl" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="los-dT-iWF"/>
+                            <constraint firstItem="lBM-ow-TYH" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="53" id="2A8-4X-6tR"/>
+                            <constraint firstItem="lBM-ow-TYH" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="SZ7-FB-5re"/>
+                            <constraint firstItem="lBM-ow-TYH" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="146" id="bEv-HA-mMk"/>
+                            <constraint firstItem="lBM-ow-TYH" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="yKf-LZ-wOI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -38,7 +58,4 @@
             <point key="canvasLocation" x="52.5" y="375"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="launch" width="100" height="56"/>
-    </resources>
 </document>

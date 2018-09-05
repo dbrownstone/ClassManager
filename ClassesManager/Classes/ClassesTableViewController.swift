@@ -46,11 +46,27 @@ class ClassesTableViewController: UITableViewController,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.classesLoaded(notification:)),
-                                                   name: .AllClasses,
-                                                   object: nil)
-        dbAccess.getAllClasses()
+        var classes = [Class]()
+        // display only the classes of which this user is a member
+        for aClass in appDelegate.allClasses {
+            if aClass.teacher ==  appDelegate.loginName {
+                classes.append(aClass)
+                continue
+            } else {
+                if aClass.members.contains(appDelegate.loggedInId) {
+                    classes.append(aClass)
+                }
+            }
+        }
+        
+        self.classes = classes
+        if self.classes.count == 0  {
+            self.performSegue(withIdentifier: Constants.Segues.AddAClass, sender: self)
+        } else {
+            for _ in classes {
+                rowHeights.append(60)
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -62,33 +78,6 @@ class ClassesTableViewController: UITableViewController,
             chatVC.theObjectMember = self.chatSubject
             self.chatSubject = nil // allows returning back to this view
             self.tabBarController?.selectedIndex = 1
-        }
-    }
-    
-    @objc func classesLoaded(notification: NSNotification) {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .AllClasses,
-                                                  object: nil)
-        existingClasses = (notification.userInfo!["classes"] as? [Class])!
-        classes = [Class]()
-        // display only the classes of which this user is a member
-        for aClass in existingClasses {
-            if aClass.teacher ==  appDelegate.loginName {
-                classes.append(aClass)
-                continue
-            } else {
-                if aClass.members.contains(appDelegate.loggedInId) {
-                    classes.append(aClass)
-                }
-            }
-        }
-        if self.classes.count == 0  {
-            self.performSegue(withIdentifier: Constants.Segues.AddAClass, sender: self)
-        } else {
-            for _ in classes {
-                rowHeights.append(60)
-            }
-            self.tableView.reloadData()
         }
     }
     
