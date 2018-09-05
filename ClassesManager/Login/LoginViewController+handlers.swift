@@ -191,7 +191,7 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         print("handleLogin")
         NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
         self.classesTVController?.navigationItem.titleView = nil
-        guard let emailText = emailTextField.text, let passwordText = passwordTextField.text else {
+        guard let _ = emailTextField.text, let _ = passwordTextField.text else {
             print("Invalid login parameters!")
             self.showAlert("Incomplete text fields!", theTitle: "Error")
             return

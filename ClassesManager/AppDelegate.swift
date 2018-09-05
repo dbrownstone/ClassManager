@@ -61,6 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func showSplash() {
         self.splashScreen = UIImageView(image: UIImage(named: "Nia"))
+        self.splashScreen?.frame = appDelegate.window!.frame
         self.window?.addSubview(splashScreen!)
         self.window?.bringSubview(toFront: splashScreen!)
         self.window?.makeKeyAndVisible()
