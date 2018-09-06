@@ -1,13 +1,13 @@
 //
 //  LoginViewController.swift
-//  
+//  ClassesManager
 //
 //  Created by David Brownstone on 02/04/2018.
+//  Copyright © 2018 David Brownstone. All rights reserved.
 //
 
 import UIKit
 import Firebase
-import FirebaseDatabase
 
 class LoginViewController: UIViewController {
     
@@ -172,12 +172,6 @@ class LoginViewController: UIViewController {
             if self.loginAgain {
                 self.loginAgain = false
                 self.showAlert("Please enter your new password and login again.", theTitle: "Password Changed")
-            } else if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode)) {
-                if (self.email?.count)! > 0 && (self.password?.count)! > 0 {
-                    NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
-                    dbAccess.signIn(self.email!, password: self.password!)
-                }
-                
             }
             return
         }
@@ -275,6 +269,28 @@ class LoginViewController: UIViewController {
     
     // MARK: - Navigation
     
+//    @IBAction func logout(_ segue: UIStoryboardSegue) {
+//        do {
+//            try Auth.auth().signOut()
+//            self.fullNameTextField?.text = ""
+//            self.phoneNoTextField?.text = ""
+//            self.email = ""
+//            self.password = ""
+//            self.emailTextField?.text = ""
+//            self.emailTextField?.becomeFirstResponder()
+//            self.passwordTextField?.text = ""
+//            thereIsAnImage = false
+//            self.profileImageView.image = UIImage(named:"unknown_image")
+//            standardDefaults.set("", forKey: Constants.StdDefaultKeys.CurrentLoggedInId)
+//            standardDefaults.set("", forKey: Constants.StdDefaultKeys.LoggedInEmail)
+//            standardDefaults.synchronize()
+//            dbAccess.setOnlineState(false)
+//            dismiss(animated: true, completion: nil)
+//        } catch {
+//            print("Unable to logout")
+//        }
+//    }
+    
     @IBAction func cancelChangedPassword(_ segue: UIStoryboardSegue) {
     }
     
@@ -292,7 +308,8 @@ class LoginViewController: UIViewController {
             controller.source = self
             controller.thisMember =  self.thisMember
             controller.password = self.passwordTextField?.text
-        } else if segue.identifier == Constants.Segues.SignedIn {
+        } else if segue.identifier == Constants.Segues.DoneLoggingIn {
+////            appDelegate.tbControl = segue.destination as! UITabBarController
             let controller =  segue.destination as! InitialViewController
             controller.alreadyLoggedIn = true
             print("Show classes")

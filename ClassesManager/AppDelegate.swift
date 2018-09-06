@@ -1,6 +1,6 @@
-                                                                                                                    //
+//
 //  AppDelegate.swift
-//  MultiTab
+//  Class Manager
 //
 //  Created by David Brownstone on 01/04/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.
@@ -45,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
+    
     func applicationWillResignActive(_ application: UIApplication) {
         dbAccess.setOnlineState(false)
     }
@@ -56,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        self.showSplash()
+        showSplash()
     }
     
     func showSplash() {
@@ -80,11 +81,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 //        SettingsBundleHelper.checkAndExecuteSettings()
         SettingsBundleHelper.setVersionAndBuildNumber()
-        self.hideSplash()
+        hideSplash()
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
         dbAccess.setOnlineState(false)
     }
+    
+    
 }
 

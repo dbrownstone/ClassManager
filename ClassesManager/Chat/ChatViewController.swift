@@ -1,6 +1,6 @@
-////
+//
 //  ChatViewController.swift
-//  MultiTab
+//  ClassesManager
 //
 //  Created by David Brownstone on 03/07/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.

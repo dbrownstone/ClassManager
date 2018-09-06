@@ -1,8 +1,9 @@
 //
 //  ListMembersTableViewController.swift
-//  
+//  ClassesManager
 //
 //  Created by David Brownstone on 09/04/2018.
+//  Copyright © 2018 David Brownstone. All rights reserved.
 //
 
 import UIKit

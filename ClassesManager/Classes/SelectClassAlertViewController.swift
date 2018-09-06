@@ -1,6 +1,6 @@
 //
 //  SelectClassAlertViewController.swift
-//  MultiTab
+//  ClassesManager
 //
 //  Created by David Brownstone on 21/05/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.

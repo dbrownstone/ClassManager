@@ -1,5 +1,6 @@
 //
-//  SwiftActivity
+//  SwiftActivity.swift
+//  Class Manager
 //
 //  Created by David Brownstone on 17/09/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.

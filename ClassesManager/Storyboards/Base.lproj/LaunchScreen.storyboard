@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina3_5" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,21 +15,29 @@
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lBM-ow-TYH">
-                                <rect key="frame" x="53" y="166" width="214" height="148"/>
+                                <rect key="frame" x="53" y="166" width="269" height="335"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="groups" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOX-6h-rTv">
-                                        <rect key="frame" x="26" y="45.5" width="162" height="56.5"/>
-                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="51"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="classes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOX-6h-rTv">
+                                        <rect key="frame" x="41" y="135" width="187.5" height="66"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="66" id="1b7-jS-HRc"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="187" id="uUb-EM-4CS"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="60"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="manager" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xj8-QL-mVa">
-                                        <rect key="frame" x="61" y="87" width="68" height="19"/>
-                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="manager" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xj8-QL-mVa">
+                                        <rect key="frame" x="41" y="179" width="187" height="27"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="27" id="Tku-0T-kUR"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="187" id="yjo-pk-bjY"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="24"/>
                                         <color key="textColor" white="0.7990722656" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -37,9 +45,10 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="yOX-6h-rTv" firstAttribute="centerY" secondItem="lBM-ow-TYH" secondAttribute="centerY" id="9uG-C9-y4K"/>
+                                    <constraint firstItem="Xj8-QL-mVa" firstAttribute="leading" secondItem="yOX-6h-rTv" secondAttribute="leading" id="AXF-Jx-Dwc"/>
                                     <constraint firstItem="yOX-6h-rTv" firstAttribute="centerX" secondItem="lBM-ow-TYH" secondAttribute="centerX" id="I2Z-Jn-yOP"/>
-                                    <constraint firstItem="yOX-6h-rTv" firstAttribute="leading" secondItem="Xj8-QL-mVa" secondAttribute="trailing" constant="-103" id="Y0H-py-H3m"/>
-                                    <constraint firstItem="Xj8-QL-mVa" firstAttribute="top" secondItem="yOX-6h-rTv" secondAttribute="bottom" constant="-15" id="m5V-M5-nM2"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Xj8-QL-mVa" secondAttribute="trailing" constant="13.5" id="cQs-fA-Bsr"/>
+                                    <constraint firstItem="Xj8-QL-mVa" firstAttribute="top" secondItem="yOX-6h-rTv" secondAttribute="bottom" constant="-21.999999999999886" id="m5V-M5-nM2"/>
                                 </constraints>
                             </view>
                         </subviews>

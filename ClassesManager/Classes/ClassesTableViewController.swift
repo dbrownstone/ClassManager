@@ -1,6 +1,6 @@
 //
 //  ClassesTableViewController.swift
-//  MultiTab
+//  Class Manager
 //
 //  Created by David Brownstone on 01/04/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.

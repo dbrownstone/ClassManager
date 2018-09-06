@@ -1,6 +1,6 @@
 //
 //  ChatViewExtensions.swift
-//  ChatViewExtensions
+//  ClassesManager
 //
 //  Created by David Brownstone on 26/06/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.

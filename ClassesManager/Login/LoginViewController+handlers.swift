@@ -1,6 +1,6 @@
 //
 //  LoginViewController+handlers.swift
-//  MultiTab
+//  ClassesManager
 //
 //  Created by David Brownstone on 03/04/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.
@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import FirebaseDatabase
 
 /**
  Handles profile image access, registering a new user and logging in an existing user
@@ -191,12 +190,16 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         print("handleLogin")
         NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
         self.classesTVController?.navigationItem.titleView = nil
-        guard let _ = emailTextField.text, let _ = passwordTextField.text else {
-            print("Invalid login parameters!")
-            self.showAlert("Incomplete text fields!", theTitle: "Error")
-            return
+        if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode)) {
+            dbAccess.signIn(self.email!, password: self.password!)
+        } else {
+            guard let emailText = emailTextField.text, let passwordText = passwordTextField.text else {
+                print("Invalid login parameters!")
+                self.showAlert("Incomplete text fields!", theTitle: "Error")
+                return
+            }
+            dbAccess.signIn(emailText, password: passwordText)
         }
-        dbAccess.signIn(self.email!, password: self.password!)
     }
     
     @objc func signInResult(notification: NSNotification) {
@@ -227,8 +230,8 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
                     }
                     thisMember.isOnline = true
                     dbAccess.setOnlineState(true)
-//                    dismiss(animated: true, completion: nil)
-                    self.performSegue(withIdentifier: Constants.Segues.SignedIn, sender: self)
+                    dismiss(animated: true, completion: nil)
+                    self.performSegue(withIdentifier: Constants.Segues.DoneLoggingIn, sender: self)
                     break
                 }
             }            

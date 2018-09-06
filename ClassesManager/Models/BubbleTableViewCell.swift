@@ -72,14 +72,9 @@ class BubbleTableViewCell: UITableViewCell {
     }
     
     func prepare() {
-//        let allCurrentImageViews = contentView.allSubViewsOf(type: UIImageView.self)
         for v in contentView.subviews {
             v.removeFromSuperview()
         }
-//        let allCurrentLabels = contentView.allSubViewsOf(type: UILabel.self)
-//        for v in allCurrentLabels {
-//            v.removeFromSuperview()
-//        }
         
         selectionStyle = .none
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -97,18 +92,14 @@ class BubbleTableViewCell: UITableViewCell {
             contentView.bringSubview(toFront: self.msgTextLabel!)
             self.msgTextLabel?.center = (self.bubbleView?.center)!
         } else {
-//            if let URL = URL(string: messageImageUrl!),
-//                let data = try? Data(contentsOf: URL) {
-            
-                self.messageImageView = UIImageView()
-                let max = (contentView.frame.size.width) * 0.55
+            self.messageImageView = UIImageView()
+            let max = (contentView.frame.size.width) * 0.55
             self.messageImageView?.image = self.messageImage
             self.messageImageView?.frame = CGRect(x: 0, y: 5, width: max, height: max/((messageImage?.size.width)! / (messageImage?.size.height)!))
-                self.messageImageView?.contentMode = .scaleAspectFit
-                contentView.addSubview(self.messageImageView!)
-                contentView.bringSubview(toFront: self.messageImageView!)
-                self.messageImageView?.center = (self.bubbleView?.center)!
-//            }
+            self.messageImageView?.contentMode = .scaleAspectFit
+            contentView.addSubview(self.messageImageView!)
+            contentView.bringSubview(toFront: self.messageImageView!)
+            self.messageImageView?.center = (self.bubbleView?.center)!
         }
         
         if authorType == .authorTypeOther {
@@ -118,11 +109,6 @@ class BubbleTableViewCell: UITableViewCell {
                 self.userImage = UIImageView(frame: CGRect(x: 0, y: 0, width: AuthorImageSize, height: AuthorImageSize))
                 self.userImage?.image = image
                 self.userImage?.isUserInteractionEnabled = true
-                
-//                let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress))
-//                bubbleView?.addGestureRecognizer(longPressRecognizer)
-//                let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tap))
-//                self.userImage?.addGestureRecognizer(tapRecognizer)
             }
         }
         
@@ -139,7 +125,6 @@ class BubbleTableViewCell: UITableViewCell {
             bubbleColor = .bubbleColorGray;
         }
         self.setImageForBubbleColor(bubbleColor!)
-//        let minInset: CGFloat = ((dataSource as AnyObject).minInsetForCell!(cell: self, atIndexPath: self.indexPath!))
         var size: CGSize?
         if (self.userImage != nil && type == .authorTypeOther) {
             contentView.addSubview(self.userImage!)

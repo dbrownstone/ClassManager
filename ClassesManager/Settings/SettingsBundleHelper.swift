@@ -1,6 +1,6 @@
 //
 //  SettingsBundleHelper.swift
-//  MultiTab
+//  ClassesManager
 //
 //  Created by David Brownstone on 08/09/2018.
 //

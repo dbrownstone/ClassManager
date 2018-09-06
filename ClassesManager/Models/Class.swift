@@ -1,6 +1,6 @@
 //
 //  Class
-//  MultiTab
+//  ClassesManager
 //
 //  Created by David Brownstone on 3/04/2018.
 //  Copyright © 2018 David Brownstone. All rights reserved.
