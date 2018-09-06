@@ -21,13 +21,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lBM-ow-TYH">
                                 <rect key="frame" x="53" y="166" width="269" height="335"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="classes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOX-6h-rTv">
-                                        <rect key="frame" x="41" y="135" width="187.5" height="66"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="classes" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOX-6h-rTv">
+                                        <rect key="frame" x="41" y="135" width="187" height="66"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="66" id="1b7-jS-HRc"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="187" id="uUb-EM-4CS"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="60"/>
+                                        <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="60"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -37,7 +37,7 @@
                                             <constraint firstAttribute="height" constant="27" id="Tku-0T-kUR"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="187" id="yjo-pk-bjY"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Palatino-Bold" family="Palatino" pointSize="24"/>
+                                        <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="24"/>
                                         <color key="textColor" white="0.7990722656" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>

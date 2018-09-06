@@ -67,22 +67,16 @@ class LoginViewController: UIViewController {
         if (self.email == nil || self.password == nil) {
             if email == nil || (email?.isEmpty)! {
                 appDelegate.loggedInId = ""
-//                self.emailTextField.becomeFirstResponder()
+                self.emailTextField.becomeFirstResponder()
                 self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
                 return
             } else {
                 self.passwordTextField.becomeFirstResponder()
-                NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
-                dbAccess.getAUser(self.email!)
-                return
             }
         }
-        if (self.email?.count)! > 0 && (self.password?.count)! > 0 {
-            self.emailTextField.text = self.email
-            self.passwordTextField.text = self.password
-            self.handleLogin()
-        }
-    }
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
+        dbAccess.getAUser(self.email!)
+     }
     
     @objc func getCurrentUser(notification: NSNotification) {
         NotificationCenter.default.removeObserver(self, name: .AUser, object: nil)
@@ -172,6 +166,17 @@ class LoginViewController: UIViewController {
             if self.loginAgain {
                 self.loginAgain = false
                 self.showAlert("Please enter your new password and login again.", theTitle: "Password Changed")
+            }
+            if (self.email?.count)! > 0 && (self.password?.count)! > 0 {
+                self.emailTextField.text = self.email
+                self.passwordTextField.text = self.password
+                
+                if (standardDefaults.bool(forKey: Constants.StdDefaultKeys.LoginMode)) {
+                    SwiftActivity.show(title: "Signing in...", animated: true)
+                    self.returnToLoginBtn.isHidden = true
+                    NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
+                    dbAccess.signIn(self.email!, password: self.password!)
+                }
             }
             return
         }

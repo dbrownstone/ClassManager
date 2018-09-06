@@ -123,10 +123,12 @@
 		6343DB3720A5F9E200D00DB2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				634469F2211AB6C200545F34 /* Settings */,
 				6357C5F120736BA00021B83C /* User.swift */,
 				6357C5F3207375B40021B83C /* Class.swift */,
 				63F9239020F76676002B3F49 /* BubbleTableViewCell.swift */,
 				6371458C208AE4640088F0B8 /* Message.swift */,
+				6343DB3820A5F9FD00D00DB2 /* Classes */,
 				6350955220B5C24200D437B2 /* MemberCollectionCell.swift */,
 			);
 			path = Models;
@@ -194,9 +196,7 @@
 				636B16672126C9B700B61251 /* SwiftActivity.swift */,
 				6343DB3620A5F99300D00DB2 /* Login */,
 				6343DB3720A5F9E200D00DB2 /* Models */,
-				6343DB3820A5F9FD00D00DB2 /* Classes */,
 				63E923DA20B4092100E17121 /* Chat */,
-				634469F2211AB6C200545F34 /* Settings */,
 				63B069A32070EF5600DC1D6F /* Storyboards */,
 				63B069942070EE1000DC1D6F /* Assets.xcassets */,
 				6357C5EC2072581D0021B83C /* Supporting Files */,
