@@ -14,10 +14,10 @@
 		63265714211DBCC400A917D5 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63265713211DBCC300A917D5 /* SettingsTableViewController.swift */; };
 		6328DD93207BE0FC002B5B28 /* AddClassesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328DD92207BE0FC002B5B28 /* AddClassesViewController.swift */; };
 		6328DD97207C83A5002B5B28 /* Connectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6328DD96207C83A5002B5B28 /* Connectivity.swift */; };
-		633D18C0213BFC85003B8621 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633D18BF213BFC84003B8621 /* InitialViewController.swift */; };
-		633D18C2213CF981003B8621 /* ScaleSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633D18C1213CF981003B8621 /* ScaleSegue.swift */; };
 		6350955120B2C89D00D437B2 /* SelectClassAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */; };
 		6350955320B5C24200D437B2 /* MemberCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350955220B5C24200D437B2 /* MemberCollectionCell.swift */; };
+		6350A5BA21478A130030FA7D /* ScaleSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350A5B821478A120030FA7D /* ScaleSegue.swift */; };
+		6350A5BB21478A130030FA7D /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350A5B921478A130030FA7D /* InitialViewController.swift */; };
 		6357C5E220721F400021B83C /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 6357C5E120721F400021B83C /* Podfile */; };
 		6357C5E9207253490021B83C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6357C5E8207253490021B83C /* GoogleService-Info.plist */; };
 		6357C5F020736AFC0021B83C /* LoginViewController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357C5EF20736AFC0021B83C /* LoginViewController+handlers.swift */; };
@@ -53,10 +53,10 @@
 		63265713211DBCC300A917D5 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		6328DD92207BE0FC002B5B28 /* AddClassesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClassesViewController.swift; sourceTree = "<group>"; };
 		6328DD96207C83A5002B5B28 /* Connectivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connectivity.swift; sourceTree = "<group>"; };
-		633D18BF213BFC84003B8621 /* InitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InitialViewController.swift; path = Initial/InitialViewController.swift; sourceTree = "<group>"; };
-		633D18C1213CF981003B8621 /* ScaleSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScaleSegue.swift; path = Initial/ScaleSegue.swift; sourceTree = "<group>"; };
 		6350955020B2C89D00D437B2 /* SelectClassAlertViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassAlertViewController.swift; sourceTree = "<group>"; };
 		6350955220B5C24200D437B2 /* MemberCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCollectionCell.swift; sourceTree = "<group>"; };
+		6350A5B821478A120030FA7D /* ScaleSegue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleSegue.swift; sourceTree = "<group>"; };
+		6350A5B921478A130030FA7D /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		6357C5E120721F400021B83C /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		6357C5E8207253490021B83C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6357C5EF20736AFC0021B83C /* LoginViewController+handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LoginViewController+handlers.swift"; sourceTree = "<group>"; };
@@ -123,12 +123,10 @@
 		6343DB3720A5F9E200D00DB2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				634469F2211AB6C200545F34 /* Settings */,
 				6357C5F120736BA00021B83C /* User.swift */,
 				6357C5F3207375B40021B83C /* Class.swift */,
 				63F9239020F76676002B3F49 /* BubbleTableViewCell.swift */,
 				6371458C208AE4640088F0B8 /* Message.swift */,
-				6343DB3820A5F9FD00D00DB2 /* Classes */,
 				6350955220B5C24200D437B2 /* MemberCollectionCell.swift */,
 			);
 			path = Models;
@@ -155,6 +153,15 @@
 				6326570E211C9ADA00A917D5 /* Settings.bundle */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		6350A5BC21478B390030FA7D /* PersonalScreen */ = {
+			isa = PBXGroup;
+			children = (
+				6350A5B921478A130030FA7D /* InitialViewController.swift */,
+				6350A5B821478A120030FA7D /* ScaleSegue.swift */,
+			);
+			path = PersonalScreen;
 			sourceTree = "<group>";
 		};
 		6357C5EC2072581D0021B83C /* Supporting Files */ = {
@@ -187,7 +194,6 @@
 		63B0698A2070EE0E00DC1D6F /* ClassesManager */ = {
 			isa = PBXGroup;
 			children = (
-				63C3B616214136FF006D5630 /* Initial */,
 				63B0698B2070EE0E00DC1D6F /* AppDelegate.swift */,
 				63AA80E8208F7C56003710B7 /* Constants.swift */,
 				6328DD96207C83A5002B5B28 /* Connectivity.swift */,
@@ -195,8 +201,11 @@
 				6357C5F520737A760021B83C /* SystemExtensions.swift */,
 				636B16672126C9B700B61251 /* SwiftActivity.swift */,
 				6343DB3620A5F99300D00DB2 /* Login */,
-				6343DB3720A5F9E200D00DB2 /* Models */,
+				6350A5BC21478B390030FA7D /* PersonalScreen */,
+				6343DB3820A5F9FD00D00DB2 /* Classes */,
 				63E923DA20B4092100E17121 /* Chat */,
+				634469F2211AB6C200545F34 /* Settings */,
+				6343DB3720A5F9E200D00DB2 /* Models */,
 				63B069A32070EF5600DC1D6F /* Storyboards */,
 				63B069942070EE1000DC1D6F /* Assets.xcassets */,
 				6357C5EC2072581D0021B83C /* Supporting Files */,
@@ -215,15 +224,6 @@
 				63265710211DA0BB00A917D5 /* Settings.storyboard */,
 			);
 			path = Storyboards;
-			sourceTree = "<group>";
-		};
-		63C3B616214136FF006D5630 /* Initial */ = {
-			isa = PBXGroup;
-			children = (
-				633D18BF213BFC84003B8621 /* InitialViewController.swift */,
-				633D18C1213CF981003B8621 /* ScaleSegue.swift */,
-			);
-			name = Initial;
 			sourceTree = "<group>";
 		};
 		63E923DA20B4092100E17121 /* Chat */ = {
@@ -371,17 +371,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				6362584B20EBA3C400116258 /* ChatViewController.swift in Sources */,
-				633D18C0213BFC85003B8621 /* InitialViewController.swift in Sources */,
+				6350A5BB21478A130030FA7D /* InitialViewController.swift in Sources */,
 				63B895B3207B69BC00177EDC /* AddNewClassViewController.swift in Sources */,
 				6357C5F4207375B40021B83C /* Class.swift in Sources */,
 				63EBAC242081D607001D43C2 /* AddMemberViewController.swift in Sources */,
 				6358C9F820A0548200E7B287 /* ChangePasswordViewController.swift in Sources */,
+				6350A5BA21478A130030FA7D /* ScaleSegue.swift in Sources */,
 				6371458D208AE4640088F0B8 /* Message.swift in Sources */,
 				63893283208706250009FCE8 /* DatabaseAccess.swift in Sources */,
 				63FC8F7A20D101F200900979 /* LoginViewController.swift in Sources */,
 				636B16682126C9B700B61251 /* SwiftActivity.swift in Sources */,
 				63F9239720FDD223002B3F49 /* ChatViewExtensions.swift in Sources */,
-				633D18C2213CF981003B8621 /* ScaleSegue.swift in Sources */,
 				63B0698C2070EE0E00DC1D6F /* AppDelegate.swift in Sources */,
 				63265714211DBCC400A917D5 /* SettingsTableViewController.swift in Sources */,
 				6357C5F620737A760021B83C /* SystemExtensions.swift in Sources */,

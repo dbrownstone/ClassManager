@@ -28,6 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var allClasses = [Class]()
     var msgCount = 0
     var splashScreen: UIImageView?
+    var splashScreenImage: UIImage?
+    var availableLaunchScreens = Dictionary<String, String>()
+    var useThisScreen: [String: String]!
     
 //    var tbControl: UITabBarController!
 
@@ -42,6 +45,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         config.spinnerLineWidth = 3
         SwiftActivity.setConfig(config: config)
 
+        if let dict = standardDefaults.dictionary(forKey: Constants.StdDefaultKeys.LaunchScreen) {
+            self.useThisScreen = dict as! [String : String]
+            let thisScreen = Array(self.useThisScreen.keys).first
+            if let URL = URL(string: self.useThisScreen[thisScreen!]!), let data = try? Data(contentsOf: URL) {
+                self.splashScreenImage = UIImage(data: data)!
+            }
+        }
         return true
     }
     
@@ -61,7 +71,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func showSplash() {
-        self.splashScreen = UIImageView(image: UIImage(named: "Nia"))
+        if self.useThisScreen != nil {
+            self.splashScreen = UIImageView(image: self.splashScreenImage)
+        } else {
+            self.splashScreen = UIImageView(image: UIImage(named: "Default"))
+        }
         self.splashScreen?.frame = appDelegate.window!.frame
         self.window?.addSubview(splashScreen!)
         self.window?.bringSubview(toFront: splashScreen!)

@@ -228,6 +228,22 @@ class DatabaseAccess: NSObject {
 //        NotificationCenter.default.post(name: .MsgDBUpdated, object: nil)
     }
     
+    public func getAvailableLaunchScreens(){
+        let screensRef = Database.database().reference().child(Constants.StorageChildKeys.AvailableLaunchScreens)
+        
+        screensRef.observe(.value, with: { (snapshot: DataSnapshot!) in
+            // Get download URL from snapshot
+            for aClassImage in snapshot.children {
+                let aClassTitle = (aClassImage as! DataSnapshot).key
+                if appDelegate.availableLaunchScreens[aClassTitle] != nil {
+                    break
+                }
+                let downloadURL = (aClassImage as! DataSnapshot).value as! String
+                appDelegate.availableLaunchScreens[aClassTitle] = downloadURL
+            }
+        })
+    }
+    
     /**
         Sign-in an existing user
     */

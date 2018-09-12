@@ -48,6 +48,7 @@ struct Constants {
         static let IndividualChatVisibilityPeriod = "individualChatVisibilityPeriod"
         static let ClassChatVisibilityPeriod = "classChatVisibilityPeriod"
         static let LoginMode = "loginMode"
+        static let LaunchScreen = "LaunchScreen"
     }
     
     struct DatabaseChildKeys {
@@ -59,6 +60,8 @@ struct Constants {
     struct StorageChildKeys {
         static let ProfileImages = "profile_images"
         static let MessageImages = "message_images"
+        static let FlashScreenImages = "flash_screens"
+        static let AvailableLaunchScreens = "availableLaunchScreens"
     }
     
     struct ClassFields {

@@ -177,6 +177,48 @@
                                     </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ChangeLaunchScreen" rowHeight="40" id="CDa-ZJ-zrU" userLabel="ChangeScreenMenu">
+                                <rect key="frame" x="0.0" y="139.5" width="375" height="40"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CDa-ZJ-zrU" id="qFr-mI-Zrs">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="39.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <button opaque="NO" tag="500" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i1h-Ox-9Em" customClass="CustomButton" customModule="ClassesManager" customModuleProvider="target">
+                                            <rect key="frame" x="15" y="3" width="343" height="34"/>
+                                            <state key="normal" title="Change the Launch Screen">
+                                                <color key="titleColor" red="0.0" green="0.4303589665" blue="0.2040699678" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </state>
+                                        </button>
+                                        <view tag="11" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sap-0s-eai">
+                                            <rect key="frame" x="15" y="37" width="343" height="180"/>
+                                            <subviews>
+                                                <stackView opaque="NO" tag="10" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="mIy-2q-yPL">
+                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="180"/>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="mIy-2q-yPL" secondAttribute="trailing" id="4ZT-cC-lPp"/>
+                                                <constraint firstItem="mIy-2q-yPL" firstAttribute="top" secondItem="sap-0s-eai" secondAttribute="top" id="Ldp-AV-H3H"/>
+                                                <constraint firstItem="mIy-2q-yPL" firstAttribute="centerX" secondItem="sap-0s-eai" secondAttribute="centerX" id="dFp-pf-pQV"/>
+                                                <constraint firstItem="mIy-2q-yPL" firstAttribute="centerY" secondItem="sap-0s-eai" secondAttribute="centerY" id="ftu-yS-zaA"/>
+                                                <constraint firstItem="mIy-2q-yPL" firstAttribute="leading" secondItem="sap-0s-eai" secondAttribute="leading" id="gvF-JE-FuX"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="i1h-Ox-9Em" firstAttribute="baseline" secondItem="sap-0s-eai" secondAttribute="top" id="Cjs-up-xgE"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="sap-0s-eai" secondAttribute="trailing" constant="1" id="JTc-Fv-KNF"/>
+                                        <constraint firstItem="sap-0s-eai" firstAttribute="leading" secondItem="i1h-Ox-9Em" secondAttribute="leading" id="ZPf-hE-cDi"/>
+                                        <constraint firstItem="sap-0s-eai" firstAttribute="top" secondItem="qFr-mI-Zrs" secondAttribute="top" constant="37" id="afR-pK-Hmp"/>
+                                        <constraint firstItem="sap-0s-eai" firstAttribute="leading" secondItem="qFr-mI-Zrs" secondAttribute="leadingMargin" constant="-1" id="bxR-Om-OIz"/>
+                                        <constraint firstItem="sap-0s-eai" firstAttribute="width" secondItem="i1h-Ox-9Em" secondAttribute="width" id="nxk-T8-rBJ"/>
+                                        <constraint firstAttribute="bottom" secondItem="sap-0s-eai" secondAttribute="bottom" constant="-177.5" id="qdK-W4-jxk"/>
+                                        <constraint firstItem="sap-0s-eai" firstAttribute="top" secondItem="i1h-Ox-9Em" secondAttribute="bottom" id="xus-de-lpp"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="pAs-7C-uLe" id="JzE-3x-8KF"/>
@@ -187,7 +229,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uoH-yJ-3Dv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1014" y="-34"/>
+            <point key="canvasLocation" x="1284" y="-34.632683658170919"/>
         </scene>
         <!--Settings-->
         <scene sceneID="5NH-po-S76">

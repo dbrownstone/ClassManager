@@ -375,11 +375,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Nia" translatesAutoresizingMaskIntoConstraints="NO" id="hcR-vz-rTt">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default" translatesAutoresizingMaskIntoConstraints="NO" id="hcR-vz-rTt">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mI8-xS-Qc8">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="568"/>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>
@@ -388,11 +388,11 @@
                             <constraint firstItem="mI8-xS-Qc8" firstAttribute="trailing" secondItem="ZMP-Bv-Rcn" secondAttribute="trailing" id="Jzs-Av-aok"/>
                             <constraint firstItem="hcR-vz-rTt" firstAttribute="top" secondItem="5W3-Zi-3dF" secondAttribute="top" id="Kqw-nx-5LJ"/>
                             <constraint firstItem="mI8-xS-Qc8" firstAttribute="leading" secondItem="ZMP-Bv-Rcn" secondAttribute="leading" id="KrA-Ti-1bN"/>
-                            <constraint firstItem="mI8-xS-Qc8" firstAttribute="top" secondItem="5W3-Zi-3dF" secondAttribute="top" id="UTR-sC-U7a"/>
+                            <constraint firstItem="mI8-xS-Qc8" firstAttribute="top" secondItem="5W3-Zi-3dF" secondAttribute="top" constant="20" id="UTR-sC-U7a"/>
                             <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="trailing" secondItem="hcR-vz-rTt" secondAttribute="trailing" id="W2N-Bq-jd3"/>
                             <constraint firstItem="hcR-vz-rTt" firstAttribute="leading" secondItem="5W3-Zi-3dF" secondAttribute="leading" id="X1u-8c-Be6"/>
                             <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="bottom" secondItem="hcR-vz-rTt" secondAttribute="bottom" id="jxV-zG-Pet"/>
-                            <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="bottom" secondItem="mI8-xS-Qc8" secondAttribute="bottom" id="wBJ-99-Sbd"/>
+                            <constraint firstItem="ZMP-Bv-Rcn" firstAttribute="bottom" secondItem="mI8-xS-Qc8" secondAttribute="bottom" constant="-20" id="wBJ-99-Sbd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZMP-Bv-Rcn"/>
                     </view>
@@ -410,7 +410,7 @@
     </scenes>
     <resources>
         <image name="DanceClasses" width="10" height="25"/>
-        <image name="Nia" width="320" height="480"/>
+        <image name="Default" width="240" height="360"/>
         <image name="chat" width="25" height="25"/>
         <image name="settings" width="30" height="30"/>
         <image name="unknown_image" width="45" height="45"/>

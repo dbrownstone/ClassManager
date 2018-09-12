@@ -58,7 +58,7 @@ class LoginViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardUp), name:.UIKeyboardWillShow, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardDown), name: .UIKeyboardWillHide, object: nil)
-        emailTextField?.becomeFirstResponder()
+//        emailTextField?.becomeFirstResponder()
         emailTextField?.delegate = self
         passwordTextField?.delegate = self
         
@@ -67,11 +67,11 @@ class LoginViewController: UIViewController {
         if (self.email == nil || self.password == nil) {
             if email == nil || (email?.isEmpty)! {
                 appDelegate.loggedInId = ""
-                self.emailTextField.becomeFirstResponder()
+//                self.emailTextField.becomeFirstResponder()
                 self.profileImageView.addGestureRecognizer(tapGestureRecognizer!)
                 return
             } else {
-                self.passwordTextField.becomeFirstResponder()
+//                self.passwordTextField.becomeFirstResponder()
             }
         }
         NotificationCenter.default.addObserver(self, selector: #selector(self.getCurrentUser(notification:)), name: .AUser, object: nil)
@@ -167,7 +167,7 @@ class LoginViewController: UIViewController {
                 self.loginAgain = false
                 self.showAlert("Please enter your new password and login again.", theTitle: "Password Changed")
             }
-            if (self.email?.count)! > 0 && (self.password?.count)! > 0 {
+            if (self.email != nil && (self.email?.count)! > 0) && (self.password != nil && (self.password?.count)! > 0) {
                 self.emailTextField.text = self.email
                 self.passwordTextField.text = self.password
                 
@@ -177,6 +177,8 @@ class LoginViewController: UIViewController {
                     NotificationCenter.default.addObserver(self, selector: #selector(signInResult(notification:)), name: .SignIn, object: nil)
                     dbAccess.signIn(self.email!, password: self.password!)
                 }
+            } else {
+                self.emailTextField.becomeFirstResponder()
             }
             return
         }
@@ -228,6 +230,7 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func login(_ sender: Any) {
+        self.passwordTextField.resignFirstResponder()
         let button = sender as! UIButton
         if button.titleLabel?.text == Constants.ButtonTitles.registerTitle {
             self.handleRegister()

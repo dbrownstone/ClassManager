@@ -26,7 +26,7 @@ class ScaleSegue: UIStoryboardSegue {
         
         containerView?.addSubview(toViewController.view)
         
-        UIView.animate(withDuration: 1.5, delay: 0, options: .transitionCrossDissolve, animations: {
+        UIView.animate(withDuration: 1.0, delay: 0.05, options: .curveEaseIn, animations: {
             toViewController.view.transform = CGAffineTransform.identity
         }, completion: { success in
             fromViewController.present(toViewController, animated: false, completion: nil)

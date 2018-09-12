@@ -19,6 +19,9 @@ enum activeTimes: String {
 class SettingsTableViewController: UITableViewController {
     
     @IBOutlet var activeTimeButtons: [UIButton]!
+    @IBOutlet weak var splashImagesView: UIView!
+    @IBOutlet weak var splashStack: UIStackView!
+    
     var loginMode: UISwitch!
     
     enum RowHeights: Int {
@@ -34,6 +37,7 @@ class SettingsTableViewController: UITableViewController {
     var menuOpened = false
     var heightForSelectedRow = 40
     var selectedRow = -1
+    var changingLaunchScreen = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,12 +50,6 @@ class SettingsTableViewController: UITableViewController {
         if standardDefaults.object(forKey: Constants.StdDefaultKeys.ClassChatVisibilityPeriod) != nil {
             classChatTimePeriod = standardDefaults.string(forKey:  Constants.StdDefaultKeys.ClassChatVisibilityPeriod)!
         }
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     override func didReceiveMemoryWarning() {
@@ -121,10 +119,67 @@ class SettingsTableViewController: UITableViewController {
         self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1), IndexPath(row: 1, section: 1)], with: .none)
         self.selectedRow = -1
     }
+    
+    var stack: UIStackView!
+    @objc func changeLaunchScreen(_ sender: UIButton) {
+        self.stack = sender.superview?.viewWithTag(10) as! UIStackView
+        self.stack.isHidden = false
+        self.stack.spacing = 0
+        let classTypes = Array(appDelegate.availableLaunchScreens.keys)
+        print("Class Types: \(classTypes)")
+        for index in 0...classTypes.count {
+            DispatchQueue.main.async(execute: {
+                let btn = UIButton(frame: CGRect(x: 0, y: 24*index, width: Int(self.stack.frame.size.width), height: 24))
+                btn.backgroundColor = .clear
+                btn.layer.cornerRadius = 5
+                btn.layer.borderWidth = 1
+                btn.layer.borderColor = UIColor.black.cgColor
+                btn.addTarget(self, action: #selector(self.acceptTheImageChoice(_ :)), for: .touchUpInside)
+                if index < classTypes.count {
+                    btn.setTitle(classTypes[index], for: UIControlState.normal)
+                    btn.setTitleColor(UIColor.black, for: .normal)
+                    btn.setTitleColor(.red, for: .highlighted)
+                } else {
+                    btn.setTitle("Add New Image", for: UIControlState.normal)
+                    btn.setTitleColor(UIColor.lightGray, for: .normal)
+                    btn.setTitleColor(.red, for: .highlighted)
+                }
+                btn.titleLabel?.textAlignment = .center
+                self.stack.addSubview(btn)
+            })
+        }
+        
+        self.stack.frame.size.height = CGFloat(classTypes.count * 24)
+        self.changingLaunchScreen = true
+        self.tableView.reloadData()
+    }
+    
+    @objc func acceptTheImageChoice(_ sender: UIButton) {
+        let selectedImageTitle = sender.titleLabel?.text
+        var dict: Dictionary<String, String> = Dictionary<String, String>()
+        if selectedImageTitle != "Add New Image" {
+            dict[selectedImageTitle!] = appDelegate.availableLaunchScreens[selectedImageTitle!]
+            appDelegate.useThisScreen = dict
+            standardDefaults.set(dict, forKey: Constants.StdDefaultKeys.LaunchScreen)
+            
+            appDelegate.useThisScreen = dict 
+                let thisScreen = Array(dict.keys).first
+                if let URL = URL(string: dict[thisScreen!]!), let data = try? Data(contentsOf: URL) {
+                    appDelegate.splashScreenImage = UIImage(data: data)!
+                }
+            
+            self.changingLaunchScreen = false
+            self.stack.isHidden = true
+            self.tableView.reloadData()
+        } else {
+            
+        }
+        
+    }
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -132,19 +187,33 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "Login Behaviour"
+        var title = ""
+        switch section {
+        case 1:
+            title = "Visibility Period for messages"
+            break
+        case 2:
+            title = "Change The Launch Screen"
+            break
+        default:
+            title = "Login Behaviour"
+            break
         }
-        return "Visibility Period for messages"
+        
+        return title
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
-        if section == 0 {
-            return 1
+        var noOfRows = 0
+        switch section {
+            case 1:
+                noOfRows = 2
+                break
+            default:
+                noOfRows = 1
+                break
         }
-        return 2
+        return noOfRows
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -153,6 +222,8 @@ class SettingsTableViewController: UITableViewController {
                 return CGFloat(self.heightForSelectedRow)
             }
             return CGFloat(RowHeights.menu_invisible.rawValue)
+        } else if indexPath.section == 2 && self.changingLaunchScreen {
+            return CGFloat(40 + (appDelegate.availableLaunchScreens.count + 1) * 24)
         }
         
         return CGFloat(RowHeights.menu_invisible.rawValue)
@@ -166,16 +237,23 @@ class SettingsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var reuseIdentifier: String!
-        if indexPath.section == 0 {
-            reuseIdentifier = "AutomaticLogin"
-        } else {
+        var reuseIdentifier = ""
+        switch indexPath.section {
+            case 1:
             reuseIdentifier = "ActiveTimeMenu"
+            break
+            case 2:
+            reuseIdentifier = "ChangeLaunchScreen"
+            default:
+            reuseIdentifier = "AutomaticLogin"
+            break
         }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
         var theView = cell.viewWithTag(11)
 
-        if indexPath.section == 1 {
+        switch indexPath.section {
+        case  1:
             if (indexPath.row == 0 && !(individualChatTimePeriod).isEmpty) || (indexPath.row == 1 && !(classChatTimePeriod.isEmpty)) {
                 theView = cell.viewWithTag(11)
                 theView?.isHidden = true
@@ -210,7 +288,14 @@ class SettingsTableViewController: UITableViewController {
             } else {
                 titleLbl.text = "Class"
             }
-        } else {
+            break
+        case 2:
+            let button = cell.viewWithTag(500) as! UIButton
+            button.addTarget(self,
+                             action: #selector(SettingsTableViewController.changeLaunchScreen(_ :)),
+                             for: .touchUpInside)
+            break
+        case 0:
             self.loginMode = cell.viewWithTag(80) as! UISwitch
             
             if standardDefaults.object(forKey: Constants.StdDefaultKeys.LoginMode) != nil {
@@ -218,6 +303,9 @@ class SettingsTableViewController: UITableViewController {
             } else {
                 loginMode.setOn(false, animated: true)
             }
+            break
+        default:
+            break
         }
         return cell
     }

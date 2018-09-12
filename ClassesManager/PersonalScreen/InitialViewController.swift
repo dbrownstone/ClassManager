@@ -29,6 +29,11 @@ class InitialViewController: UIViewController {
             appDelegate.internetIsAvailable = true
             FirebaseApp.configure()
             Database.database().isPersistenceEnabled = true
+            dbAccess.getAvailableLaunchScreens()
+            print("AvailableLaunchScreens: \(appDelegate.availableLaunchScreens)")
+            if appDelegate.useThisScreen != nil {
+                self.splashScreen.image = appDelegate.splashScreenImage!
+            }
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(self.usersLoaded(notification:)),
                                                    name: .AllUsers,
